@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="搜索"
+        android:icon="@drawable/ic_search"
+        android:id="@+id/home_search"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="收藏列表"
+        android:icon="@drawable/ic_collect"
+        android:id="@+id/home_collect"
+        app:showAsAction="never"/>
+</menu>

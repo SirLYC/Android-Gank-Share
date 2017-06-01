@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litetal>
+    <dbname value="CollectItem"/>
+
+    <version value="1"/>
+
+    <list>
+        <mapping class="com.lyc.gank.Database.Item"/>
+    </list>
+
+</litetal>

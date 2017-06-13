@@ -10,7 +10,7 @@
 >> 如果网盘挂了可以随时联系我
 
 ### 目前实现功能
-### V2.0更新
+#### V2.0更新（2017.6.13）
 - 重新排版界面，增加每日推荐（今天没更新会加载前一天）
 - 优化android 5.0 以上版本的界面显示
 
@@ -22,7 +22,7 @@
 - 搜索功能没写（逃）
 - ...
 ### 应用截图
-#### V2.0更新
+#### V2.0更新（2017.6.13）
 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(1).png) 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(2).png)

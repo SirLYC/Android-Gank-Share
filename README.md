@@ -10,25 +10,25 @@
 >> 如果网盘挂了可以随时联系我
 
 ### 目前实现功能
-###V2.0更新
+### V2.0更新
 - 重新排版界面，增加每日推荐（今天没更新会加载前一天）
 - 优化android 5.0 以上版本的界面显示
 
 ---
-####V1.0
+#### V1.0
 - 基本的展示文章，阅读
 - 支持保存妹子图到本地
 - 支持干货分享（QQ）
 - 搜索功能没写（逃）
 - ...
 ### 应用截图
-####V2.0更新
+#### V2.0更新
 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(1).png) 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(2).png)
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(3).png) 
 ---
-####V1.0
+#### V1.0
 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic/pic%20(1).png) 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic/pic%20(2).png)

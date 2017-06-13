@@ -27,6 +27,7 @@
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(1).png) 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(2).png)
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(3).png) 
+
 ---
 #### V1.0
 

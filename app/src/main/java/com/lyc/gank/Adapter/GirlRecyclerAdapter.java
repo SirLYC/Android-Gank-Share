@@ -41,7 +41,7 @@ public class GirlRecyclerAdapter extends BaseRecyclerAdapter<GirlRecyclerAdapter
     @Override
     public GirlHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.girls_item, parent, false);
+                .inflate(R.layout.item_girls, parent, false);
         return new GirlHolder(view);
     }
 
@@ -52,7 +52,7 @@ public class GirlRecyclerAdapter extends BaseRecyclerAdapter<GirlRecyclerAdapter
         Glide.with(mContext).load(item.url)
                 .placeholder(R.drawable.loading)
                 .into(holder.girlImg);
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mShowPhotoListener != null){
@@ -60,10 +60,9 @@ public class GirlRecyclerAdapter extends BaseRecyclerAdapter<GirlRecyclerAdapter
                 }
             }
         });
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Log.e("girl", "long click");
                 return mLongListener != null && mLongListener.onLongClick(position, v);
             }
         });
@@ -81,7 +80,7 @@ public class GirlRecyclerAdapter extends BaseRecyclerAdapter<GirlRecyclerAdapter
             super(itemView);
             girlImg = (ImageView) itemView.findViewById(R.id.img_girl);
             date = (TextView) itemView.findViewById(R.id.text_img_date);
-            cardView = itemView.findViewById(R.id.card_view);
+            view = itemView;
         }
     }
 }

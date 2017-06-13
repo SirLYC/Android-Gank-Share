@@ -11,6 +11,8 @@ import java.util.List;
 public class ImageUrls implements Serializable{
     private List<String> urls = new ArrayList<>();
 
+    public ImageUrls(){}
+
     public ImageUrls(List<ResultItem> items){
         for (ResultItem item : items) {
             urls.add(item.url);
@@ -19,5 +21,11 @@ public class ImageUrls implements Serializable{
 
     public List<String> getUrls() {
         return urls;
+    }
+
+    public void setUrls(List<String> urls){
+        for(String u: urls){
+            this.urls.add(u);
+        }
     }
 }

@@ -20,34 +20,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
-            android:hardwareAccelerated="true"
             android:name=".WebActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden">
-        </activity>
-        <activity android:name=".CollectActivity">
-        </activity>
-        <activity android:name=".PhotoActivity">
-        </activity>
-        <activity android:name=".SinglePhotoActivity">
-        </activity>
-
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:hardwareAccelerated="true" />
+        <activity android:name=".PhotoActivity" />
+        <activity android:name=".SinglePhotoActivity" />
         <activity
             android:name="com.mob.tools.MobUIShell"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
-
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <data android:scheme="tencent1106196934" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -55,10 +43,18 @@
             <!-- 调用新浪原生SDK，需要注册的回调activity -->
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
+        <activity android:name=".MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".AboutActivity" />
     </application>
 
 </manifest>

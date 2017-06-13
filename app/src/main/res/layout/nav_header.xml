@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="180dp"
-    android:padding="10dp"
     android:background="?attr/colorPrimary">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/icon_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@drawable/nav_icon"
-        android:layout_centerInParent="true"/>
+    <ImageView
+        android:id="@+id/header_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/username"
-        android:layout_above="@+id/mail"
-        android:text="神秘功能开发中..."
-        android:textColor="#FFF"
-        android:textSize="14sp"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="5dp"
+        android:id="@+id/text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/mail"
-        android:layout_alignParentBottom="true"
-        android:text="kevin.sir@qq.com"
-        android:textColor="#FFF"
-        android:textSize="14sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-</RelativeLayout>
+</FrameLayout>

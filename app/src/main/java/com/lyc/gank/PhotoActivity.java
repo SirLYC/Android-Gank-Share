@@ -19,11 +19,20 @@ import com.lyc.gank.Bean.ImageUrls;
 import com.lyc.gank.Util.ImageUtil;
 import com.lyc.gank.Util.ToastUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class PhotoActivity extends AppCompatActivity {
 
-    private ViewPager photoPager;
-    private TextView pageNowText;
-    private Button saveButton;
+    @BindView(R.id.pager_photo)
+    ViewPager photoPager;
+
+    @BindView(R.id.page_now)
+    TextView pageNowText;
+
+    @BindView(R.id.btn_save)
+    Button saveButton;
+
     ImageUrls urls;
     private int pageNow;
 
@@ -36,12 +45,13 @@ public class PhotoActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_photo);
         overridePendingTransition(R.anim.magnify_fade_in, 0);
-        photoPager = (ViewPager)findViewById(R.id.photo_pager);
-        saveButton = (Button)findViewById(R.id.btn_save);
-        pageNowText = (TextView)findViewById(R.id.page_now);
+
+        ButterKnife.bind(this);
+
         urls = (ImageUrls) getIntent().getSerializableExtra("urls");
         pageNow = getIntent().getIntExtra("page_now", 0);
         PhotoPagerAdapter adapter = new PhotoPagerAdapter(urls.getUrls(), this);
+
         photoPager.setAdapter(adapter);
         photoPager.setOffscreenPageLimit(6);
         photoPager.setCurrentItem(pageNow);

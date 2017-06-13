@@ -27,6 +27,9 @@ import com.tencent.smtt.sdk.WebViewClient;
 
 import org.litepal.crud.DataSupport;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * 用于展示干货内容的activity
@@ -35,8 +38,14 @@ import org.litepal.crud.DataSupport;
 public class WebActivity extends AppCompatActivity {
 
     ResultItem resultItem;
+
+    @BindView(R.id.tool_bar_web)
     Toolbar toolbar;
+
+    @BindView(R.id.webview_web)
     WebView webView;
+
+    @BindView(R.id.progress_web)
     ProgressBar webProgress;
 
     private boolean isFullScreen;
@@ -48,16 +57,16 @@ public class WebActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_web);
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
-        webProgress = (ProgressBar)findViewById(R.id.progress_web_load);
         Intent intent = getIntent();
         resultItem = (ResultItem) intent.getSerializableExtra("item");
         ActionBar actionbar = getSupportActionBar();
         if(actionbar != null){
             actionbar.setDisplayHomeAsUpEnabled(true);
         }
-        webView = (WebView)findViewById(R.id.article_web_view);
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);

@@ -1,25 +1,30 @@
-package com.lyc.gank;
+package com.lyc.gank.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.lyc.gank.Adapter.CollectRecyclerAdapter;
-import com.lyc.gank.Database.Item;
 import com.lyc.gank.Bean.ResultItem;
+import com.lyc.gank.Database.Item;
+import com.lyc.gank.MainActivity;
+import com.lyc.gank.R;
+import com.lyc.gank.SinglePhotoActivity;
+import com.lyc.gank.WebActivity;
 
 import org.litepal.crud.DataSupport;
 
@@ -28,35 +33,68 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CollectActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * Created by 972694341@qq.com on 2017/6/8.
+ */
+
+public class CollectFragment extends Fragment {
+
+    @BindView(R.id.tool_bar_collect)
     Toolbar toolbar;
-    RecyclerView recyclerView;
-    List<Item> mItemList;
-    CollectRecyclerAdapter adapter;
+
+    @BindView(R.id.recycler_view_collect)
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.fab_delete_select)
     FloatingActionButton fab;
+
+    List<Item> mItemList = new ArrayList<>();
+
+    CollectRecyclerAdapter adapter;
     private Set<Integer> posSet = new HashSet<>();
-    private boolean onSelect = false;
+
+    public boolean onSelect = false;
+
     private boolean isSelectAll = false;
 
+    private boolean isPrepared = false;
+    Runnable r = new Runnable() {
+        @Override
+        public void run() {
+            mItemList.clear();
+            for(Item i: DataSupport.findAll(Item.class)){
+                mItemList.add(i);
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                    Log.e("Collect", mItemList.size() + "");
+                }
+            });
+        }
+    };
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collect);
-        mItemList = DataSupport.findAll(Item.class);
-        toolbar = (Toolbar)findViewById(R.id.collect_toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        recyclerView = (RecyclerView)findViewById(R.id.collect_recycler);
-        adapter = new CollectRecyclerAdapter(mItemList, this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        fab = (FloatingActionButton)findViewById(R.id.delete_select);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_collect, container, false);
+        ButterKnife.bind(this, view);
+
+        initToolbar();
+
+        adapter = new CollectRecyclerAdapter(mItemList, getContext());
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fab.hide();
-                AlertDialog.Builder builder = new AlertDialog.Builder(CollectActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setCancelable(false);
                 builder.setMessage("确定删除所选项？");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -75,6 +113,47 @@ public class CollectActivity extends AppCompatActivity {
             }
         });
         setOnItemListener();
+        isPrepared = true;
+        new Thread(r).start();
+        return view;
+    }
+
+    private void initToolbar() {
+        toolbar.setNavigationIcon(R.drawable.ic_menu);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onSelect){
+                    endSelect();
+                }else {
+                    ((MainActivity)getActivity()).openOrCloseDrawer(true);
+                }
+            }
+        });
+        ((MainActivity)getActivity()).initToolbar(toolbar, "收藏列表", R.menu.menu_collect);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.collect_select:
+                        if(onSelect){
+                            selectAllOrUnSelectAll();
+                        }else {
+                            startSelect();
+                        }
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if(isVisibleToUser && isPrepared){
+            new Thread(r).start();
+        }
     }
 
     private void setOnItemListener(){
@@ -84,7 +163,7 @@ public class CollectActivity extends AppCompatActivity {
                 ResultItem item = mItemList.get(pos).toResultItem();
                 if(onSelect){
                     addOrRemove(pos);
-                 }else {
+                }else {
                     if(item.type.equals("休息视频")){
                         Intent intent = new Intent();
                         intent.setAction("android.intent.action.VIEW");
@@ -93,11 +172,11 @@ public class CollectActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                     else if(item.type.equals("福利")){
-                        Intent intent = new Intent(CollectActivity.this, SinglePhotoActivity.class);
+                        Intent intent = new Intent(getContext(), SinglePhotoActivity.class);
                         intent.putExtra("url", item.url);
                         startActivity(intent);
                     }else{
-                        Intent intent = new Intent(CollectActivity.this, WebActivity.class);
+                        Intent intent = new Intent(getContext(), WebActivity.class);
                         intent.putExtra("item", item);
                         startActivity(intent);
                     }
@@ -119,22 +198,29 @@ public class CollectActivity extends AppCompatActivity {
         });
     }
 
-    private void startSelect(){
+    public void startSelect(){
         if(mItemList.size() == 0)
             return;
         onSelect = true;
         isSelectAll = false;
         adapter.setOnSelect(true);
         adapter.notifyDataSetChanged();
+        toolbar.setTitle("选择");
+        toolbar.setNavigationIcon(R.drawable.ic_cancel);
     }
 
-    private void endSelect(){
+    public void endSelect(){
         onSelect = false;
         isSelectAll = false;
+        for(int p: posSet){
+            unSelect(p);
+        }
         posSet.clear();
         adapter.setOnSelect(false);
         adapter.notifyDataSetChanged();
         fab.hide();
+        toolbar.setTitle("收藏列表");
+        toolbar.setNavigationIcon(R.drawable.ic_menu);
     }
 
     private void addOrRemove(int pos){
@@ -146,12 +232,10 @@ public class CollectActivity extends AppCompatActivity {
                 fab.hide();
             }
             posSet.remove(pos);
-            ((ImageView)recyclerView.getChildAt(pos)
-                    .findViewById(R.id.check_img)).setImageResource(R.drawable.ic_unchecked);
+            unSelect(pos);
         }else {
             posSet.add(pos);
-            ((ImageView)recyclerView.getChildAt(pos)
-                    .findViewById(R.id.check_img)).setImageResource(R.drawable.ic_checked);
+            select(pos);
             if(posSet.size() == mItemList.size()){
                 isSelectAll = true;
             }
@@ -161,11 +245,20 @@ public class CollectActivity extends AppCompatActivity {
         }
     }
 
+    private void unSelect(int pos) {
+        ((ImageView)mRecyclerView.getChildAt(pos)
+                .findViewById(R.id.check_img)).setImageResource(R.drawable.ic_unchecked);
+    }
+
+    private void select(int pos) {
+        ((ImageView)mRecyclerView.getChildAt(pos)
+                .findViewById(R.id.check_img)).setImageResource(R.drawable.ic_checked);
+    }
+
     private void selectAllOrUnSelectAll(){
         if(isSelectAll){
             for (Integer pos : posSet) {
-                ((ImageView)recyclerView.getChildAt(pos)
-                        .findViewById(R.id.check_img)).setImageResource(R.drawable.ic_unchecked);
+                unSelect(pos);
             }
             posSet.clear();
             fab.hide();
@@ -173,8 +266,7 @@ public class CollectActivity extends AppCompatActivity {
         }else {
             for (int i = 0; i < mItemList.size(); i++){
                 posSet.add(i);
-                ((ImageView)recyclerView.getChildAt(i)
-                        .findViewById(R.id.check_img)).setImageResource(R.drawable.ic_checked);
+                select(i);
             }
             if(fab.getVisibility() != View.VISIBLE){
                 fab.show();
@@ -193,44 +285,5 @@ public class CollectActivity extends AppCompatActivity {
             mItemList.remove(item);
         }
         endSelect();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(onSelect){
-            endSelect();
-        }else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_collect, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                onBackPressed();
-                break;
-            case R.id.collect_select:
-                if(onSelect){
-                    selectAllOrUnSelectAll();
-                }else {
-                    startSelect();
-                }
-            default:
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        toolbar.setTitle("收藏列表");
     }
 }

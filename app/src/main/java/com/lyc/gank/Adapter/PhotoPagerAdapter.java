@@ -38,7 +38,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.photo_view, container, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.view_photo, container, false);
         final ProgressBar bar = (ProgressBar) view.findViewById(R.id.photo_progress);
         final PhotoView photo = (PhotoView)view.findViewById(R.id.photo_img);
         Glide.with(mContext).load(mUrls.get(position)).listener(new RequestListener<String, GlideDrawable>() {

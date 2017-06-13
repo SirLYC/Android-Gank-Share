@@ -36,7 +36,7 @@ public class SinglePhotoActivity extends AppCompatActivity {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
-        setContentView(R.layout.photo_view);
+        setContentView(R.layout.view_photo);
         overridePendingTransition(R.anim.magnify_fade_in, 0);
         saveButton = (Button)findViewById(R.id.btn_save);
         PhotoView img = (PhotoView)findViewById(R.id.photo_img);

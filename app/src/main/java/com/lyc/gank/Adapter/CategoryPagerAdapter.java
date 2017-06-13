@@ -12,12 +12,12 @@ import java.util.List;
  * 主页fragment的adapter
  */
 
-public class HomePagerAdapter extends FragmentPagerAdapter {
+public class CategoryPagerAdapter extends FragmentPagerAdapter {
 
     List<BaseFragment> mFragmentList;
     String [] mTitles;
 
-    public HomePagerAdapter(FragmentManager fm, List<BaseFragment> fragmentList, String[] titles) {
+    public CategoryPagerAdapter(FragmentManager fm, List<BaseFragment> fragmentList, String[] titles) {
         super(fm);
         mFragmentList = fragmentList;
         mTitles = titles;

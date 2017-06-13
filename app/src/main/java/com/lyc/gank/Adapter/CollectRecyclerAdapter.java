@@ -61,11 +61,11 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
     public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == ITEM_WITH_IMG || viewType ==ITEM_GIRLS) {
             View view = LayoutInflater.from(mContext)
-                    .inflate(R.layout.collect_item_with_img, parent, false);
+                    .inflate(R.layout.item_collect_with_img, parent, false);
             return new ItemWithImg(view);
         }else {
             View view = LayoutInflater.from(mContext)
-                    .inflate(R.layout.collect_item_without_img, parent, false);
+                    .inflate(R.layout.item_collect_without_img, parent, false);
             return new ItemWithoutImg(view);
         }
     }
@@ -73,50 +73,33 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
     @Override
     public void onBindViewHolder(BaseHolder holder, final int position) {
         final Item item = mData.get(position);
-        if(getItemViewType(position) == ITEM_WITH_IMG) {
-            ItemWithImg mHolder = (ItemWithImg) holder;
+        String author = item.getAuthor() == null? "匿名":item.getAuthor();
+        String imgUrl = null;
+        int type = getItemViewType(position);
+        if(type == ITEM_GIRLS)
+            imgUrl = item.getUrl();
+        else if(type == ITEM_WITH_IMG)
+            imgUrl = item.getImages().get(0);
+
+        if(type == ITEM_WITHOUT_IMG){
+            ItemWithoutImg mHolder = (ItemWithoutImg) holder;
             mHolder.title.setText(item.getTitle());
             mHolder.publishTime.setText(item.getPublishTime().substring(0, 10));
             mHolder.type.setText(item.getType());
-            if (item.getAuthor() != null) {
-                mHolder.author.setText(item.getAuthor());
-            } else {
-                mHolder.author.setText("匿名");
-            }
-            Glide.with(mContext).load(item.getImages().get(0))
-                    .into(mHolder.itemImg);
-            if(onSelect){
-                mHolder.check.setVisibility(View.VISIBLE);
-            }else {
-                mHolder.check.setVisibility(View.GONE);
-            }
-        }else if(getItemViewType(position) == ITEM_GIRLS){
-            ItemWithImg mHolder = (ItemWithImg) holder;
-            mHolder.title.setText(item.getTitle());
-            mHolder.publishTime.setText(item.getPublishTime().substring(0, 10));
-            mHolder.type.setText(item.getType());
-            if (item.getAuthor() != null) {
-                mHolder.author.setText(item.getAuthor());
-            } else {
-                mHolder.author.setText("匿名");
-            }
-            Glide.with(mContext).load(item.getUrl())
-                    .into(mHolder.itemImg);
+            mHolder.author.setText(author);
             if(onSelect){
                 mHolder.check.setVisibility(View.VISIBLE);
             }else {
                 mHolder.check.setVisibility(View.GONE);
             }
         }else {
-            ItemWithoutImg mHolder = (ItemWithoutImg) holder;
+            ItemWithImg mHolder = (ItemWithImg) holder;
             mHolder.title.setText(item.getTitle());
             mHolder.publishTime.setText(item.getPublishTime().substring(0, 10));
             mHolder.type.setText(item.getType());
-            if (item.getAuthor() != null) {
-                mHolder.author.setText(item.getAuthor());
-            } else {
-                mHolder.author.setText("匿名");
-            }
+            mHolder.author.setText(author);
+            Glide.with(mContext).load(imgUrl)
+                    .into(mHolder.itemImg);
             if(onSelect){
                 mHolder.check.setVisibility(View.VISIBLE);
             }else {
@@ -124,7 +107,7 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
             }
         }
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mOnItemSelectedListener != null){
@@ -133,7 +116,7 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
             }
         });
 
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 if(mOnItemLongClickListener != null){
@@ -164,7 +147,6 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
             itemImg = (ImageView)itemView.findViewById(R.id.item_img);
             publishTime = (TextView) itemView.findViewById(R.id.text_publish_time);
             type = (TextView) itemView.findViewById(R.id.text_type);
-            cardView = itemView.findViewById(R.id.card_view);
             check = (ImageView) itemView.findViewById(R.id.check_img);
         }
     }
@@ -181,7 +163,6 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
             author = (TextView) itemView.findViewById(R.id.text_author);
             title = (TextView) itemView.findViewById(R.id.text_title);
             publishTime = (TextView) itemView.findViewById(R.id.text_publish_time);
-            cardView = itemView.findViewById(R.id.card_view);
             type = (TextView) itemView.findViewById(R.id.text_type);
             check = (ImageView) itemView.findViewById(R.id.check_img);
         }

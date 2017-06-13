@@ -17,19 +17,32 @@
             style="@style/titleTextStyle"
             android:layout_width="match_parent"
             android:layout_height="75dp" />
-        <TextView
-            style="@style/bottomTextStyle"
-            android:id="@+id/text_type"/>
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                style="@style/bottomTextStyle"
-                android:id="@+id/text_author"/>
-            <TextView
-                style="@style/bottomTextStyle"
-                android:id="@+id/text_publish_time"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/bottomTextStyle"
+                    android:id="@+id/text_type"/>
+                <TextView
+                    style="@style/bottomTextStyle"
+                    android:id="@+id/text_publish_time"/>
+                <TextView
+                    style="@style/bottomTextStyle"
+                    android:id="@+id/text_author"/>
+            </LinearLayout>
+            <ImageView
+                android:src="@drawable/ic_unchecked"
+                android:visibility="gone"
+                android:layout_gravity="center_vertical|end"
+                android:id="@+id/check_img"
+                android:layout_width="75dp"
+                android:layout_height="12sp" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

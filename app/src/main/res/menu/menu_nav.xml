@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single"/>
+
+    <item
+        android:checkable="true"
+        android:checked="true"
+        android:id="@+id/recommend"
+        android:title="今日推荐"/>
+
+    <item
+        android:checkable="true"
+        android:id="@+id/category"
+        android:title="分类干货"/>
+
+
+    <item
+        android:checkable="true"
+        android:id="@+id/girl"
+        android:title="妹子"/>
+
+
+    <item
+        android:checkable="true"
+        android:id="@+id/collect"
+        android:title="收藏"/>
+
+    <item
+        android:id="@+id/about"
+        android:title="关于"/>
+
+    <item
+        android:id="@+id/exit"
+        android:title="退出"/>
+
+</menu>

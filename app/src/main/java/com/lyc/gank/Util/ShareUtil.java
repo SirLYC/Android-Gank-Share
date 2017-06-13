@@ -1,6 +1,7 @@
 package com.lyc.gank.Util;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.lyc.gank.Bean.ResultItem;
 
@@ -35,5 +36,22 @@ public class ShareUtil {
             // siteUrl是分享此内容的网站地址，仅在QQ空间使用
             oks.setSiteUrl(item.url);
             oks.show(context);
+    }
+
+    public static void shareImage(Context context, ResultItem item){
+        OnekeyShare oks = new OnekeyShare();
+        oks.disableSSOWhenAuthorize();
+        oks.setTitle("图片分享");
+        oks.setTitleUrl(item.url);
+        Log.e("分享", item.url);
+        oks.setText("来自GanK.io每日干货");
+        oks.setImageUrl(item.url);
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl(item.url);
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(item.url);
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl(item.url);
+        oks.show(context);
     }
 }

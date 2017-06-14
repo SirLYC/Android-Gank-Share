@@ -5,7 +5,7 @@
 - 还有休息视频
 
 ### 下载地址
-[V2.0](http://pan.baidu.com/s/1c90FUI)<br>
+[V2.0](http://pan.baidu.com/s/1slNPkN7)<br>
 [V1.0](http://pan.baidu.com/s/1geG1hgn)
 >> 如果网盘挂了可以随时联系我
 

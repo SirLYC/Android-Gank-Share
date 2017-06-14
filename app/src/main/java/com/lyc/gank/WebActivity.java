@@ -150,7 +150,7 @@ public class WebActivity extends AppCompatActivity {
                 break;
             case R.id.web_launch:
                 Intent intent = new Intent();
-                intent.setAction("android.textIntent.action.VIEW");
+                intent.setAction("android.intent.action.VIEW");
                 Uri uri = Uri.parse(resultItem.url);
                 intent.setData(uri);
                 startActivity(intent);

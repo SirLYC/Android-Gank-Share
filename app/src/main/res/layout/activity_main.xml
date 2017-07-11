@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.lyc.gank.CustomView.MainViewPager
+    <com.lyc.gank.view.NoSlippingViewPager
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/pager_main"
         android:layout_width="match_parent"

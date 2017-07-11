@@ -16,10 +16,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
-import com.lyc.gank.Bean.ResultItem;
-import com.lyc.gank.Database.Item;
-import com.lyc.gank.Util.ShareUtil;
-import com.lyc.gank.Util.ToastUtil;
+import com.lyc.gank.bean.ResultItem;
+import com.lyc.gank.database.Item;
+import com.lyc.gank.util.ShareUtil;
+import com.lyc.gank.util.TipUtil;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -29,6 +29,11 @@ import org.litepal.crud.DataSupport;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 
 /**
@@ -128,25 +133,11 @@ public class WebActivity extends AppCompatActivity {
                 if(webView != null)
                     webView.reload();
                 break;
-            case R.id.web_collect:
-                final Item itemCollect = new Item(resultItem);
-                if(DataSupport.where("idOnServer = ?",
-                        resultItem.id).find(Item.class).isEmpty()){
-                    itemCollect.save();
-                }else {
-                    Snackbar.make(webView, "已经在收藏列表中了！", Snackbar.LENGTH_SHORT)
-                            .setAction("确定", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                }
-                            }).show();
-                }
-                break;
             case R.id.web_copy:
                 String url = webView.getUrl();
                 ClipboardManager clip = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
                 clip.setText(url);
-                ToastUtil.show(this, "已复制到剪贴板", 1000);
+                TipUtil.showShort(this, R.string.copy_success);
                 break;
             case R.id.web_launch:
                 Intent intent = new Intent();
@@ -197,8 +188,11 @@ public class WebActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if(webView!=null) {
+            webView.setVisibility(View.GONE);
+            webView.removeAllViews();
+            webView.destroy();
+        }
         super.onDestroy();
-        webView.setVisibility(View.GONE);
-        webView.destroy();
     }
 }

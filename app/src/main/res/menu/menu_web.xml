@@ -19,11 +19,6 @@
         app:showAsAction="never" />
 
     <item
-        android:title="收藏"
-        android:id="@+id/web_collect"
-        app:showAsAction="never"/>
-
-    <item
         android:title="复制地址"
         android:id="@+id/web_copy"
         app:showAsAction="never"

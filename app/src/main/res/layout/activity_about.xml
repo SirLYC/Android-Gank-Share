@@ -28,7 +28,7 @@
             android:layout_margin="5dp"
             android:autoLink="web"
             android:textColor="#000"
-            android:text="项目地址:https://github.com/SirLYC/Android-Gank-Share"
+            android:text="@string/github"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -36,20 +36,20 @@
             android:layout_margin="5dp"
             android:autoLink="email"
             android:textColor="#000"
-            android:text="作者邮箱：kevinliu.sir@qq.com"
+            android:text="@string/email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:layout_margin="5dp"
-            android:text="用到用到的开源库: cardview, glide, okhttp3, gson, litepal, photoview, ButterKnife, ShareSDK在这里感谢原作者。"
+            android:text="@string/dependencies"
             android:textColor="#000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:layout_margin="5dp"
-            android:text="本项目学习用，可以随意copy。"
+            android:text="@string/about"
             android:textColor="#000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -58,7 +58,7 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_about_contact_by_qq"
         android:src="@drawable/ic_message"
-        android:elevation="5dp"
+        app:elevation="5dp"
         app:pressedTranslationZ="10dp"
         android:layout_margin="10dp"
         android:layout_gravity="bottom|end"

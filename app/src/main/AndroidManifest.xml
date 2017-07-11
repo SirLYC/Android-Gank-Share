@@ -21,12 +21,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:screenOrientation="portrait"
             android:name=".WebActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:hardwareAccelerated="true" />
-        <activity android:name=".PhotoActivity" />
-        <activity android:name=".SinglePhotoActivity" />
         <activity
+            android:screenOrientation="portrait"
+            android:name=".PhotoActivity" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".SinglePhotoActivity" />
+        <activity
+            android:screenOrientation="portrait"
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
@@ -47,14 +53,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" >
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AboutActivity" />
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".AboutActivity" />
     </application>
 
 </manifest>

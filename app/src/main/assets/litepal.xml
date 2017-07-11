@@ -5,7 +5,7 @@
     <version value="1"/>
 
     <list>
-        <mapping class="com.lyc.gank.Database.Item"/>
+        <mapping class="com.lyc.gank.database.Item"/>
     </list>
 
 </litetal>

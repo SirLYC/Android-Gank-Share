@@ -11,14 +11,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.lyc.gank.Util.ImageUtil;
-import com.lyc.gank.Util.ToastUtil;
+import com.lyc.gank.util.ImageUtil;
+import com.lyc.gank.util.TipUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.senab.photoview.PhotoView;
 
 
@@ -27,7 +31,15 @@ import uk.co.senab.photoview.PhotoView;
  */
 public class SinglePhotoActivity extends AppCompatActivity {
     String url;
+
+    @BindView(R.id.btn_save)
     Button saveButton;
+
+    @BindView(R.id.photo_img)
+    PhotoView img;
+
+    @BindView(R.id.photo_progress)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,46 +50,42 @@ public class SinglePhotoActivity extends AppCompatActivity {
         }
         setContentView(R.layout.view_photo);
         overridePendingTransition(R.anim.magnify_fade_in, 0);
-        saveButton = (Button)findViewById(R.id.btn_save);
-        PhotoView img = (PhotoView)findViewById(R.id.photo_img);
+        ButterKnife.bind(this);
         url = getIntent().getStringExtra("url");
         Glide.with(this).load(url)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        findViewById(R.id.photo_progress).setVisibility(View.GONE);
-                        ToastUtil.show(SinglePhotoActivity.this, "网络似乎不太给力...", 1000);
+                        progressBar.setVisibility(View.GONE);
+                        TipUtil.showShort(SinglePhotoActivity.this, R.string.internet_is_not_ok);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        findViewById(R.id.photo_progress).setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
                         return false;
                     }
                 })
                 .into(img);
         img.setEnabled(true);
-        findViewById(R.id.photo_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         saveButton.setVisibility(View.VISIBLE);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(SinglePhotoActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(SinglePhotoActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                }else {
-                    save();
-                }
-            }
-        });
+    }
+
+    @OnClick(R.id.photo_layout)
+    public void back(){
+        finish();
+    }
+
+    @OnClick(R.id.btn_save)
+    public void savePhoto(){
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }else {
+            save();
+        }
     }
 
     @Override
@@ -87,7 +95,7 @@ public class SinglePhotoActivity extends AppCompatActivity {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     save();
                 }else {
-                    ToastUtil.show(this,"没有相关权限！", 1000);
+                    TipUtil.showShort(this, R.string.no_permission);
                 }
                 break;
             default:
@@ -102,7 +110,7 @@ public class SinglePhotoActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.show(SinglePhotoActivity.this, "成功保存至" + path, 2000);
+                        TipUtil.showShort(SinglePhotoActivity.this, getString(R.string.save_img_success) + path);
                     }
                 });
             }
@@ -112,7 +120,7 @@ public class SinglePhotoActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.show(SinglePhotoActivity.this, "网络出错", 2000);
+                        TipUtil.showShort(SinglePhotoActivity.this, R.string.internet_exception);
                     }
                 });
             }

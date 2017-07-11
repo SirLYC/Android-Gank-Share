@@ -14,10 +14,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.lyc.gank.Adapter.PhotoPagerAdapter;
-import com.lyc.gank.Bean.ImageUrls;
-import com.lyc.gank.Util.ImageUtil;
-import com.lyc.gank.Util.ToastUtil;
+import com.lyc.gank.adapter.PhotoPagerAdapter;
+import com.lyc.gank.bean.ImageUrls;
+import com.lyc.gank.util.ImageUtil;
+import com.lyc.gank.util.TipUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,7 +102,7 @@ public class PhotoActivity extends AppCompatActivity {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     save();
                 }else {
-                    ToastUtil.show(this,"没有相关权限！", 1000);
+                    TipUtil.showShort(this, R.string.no_permission);
                 }
                 break;
             default:
@@ -117,7 +117,7 @@ public class PhotoActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.show(PhotoActivity.this, "成功保存至" + path, 2000);
+                        TipUtil.showShort(PhotoActivity.this, getString(R.string.save_img_success));
                     }
                 });
             }
@@ -127,7 +127,7 @@ public class PhotoActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.show(PhotoActivity.this, "网络出错", 2000);
+                        TipUtil.showShort(PhotoActivity.this, R.string.internet_exception);
                     }
                 });
             }

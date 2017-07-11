@@ -1,7 +1,24 @@
 <resources>
     <string name="app_name">干货集中营</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <drawable name="color_green">#388E3C</drawable>
+    <string name="empty_hint_collect">暂时还没有任何收藏哦~去今日推荐看看有没有喜欢的干货吧！</string>
+    <string name="go_to_category">前往今日推荐</string>
+    <string name="go_to_collect">前往查看</string>
+    <string name="empty_hint_internet">网络状态似乎不太好，刷新试试吧</string>
+    <string name="refresh">刷新</string>
+    <string name="already_in_collect">已经在列表中了！</string>
+    <string name="collect_success">收藏成功</string>
+    <string name="load_failed">加载失败，请检查网络设置</string>
+    <string name="save_img_success">成功保存妹子到</string>
+    <string name="internet_exception">网络出错，请检查网络后重试</string>
+    <string name="internet_is_not_ok">网络似乎不太给力</string>
+    <string name="no_permission">没有相关权限</string>
+    <string name="sure_to_delete">确定删除所选项？</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="copy_success">已复制到剪贴板</string>
+    <string name="github">项目地址:https://github.com/SirLYC/Android-Gank-Share</string>
+    <string name="email">作者邮箱：kevinliu.sir@qq.com</string>
+    <string name="dependencies">用到用到的开源库: cardview, glide, okhttp3, gson, litepal, photoview, ButterKnife, ShareSDK,rxjava2,retrofit在这里感谢原作者。</string>
+    <string name="about">本项目学习用，可以随意copy。</string>
 </resources>

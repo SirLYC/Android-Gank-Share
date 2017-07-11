@@ -1,7 +1,8 @@
 ## 干货集中营Gank.io客户端
 ### 下载地址
-[V2.0](http://pan.baidu.com/s/1slNPkN7)<br>
-[V1.0](http://pan.baidu.com/s/1geG1hgn)
+[v2.1](http://pan.baidu.com/s/1bpEjJbx) __(最新)__ <br>
+[V2.0](http://pan.baidu.com/s/1dFIj1eh)<br>
+[V1.0](http://pan.baidu.com/s/1pKPGuYB)
 >> 如果网盘挂了可以随时联系我
 
 ### 简介

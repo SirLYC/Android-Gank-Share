@@ -8,11 +8,14 @@
 - 分享每日技术干货
 - 精选每日妹子图
 - 还有休息视频
+---
 ### 版本说明
+---
 #### V2.1.1更新（2017.7.12）
 - 加入缓存功能，加载数据的同时保存到本地
 - 更加节省流量，没有到更新时间优先加载本地数据
 - 修改配色（很喜欢项目[MyMeizhi](https://github.com/drakeet/Meizhi)的配色，直接copy了），后续更新会加入修改主题功能
+---
 #### V2.1更新（2017.7.11）
 - （题外话）总算熬过考试周了
 - 侧滑背景改用bing每日一图（郭霖大神的api）
@@ -34,10 +37,11 @@
 ---
 ### 应用截图
 #### V2.1更新（2017.7.12）
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(1).png) 
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(2).png)
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(3).png) 
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(4).png) 
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(1).jpg) 
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(2).jpg)
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(3).jpg) 
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(4).jpg) 
+---
 #### V2.0更新（2017.6.13）
 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(1).png) 

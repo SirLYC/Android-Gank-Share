@@ -1,10 +1,13 @@
 package com.lyc.gank.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.lyc.gank.adapter.ArticleRecyclerAdapter;
 import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.bean.RecommendResults;
@@ -20,10 +24,12 @@ import com.lyc.gank.bean.ResultItem;
 import com.lyc.gank.MainActivity;
 import com.lyc.gank.R;
 import com.lyc.gank.SinglePhotoActivity;
+import com.lyc.gank.bean.Results;
 import com.lyc.gank.util.TimeUtil;
 import com.lyc.gank.util.TipUtil;
 import com.lyc.gank.WebActivity;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -47,14 +53,13 @@ public class GankRecommendFragment extends GankBaseFragment {
     private ArticleRecyclerAdapter mAdapter;
 
     private Date mDate = new Date();
-    private Date today = new Date();
-
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_recommend, container, false);
         ButterKnife.bind(this, view);
+        type = "推荐";
         ((MainActivity)mActivity).initToolbar(toolbar, "今日推荐");
         mRecyclerView = ButterKnife.findById(view, R.id.recycler_view_recommend);
         setRecyclerView();
@@ -67,14 +72,15 @@ public class GankRecommendFragment extends GankBaseFragment {
             @Override
             public void onRefresh() {
                 today = new Date();
+                mDate = new Date();
                 loadData();
             }
         });
     }
 
     private void setRecyclerView() {
-
         mAdapter = new ArticleRecyclerAdapter(mData, getContext());
+        adapter = mAdapter;
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
@@ -89,7 +95,7 @@ public class GankRecommendFragment extends GankBaseFragment {
                         startActivity(intent);
                         break;
                     case "休息视频":
-                        intent.setAction("android.intent.action.VIEW");
+                        intent.setAction("android.intent.setAction.VIEW");
                         Uri uri = Uri.parse(item.url);
                         intent.setData(uri);
                         startActivity(intent);
@@ -115,7 +121,15 @@ public class GankRecommendFragment extends GankBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadData();
+        if(isFirstVisibleToUser && isPreparedCreate) {
+            isFirstVisibleToUser = false;
+            refreshLayout.setRefreshing(true);
+            if(!loadDataFromLocal() || TimeUtil.needRefresh(getLastDate(), today)) {
+                loadData();
+            }else {
+                refreshLayout.setRefreshing(false);
+            }
+        }
     }
 
     private void loadData(){
@@ -155,15 +169,23 @@ public class GankRecommendFragment extends GankBaseFragment {
                             mAdapter.notifyDataSetChanged();
                             refreshLayout.setRefreshing(false);
                             needRefresh = false;
+                            saveData();
+                            today = new Date();
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         refreshLayout.setRefreshing(false);
-                        TipUtil.showShort(mActivity, R.string.load_failed);
                         showNoInternetEmptyView(true);
                         needRefresh = true;
+                        Snackbar.make(mRecyclerView, R.string.internet_exception, Snackbar.LENGTH_SHORT)
+                                .setAction(R.string.retry, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        loadData();
+                                    }
+                                }).show();
                     }
                 });
     }
@@ -171,6 +193,7 @@ public class GankRecommendFragment extends GankBaseFragment {
     @Override
     public void refresh() {
         if(needRefresh) {
+            mDate = new Date();
             loadData();
         }
     }

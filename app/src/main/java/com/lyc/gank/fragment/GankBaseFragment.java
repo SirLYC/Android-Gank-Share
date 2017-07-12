@@ -1,8 +1,12 @@
 package com.lyc.gank.fragment;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -13,9 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.lyc.gank.MainActivity;
 import com.lyc.gank.R;
+import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.bean.ResultItem;
+import com.lyc.gank.bean.Results;
 import com.lyc.gank.database.Item;
 import com.lyc.gank.api.GankIoApi;
 import com.lyc.gank.api.RetrofitFactory;
@@ -27,6 +34,8 @@ import com.lyc.gank.view.EmptyView;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -36,6 +45,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by 972694341@qq.com on 2017/7/11.
@@ -51,11 +62,24 @@ public abstract class GankBaseFragment extends BaseFragment {
 
     protected int itemNow;
 
+    protected String type;
+
+    protected BaseRecyclerAdapter adapter;
+
     protected GankIoApi gankIoApi = RetrofitFactory.getGankIoApi();
 
     protected View view;
 
     protected EmptyView noInternetEmptyView;
+
+    protected boolean isFirstVisibleToUser = true;
+
+    protected Date today = new Date();
+
+    /**
+     * 防止加载过程在setContentView之前进行
+     */
+    protected boolean isPreparedCreate;
 
     protected boolean needRefresh = false;
 
@@ -91,8 +115,65 @@ public abstract class GankBaseFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        isPreparedCreate = true;
+    }
 
-    protected void collect(final ResultItem item,final View v){
+    /**
+     * 从本地读取数据
+     * @return 是否有本地数据
+     */
+    protected boolean loadDataFromLocal(){
+        SharedPreferences preferences = getContext()
+                .getSharedPreferences(type, Context.MODE_PRIVATE);
+        String json = preferences.getString(getString(R.string.data), null);
+        if(json != null){
+            Results results = new Gson().fromJson(json, Results.class);
+            mData.addAll(results.resultItems);
+            adapter.notifyDataSetChanged();
+            return true;
+        }
+        return false;
+    }
+
+
+    protected Date getLastDate(){
+        SharedPreferences preferences =
+                getContext().getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE);
+        int year = preferences.getInt(getString(R.string.year), -1);
+        if(year == -1)
+            return null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, preferences.getInt(getString(R.string.month), -1));
+        calendar.set(Calendar.DAY_OF_MONTH, preferences.getInt(getString(R.string.day), -1));
+        calendar.set(Calendar.HOUR_OF_DAY, preferences.getInt(getString(R.string.hour), -1));
+        calendar.set(Calendar.MINUTE, preferences.getInt(getString(R.string.minute), -1));
+        calendar.set(Calendar.SECOND, preferences.getInt(getString(R.string.second), -1));
+        return calendar.getTime();
+    }
+
+    protected void saveData(){
+        Results results = new Results();
+        results.resultItems = mData;
+        String json = new Gson().toJson(results);
+        SharedPreferences.Editor editor =
+                getContext().getSharedPreferences(type, MODE_PRIVATE).edit();
+        editor.putString(getString(R.string.data), json);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        editor.putInt(getString(R.string.year), calendar.get(Calendar.YEAR));
+        editor.putInt(getString(R.string.month), calendar.get(Calendar.MONTH));
+        editor.putInt(getString(R.string.day), calendar.get(Calendar.DAY_OF_MONTH));
+        editor.putInt(getString(R.string.hour), calendar.get(Calendar.HOUR_OF_DAY));
+        editor.putInt(getString(R.string.minute), calendar.get(Calendar.MINUTE));
+        editor.putInt(getString(R.string.second), calendar.get(Calendar.SECOND));
+        editor.apply();
+    }
+
+    protected void collect(final ResultItem item, final View v){
         Observable.create(new ObservableOnSubscribe<Item>() {
             @Override
             public void subscribe(ObservableEmitter<Item> e) throws Exception {

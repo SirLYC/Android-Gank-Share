@@ -11,6 +11,9 @@ import java.util.Date;
 
 public class TimeUtil {
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+
+    private static Calendar calendar = Calendar.getInstance();
+
     private TimeUtil(){}
 
     public static String getDateString(Date date){
@@ -22,7 +25,6 @@ public class TimeUtil {
     }
 
     public static Date getDayBefore(Date date, int days){
-        Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - days);
         try {
@@ -31,5 +33,20 @@ public class TimeUtil {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public static boolean needRefresh(Date last, Date now){
+        if(last == null)
+            return true;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        int dayNow = calendar.get(Calendar.DAY_OF_MONTH);
+        int hourNow = calendar.get(Calendar.HOUR_OF_DAY);
+        calendar.setTime(last);
+        int dayLast = calendar.get(Calendar.DAY_OF_MONTH);
+        int hourLast = calendar.get(Calendar.HOUR_OF_DAY);
+        //每天13点更新
+        return (dayLast != dayNow && hourLast <= 13)
+                || (dayLast == dayNow && hourNow > 13 && hourLast <= 13);
     }
 }

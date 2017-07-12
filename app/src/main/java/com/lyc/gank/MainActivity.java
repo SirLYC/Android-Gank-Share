@@ -2,6 +2,7 @@ package com.lyc.gank;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.lyc.gank.adapter.MainPagerAdapter;
 import com.lyc.gank.fragment.CategoryFragment;
 import com.lyc.gank.fragment.CollectFragment;
@@ -31,6 +35,7 @@ import com.lyc.gank.util.TimeUtil;
 import com.tencent.smtt.sdk.QbSdk;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -57,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Fragment> mFragmentList = new ArrayList<>();
 
-    private boolean isLoadBackGround = false;
-
     private boolean needRefresh = false;
 
     private Date today = new Date();
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private TimeReceiver timeReceiver;
 
     private InternetReceiver internetReceiver;
+
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setNeedRefresh(boolean needRefresh) {
         this.needRefresh = needRefresh;
-    }
-
-    public boolean isLoadBackGround() {
-        return isLoadBackGround;
-    }
-
-    public void setLoadBackGround(boolean loadBackGround) {
-        isLoadBackGround = loadBackGround;
     }
 
     public Date getToday() {
@@ -244,7 +241,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setBackGround() {
+    public void setBackGround(){
+        String url = getUrl();
+        Date now = new Date();
+        Date last = getLastDate();
+        needRefresh = false;
+        if(last == null || url == null) {
+            needRefresh = true;
+        }else{
+            needRefresh = TimeUtil.needRefresh(last, now);
+        }
+        if(needRefresh){
+            loadBackGround();
+        }else {
+            loadBackGround(url);
+        }
+    }
+
+    /**
+     * 有缓存时的加载
+     * @param url 上一次的图片背景url
+     */
+    public void loadBackGround(String url){
+        View header = navigationView.getHeaderView(0);
+        final TextView dateText = ButterKnife.findById(header, R.id.text_date);
+        final ImageView bgImg = ButterKnife.findById(header, R.id.header_bg);
+        dateText.setText(TimeUtil.getDateString(new Date()));
+        Glide.with(MainActivity.this)
+                .load(url)
+                .centerCrop()
+                .into(bgImg);
+        needRefresh = false;
+        today = new Date();
+    }
+
+    /**
+     * 直接从服务器加载
+     */
+    public void loadBackGround() {
         View header = navigationView.getHeaderView(0);
         final TextView dateText = ButterKnife.findById(header, R.id.text_date);
         final ImageView bgImg = ButterKnife.findById(header, R.id.header_bg);
@@ -263,20 +297,58 @@ public class MainActivity extends AppCompatActivity {
                                 .load(value)
                                 .centerCrop()
                                 .into(bgImg);
+                        url = value;
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        bgImg.setImageResource(R.drawable.loading);
-                        isLoadBackGround = false;
                         needRefresh = true;
                     }
 
                     @Override
                     public void onComplete() {
-                        isLoadBackGround = true;
+                        needRefresh = false;
+                        today = new Date();
+                        saveData(url, today);
                     }
                 });
+    }
+
+    private String getUrl(){
+        SharedPreferences preferences =
+                getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE);
+        return preferences.getString(getString(R.string.url_background), null);
+    }
+
+    private Date getLastDate(){
+        SharedPreferences preferences =
+                getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE);
+        int year = preferences.getInt(getString(R.string.year), -1);
+        if(year == -1)
+            return null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, preferences.getInt(getString(R.string.month), -1));
+        calendar.set(Calendar.DAY_OF_MONTH, preferences.getInt(getString(R.string.day), -1));
+        calendar.set(Calendar.HOUR_OF_DAY, preferences.getInt(getString(R.string.hour), -1));
+        calendar.set(Calendar.MINUTE, preferences.getInt(getString(R.string.minute), -1));
+        calendar.set(Calendar.SECOND, preferences.getInt(getString(R.string.second), -1));
+        return calendar.getTime();
+    }
+
+    private void saveData(String url, Date date){
+        SharedPreferences.Editor editor =
+                getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE).edit();
+        editor.putString(getString(R.string.url_background), url);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        editor.putInt(getString(R.string.year), calendar.get(Calendar.YEAR));
+        editor.putInt(getString(R.string.month), calendar.get(Calendar.MONTH));
+        editor.putInt(getString(R.string.day), calendar.get(Calendar.DAY_OF_MONTH));
+        editor.putInt(getString(R.string.hour), calendar.get(Calendar.HOUR_OF_DAY));
+        editor.putInt(getString(R.string.minute), calendar.get(Calendar.MINUTE));
+        editor.putInt(getString(R.string.second), calendar.get(Calendar.SECOND));
+        editor.apply();
     }
 
 
@@ -284,7 +356,9 @@ public class MainActivity extends AppCompatActivity {
      * 断网之后的刷新
      */
     public void refresh(){
-        setBackGround();
+        if(needRefresh) {
+            loadBackGround();
+        }
         ((GankRecommendFragment)mFragmentList.get(0)).refresh();
         ((CategoryFragment)mFragmentList.get(1)).refresh();
         ((GirlFragment)mFragmentList.get(2)).refresh();

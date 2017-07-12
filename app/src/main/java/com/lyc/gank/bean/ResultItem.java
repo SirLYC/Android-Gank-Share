@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ResultItem implements Serializable{
     @SerializedName("_id")
-    public String id;
+    public String _id;
 
     @SerializedName("desc")
     public String title;

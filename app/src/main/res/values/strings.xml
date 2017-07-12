@@ -14,11 +14,23 @@
     <string name="internet_is_not_ok">网络似乎不太给力</string>
     <string name="no_permission">没有相关权限</string>
     <string name="sure_to_delete">确定删除所选项？</string>
+    <string name="retry">重试</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="copy_success">已复制到剪贴板</string>
     <string name="github">项目地址:https://github.com/SirLYC/Android-Gank-Share</string>
     <string name="email">作者邮箱：kevinliu.sir@qq.com</string>
     <string name="dependencies">用到用到的开源库: cardview, glide, okhttp3, gson, litepal, photoview, ButterKnife, ShareSDK,rxjava2,retrofit在这里感谢原作者。</string>
-    <string name="about">本项目学习用，可以随意copy。</string>
+    <string name="about">本项目学习用，可以随意copy。如果有任何疑问或者意见以及bug反馈可以直接通过下面的按钮qq联系我哦！</string>
+    <string name="main_activity">MainActivity</string>
+    <string name="key_date_main">背景更新时间</string>
+    <string name="key_date_recommend">推荐更新时间</string>
+    <string name="url_background">背景url</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="hour">时</string>
+    <string name="minute">分</string>
+    <string name="second">秒</string>
+    <string name="data">data</string>
 </resources>

@@ -1,13 +1,21 @@
 package com.lyc.gank.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.lyc.gank.R;
 import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.bean.Results;
+import com.lyc.gank.util.TimeUtil;
+
+import java.util.Date;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -21,13 +29,9 @@ public class GankDataFragment extends GankBaseFragment {
 
     protected static final String KEY_TYPE = "type";
 
-    protected String type;
-
     private OnLoadListener mOnLoadListener;
 
     private int mPage = 2;
-
-    protected BaseRecyclerAdapter adapter;
 
     private static final int COUNT_PER_PAGE = 20;
     /**
@@ -40,14 +44,6 @@ public class GankDataFragment extends GankBaseFragment {
      * 保存每个fragment浮动按钮的状态
      */
     private int FABVisibility = View.INVISIBLE;
-    /**
-     * 懒加载fragment的标志
-     */
-    protected boolean isFirstVisibleToUser = true;
-    /**
-     * 防止加载过程在setContentView之前进行
-     */
-    protected boolean isPreparedCreate;
 
     public void backToTop() {
         if (mRecyclerView != null) {
@@ -71,7 +67,6 @@ public class GankDataFragment extends GankBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        isPreparedCreate = true;
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -82,12 +77,20 @@ public class GankDataFragment extends GankBaseFragment {
         });
         registerForContextMenu(mRecyclerView);
         if(getUserVisibleHint() && isFirstVisibleToUser){
+            Log.e(toString(), "first");
             onFirstLoadData();
         }
     }
     protected void onFirstLoadData() {
         isFirstVisibleToUser = false;
-        loadData(FLAG_INIT);
+        if(mOnLoadListener != null){
+            mOnLoadListener.onStart();
+        }
+        if(!loadDataFromLocal() || TimeUtil.needRefresh(getLastDate(), today)) {
+            loadData(FLAG_INIT);
+        }else if(mOnLoadListener != null){
+            mOnLoadListener.onFinish();
+        }
     }
 
     /**
@@ -140,9 +143,12 @@ public class GankDataFragment extends GankBaseFragment {
 
                     @Override
                     public void onNext(Results value) {
-                        if(flag == FLAG_INIT || flag == FLAG_REFRESH)
+                        if(flag == FLAG_INIT || flag == FLAG_REFRESH) {
                             mData.clear();
+                        }
                         mData.addAll(value.resultItems);
+                        today = new Date();
+                        saveData();
                     }
 
                     @Override
@@ -152,11 +158,19 @@ public class GankDataFragment extends GankBaseFragment {
                         if(mOnLoadListener != null) {
                             mOnLoadListener.onFailed();
                         }
+                        Snackbar.make(mRecyclerView, R.string.internet_exception, Snackbar.LENGTH_SHORT)
+                                .setAction(R.string.retry, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        loadData(FLAG_REFRESH);
+                                    }
+                                }).show();
                     }
 
                     @Override
                     public void onComplete() {
                         needRefresh = false;
+                        today = new Date();
                         showNoInternetEmptyView(false);
                         if(mOnLoadListener != null) {
                             mOnLoadListener.onFinish();

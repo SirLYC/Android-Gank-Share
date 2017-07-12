@@ -31,7 +31,6 @@
         android:layout_margin="10dp"
         android:visibility="gone"
         app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:backgroundTint="#d84315"/>
+        app:pressedTranslationZ="12dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

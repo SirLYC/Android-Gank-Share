@@ -25,8 +25,7 @@ public class InternetReceiver extends BroadcastReceiver {
         if(info == null){
             lastTime = false;
         }else {
-            if(!lastTime && activity.isNeedRefresh()){
-                Log.e("tag", "refresh");
+            if(!lastTime){
                 activity.refresh();
             }
             lastTime = true;

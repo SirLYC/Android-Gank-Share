@@ -31,7 +31,7 @@ public class Item extends DataSupport{
     public Item(){super();}
 
     public Item(ResultItem item){
-        idOnServer = item.id;
+        idOnServer = item._id;
         title = item.title;
         publishTime = item.publishTime;
         type = item.type;
@@ -110,7 +110,7 @@ public class Item extends DataSupport{
 
     public ResultItem toResultItem(){
         ResultItem item = new ResultItem();
-        item.id = idOnServer;
+        item._id = idOnServer;
         item.title = title;
         item.publishTime = publishTime;
         item.url = url;

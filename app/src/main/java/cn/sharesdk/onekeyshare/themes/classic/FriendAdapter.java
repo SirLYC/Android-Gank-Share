@@ -114,11 +114,11 @@ public class FriendAdapter extends PullToRequestListAdapter implements PlatformA
 		boolean hasNext = false;
 		ArrayList<Following> data = new ArrayList<Following>();
 		if ("SinaWeibo".equals(platform)) {
-			// users[id, name, description]
+			// users[_id, name, description]
 			@SuppressWarnings("unchecked")
 			ArrayList<HashMap<String, Object>> users = (ArrayList<HashMap<String,Object>>) res.get("users");
 			for (HashMap<String, Object> user : users) {
-				String uid = String.valueOf(user.get("id"));
+				String uid = String.valueOf(user.get("_id"));
 				if (!uidMap.containsKey(uid)) {
 					Following following = new Following();
 					following.uid = uid;
@@ -155,11 +155,11 @@ public class FriendAdapter extends PullToRequestListAdapter implements PlatformA
 				}
 			}
 		} else if ("Facebook".equals(platform)) {
-			// data[id, name]
+			// data[_id, name]
 			@SuppressWarnings("unchecked")
 			ArrayList<HashMap<String, Object>> datas = (ArrayList<HashMap<String,Object>>) res.get("data");
 			for (HashMap<String, Object> d : datas) {
-				String uid = String.valueOf(d.get("id"));
+				String uid = String.valueOf(d.get("_id"));
 				if (!uidMap.containsKey(uid)) {
 					Following following = new Following();
 					following.uid = uid;

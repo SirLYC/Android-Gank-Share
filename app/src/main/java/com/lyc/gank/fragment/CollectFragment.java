@@ -202,7 +202,7 @@ public class CollectFragment extends BaseFragment {
                     Intent intent = new Intent();
                     switch (item.type){
                         case "休息视频":
-                            intent.setAction("android.intent.action.VIEW");
+                            intent.setAction("android.intent.setAction.VIEW");
                             Uri uri = Uri.parse(item.url);
                             intent.setData(uri);
                             startActivity(intent);

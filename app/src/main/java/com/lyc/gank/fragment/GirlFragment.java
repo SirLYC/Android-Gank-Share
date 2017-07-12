@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -63,7 +64,6 @@ public class GirlFragment extends GankDataFragment {
             @Override
             public void onFailed() {
                 refreshLayout.setRefreshing(false);
-                TipUtil.showShort(mActivity, R.string.load_failed);
             }
         });
         return view;

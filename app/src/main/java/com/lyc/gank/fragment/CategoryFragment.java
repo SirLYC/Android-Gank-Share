@@ -145,7 +145,6 @@ public class CategoryFragment extends BaseFragment {
                 @Override
                 public void onFailed() {
                     refreshLayout.setRefreshing(false);
-                    TipUtil.showShort(mActivity, R.string.load_failed);
                 }
             });
         }

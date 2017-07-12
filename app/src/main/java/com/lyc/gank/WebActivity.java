@@ -1,5 +1,6 @@
 package com.lyc.gank;
 
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -82,6 +83,7 @@ public class WebActivity extends AppCompatActivity {
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webView.setDrawingCacheEnabled(true);
         webView.setWebViewClient(new WebViewClient(){
             @Override
@@ -105,7 +107,8 @@ public class WebActivity extends AppCompatActivity {
             @Override
             public void onReceivedTitle(WebView webView, String s) {
                 super.onReceivedTitle(webView, s);
-                toolbar.setTitle(s);
+                if(s!=null && !s.equals(""))
+                    toolbar.setTitle(s);
             }
         });
 
@@ -136,12 +139,12 @@ public class WebActivity extends AppCompatActivity {
             case R.id.web_copy:
                 String url = webView.getUrl();
                 ClipboardManager clip = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-                clip.setText(url);
+                clip.setPrimaryClip(ClipData.newPlainText(null, url));
                 TipUtil.showShort(this, R.string.copy_success);
                 break;
             case R.id.web_launch:
                 Intent intent = new Intent();
-                intent.setAction("android.intent.action.VIEW");
+                intent.setAction("android.intent.setAction.VIEW");
                 Uri uri = Uri.parse(resultItem.url);
                 intent.setData(uri);
                 startActivity(intent);

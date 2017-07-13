@@ -46,14 +46,14 @@ public class ArticleRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerAdapter.BaseHolder holder, final int position) {
+    public void onBindViewHolder(final BaseRecyclerAdapter.BaseHolder holder, final int position) {
         final ResultItem resultItem = mData.get(position);
         String title = resultItem.title;
         if(title.length() > 75){
             title = title.substring(0, 75) + "...";
         }
 
-        int type = getItemViewType(position);
+        final int type = getItemViewType(position);
         String author = resultItem.author == null? "匿名":resultItem.author;
         String imgUrl = null;
         if(type == ITEM_GIRLS)
@@ -81,6 +81,9 @@ public class ArticleRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
             @Override
             public void onClick(View v) {
                 if(mOnItemClickListener != null){
+                    if(type == ITEM_GIRLS) {
+                        v = ((ArticleWithImg) holder).itemImg;
+                    }
                     mOnItemClickListener.onClick(position, v);
                 }
             }

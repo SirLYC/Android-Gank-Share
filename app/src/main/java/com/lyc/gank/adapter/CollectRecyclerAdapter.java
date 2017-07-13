@@ -50,11 +50,11 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerAdapter.BaseHolder holder, final int position) {
+    public void onBindViewHolder(final BaseRecyclerAdapter.BaseHolder holder, final int position) {
         final Item item = mData.get(position);
         String author = item.getAuthor() == null? "匿名":item.getAuthor();
         String imgUrl = null;
-        int type = getItemViewType(position);
+        final int type = getItemViewType(position);
         if(type == ITEM_GIRLS)
             imgUrl = item.getUrl();
         else if(type == ITEM_WITH_IMG)
@@ -90,6 +90,9 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
             @Override
             public void onClick(View v) {
                 if(mOnItemClickListener != null){
+                    if(type == ITEM_GIRLS) {
+                        v = ((ItemWithImg) holder).itemImg;
+                    }
                     mOnItemClickListener.onClick(position, v);
                 }
             }

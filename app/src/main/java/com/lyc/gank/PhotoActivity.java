@@ -1,96 +1,116 @@
 package com.lyc.gank;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 
-import com.lyc.gank.adapter.PhotoPagerAdapter;
-import com.lyc.gank.bean.ImageUrls;
-import com.lyc.gank.util.ImageUtil;
+import com.lyc.gank.util.ImageSave;
+import com.lyc.gank.util.Shares;
 import com.lyc.gank.util.TipUtil;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
+
+/**
+ * 用于展示单张照片的activity
+ */
 public class PhotoActivity extends AppCompatActivity {
+    public static final String KEY_IMG_URL = "url";
 
-    @BindView(R.id.pager_photo)
-    ViewPager photoPager;
+    public static final String KEY_IMG_TITLE = "title";
 
-    @BindView(R.id.page_now)
-    TextView pageNowText;
+    private String url;
 
-    @BindView(R.id.btn_save)
-    Button saveButton;
+    private String title;
 
-    ImageUrls urls;
-    private int pageNow;
+    private boolean mIsHidden;
+
+    @BindView(R.id.photo_img)
+    ImageView img;
+
+    @BindView(R.id.tool_bar_photo)
+    Toolbar toolbar;
+
+    @BindView(R.id.app_bar_photo)
+    AppBarLayout mAppBar;
+
+
+    private PhotoViewAttacher mPhotoViewAttacher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
-            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
-        }
         setContentView(R.layout.activity_photo);
-        overridePendingTransition(R.anim.magnify_fade_in, 0);
-
         ButterKnife.bind(this);
+        ViewCompat.setTransitionName(img, getString(R.string.photo));
+        setToolbar();
+        Picasso.with(this).load(url).into(img);
+        setupPhotoAttacher();
+    }
 
-        urls = (ImageUrls) getIntent().getSerializableExtra("urls");
-        pageNow = getIntent().getIntExtra("page_now", 0);
-        PhotoPagerAdapter adapter = new PhotoPagerAdapter(urls.getUrls(), this);
+    private void setToolbar() {
+        Intent intent = getIntent();
+        title = intent.getStringExtra(KEY_IMG_TITLE);
+        url = intent.getStringExtra(KEY_IMG_URL);
+        toolbar.setTitle(title);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= 21) {
+            mAppBar.setElevation(10.6f);
+        }
+        mAppBar.setAlpha(0.7f);
+    }
 
-        photoPager.setAdapter(adapter);
-        photoPager.setOffscreenPageLimit(6);
-        photoPager.setCurrentItem(pageNow);
-        pageNowText.setText((pageNow + 1) + "/" + urls.getUrls().size());
-        photoPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    private void setupPhotoAttacher() {
+        mPhotoViewAttacher = new PhotoViewAttacher(img);
+        mPhotoViewAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-            @Override
-            public void onPageSelected(int position) {
-                pageNow = position;
-                pageNowText.setText((position + 1) + "/" + urls.getUrls().size());
-                if(saveButton.getVisibility() == View.GONE){
-                    saveButton.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if(state == ViewPager.SCROLL_STATE_DRAGGING){
-                    saveButton.setVisibility(View.GONE);
-                }else {
-                    if(saveButton.getVisibility() == View.GONE){
-                        saveButton.setVisibility(View.VISIBLE);
-                    }
-                }
+            public void onViewTap(View view, float x, float y) {
+                hideOrShowToolbar();
             }
         });
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        img.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(PhotoActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(PhotoActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                }else {
-                    save();
-                }
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PhotoActivity.this);
+                builder.setMessage(R.string.is_save_girl);
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveImgWithPermissionCheck();
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+                builder.show();
+                return true;
             }
         });
     }
@@ -100,7 +120,7 @@ public class PhotoActivity extends AppCompatActivity {
         switch (requestCode){
             case 1:
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    save();
+                    saveImg();
                 }else {
                     TipUtil.showShort(this, R.string.no_permission);
                 }
@@ -110,40 +130,72 @@ public class PhotoActivity extends AppCompatActivity {
         }
     }
 
-    private void save(){
-        ImageUtil.saveFromUrl(urls.getUrls().get(pageNow), new ImageUtil.onFinishListener() {
-            @Override
-            public void onSuccess(final String path) {
-                runOnUiThread(new Runnable() {
+    protected void saveImg(){
+        ImageSave.saveImageAndGetPathObservable(this, url, title)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Uri>() {
                     @Override
-                    public void run() {
-                        TipUtil.showShort(PhotoActivity.this, getString(R.string.save_img_success));
+                    public void accept(Uri uri) throws Exception {
+                        TipUtil.showShort(PhotoActivity.this, getString(R.string.save_img_success) + ImageSave.path);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        TipUtil.showShort(PhotoActivity.this, R.string.internet_is_not_ok);
                     }
                 });
-            }
-
-            @Override
-            public void onFailed() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TipUtil.showShort(PhotoActivity.this, R.string.internet_exception);
-                    }
-                });
-            }
-        });
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.share_photo:
+                ImageSave.saveImageAndGetPathObservable(this, url, title)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Uri>() {
+                            @Override
+                            public void accept(Uri uri) throws Exception {
+                                Shares.shareImage(PhotoActivity.this, uri);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                TipUtil.showShort(PhotoActivity.this, R.string.internet_exception);
+                            }
+                        });
+                return true;
+            case R.id.save_photo:
+                saveImgWithPermissionCheck();
+                return true;
+        }
+
+        return true;
     }
 
-
+    private void saveImgWithPermissionCheck() {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }else {
+            saveImg();
+        }
+    }
 
     @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, R.anim.shrink_fade_out);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_photo, menu);
+        return true;
+    }
+
+    protected void hideOrShowToolbar() {
+        mAppBar.animate()
+                .translationY(mIsHidden ? 0 : -mAppBar.getHeight())
+                .setInterpolator(new DecelerateInterpolator(2))
+                .start();
+        mIsHidden = !mIsHidden;
     }
 }

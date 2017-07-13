@@ -1,46 +1,37 @@
 package com.lyc.gank.fragment;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
 import com.lyc.gank.adapter.ArticleRecyclerAdapter;
-import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.bean.RecommendResults;
 import com.lyc.gank.bean.ResultItem;
 import com.lyc.gank.MainActivity;
 import com.lyc.gank.R;
-import com.lyc.gank.SinglePhotoActivity;
-import com.lyc.gank.bean.Results;
 import com.lyc.gank.util.TimeUtil;
-import com.lyc.gank.util.TipUtil;
-import com.lyc.gank.WebActivity;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
+
+import static android.R.attr.value;
 
 public class GankRecommendFragment extends GankBaseFragment {
 
@@ -53,6 +44,12 @@ public class GankRecommendFragment extends GankBaseFragment {
     private ArticleRecyclerAdapter mAdapter;
 
     private Date mDate = new Date();
+
+    private static final int STATE_REFRESH = 0;
+
+    private static final int STATE_NO_CHANGE = 1;
+
+    private static final int STATE_NO_DATA = 2;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -78,43 +75,13 @@ public class GankRecommendFragment extends GankBaseFragment {
         });
     }
 
-    private void setRecyclerView() {
+    @Override
+    protected void setRecyclerView() {
         mAdapter = new ArticleRecyclerAdapter(mData, getContext());
         adapter = mAdapter;
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int pos, View v) {
-                ResultItem item = mData.get(pos);
-                Intent intent = new Intent();
-                switch (item.type){
-                    case "福利":
-                        intent.setClassName(getContext(), SinglePhotoActivity.class.getName());
-                        intent.putExtra("url", item.url);
-                        startActivity(intent);
-                        break;
-                    case "休息视频":
-                        intent.setAction("android.intent.setAction.VIEW");
-                        Uri uri = Uri.parse(item.url);
-                        intent.setData(uri);
-                        startActivity(intent);
-                        break;
-                    default:
-                        intent.setClassName(getContext(), WebActivity.class.getName());
-                        intent.putExtra("item", item);
-                        startActivity(intent);
-                        break;
-                }
-            }
-
-            @Override
-            public boolean onLongClick(int pos, View v) {
-                itemNow = pos;
-                return false;
-            }
-        });
-        registerForContextMenu(mRecyclerView);
+        super.setRecyclerView();
     }
 
 
@@ -141,36 +108,47 @@ public class GankRecommendFragment extends GankBaseFragment {
                     public List<ResultItem> apply(RecommendResults recommendResults) throws Exception {
                         return recommendResults.recommend.merge();
                     }
-                }).filter(new Predicate<List<ResultItem>>() {
-            @Override
-            public boolean test(List<ResultItem> resultItems) throws Exception {
-                if(resultItems != null && resultItems.size() > 1){
-                    mData.clear();
-                    mData.addAll(resultItems);
-                    return true;
-                }else {
-                    return false;
-                }
-            }
-        }).isEmpty()
-                .subscribe(new SingleObserver<Boolean>() {
+                })
+                .map(new Function<List<ResultItem>, Integer>() {
+                    @Override
+                    public Integer apply(List<ResultItem> list) throws Exception {
+                        if(list != null && list.size() > 1 && !list.get(0)._id.equals(lastIdOnServer)) {
+                            mData.clear();
+                            mData.addAll(list);
+                            return STATE_REFRESH;
+                        }
+
+                        if(list == null || list.size() <= 1) {
+                            return STATE_NO_DATA;
+                        }
+
+                        return STATE_NO_CHANGE;
+                    }
+                })
+                .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         refreshLayout.setRefreshing(true);
                     }
 
                     @Override
-                    public void onSuccess(Boolean value) {
-                        showNoInternetEmptyView(false);
-                        if(value) {
-                            mDate = TimeUtil.getYesterday(mDate);
-                            loadData();
-                        }else {
-                            mAdapter.notifyDataSetChanged();
-                            refreshLayout.setRefreshing(false);
-                            needRefresh = false;
-                            saveData();
-                            today = new Date();
+                    public void onNext(Integer value) {
+                        switch (value){
+                            case STATE_REFRESH:
+                                mAdapter.notifyDataSetChanged();
+                                refreshLayout.setRefreshing(false);
+                                needRefresh = false;
+                                saveData();
+                                today = new Date();
+                                break;
+                            case STATE_NO_DATA:
+                                mDate = TimeUtil.getYesterday(mDate);
+                                loadData();
+                                break;
+                            case STATE_NO_CHANGE:
+                                refreshLayout.setRefreshing(false);
+                            default:
+                                break;
                         }
                     }
 
@@ -187,6 +165,9 @@ public class GankRecommendFragment extends GankBaseFragment {
                                     }
                                 }).show();
                     }
+
+                    @Override
+                    public void onComplete() {}
                 });
     }
 
@@ -200,13 +181,5 @@ public class GankRecommendFragment extends GankBaseFragment {
 
     public Date getToday() {
         return today;
-    }
-
-    public void setToday(Date today) {
-        this.today = today;
-    }
-
-    public void setDate(Date mDate) {
-        this.mDate = mDate;
     }
 }

@@ -35,17 +35,18 @@ public class GirlRecyclerAdapter extends BaseRecyclerAdapter<GirlRecyclerAdapter
     }
 
     @Override
-    public void onBindViewHolder(GirlHolder holder, final int position) {
+    public void onBindViewHolder(final GirlHolder holder, final int position) {
         final ResultItem item = mData.get(position);
         holder.date.setText(item.publishTime.substring(0, 10));
         Glide.with(mContext).load(item.url)
+                .skipMemoryCache(true)
                 .placeholder(R.drawable.loading)
                 .into(holder.girlImg);
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mOnItemClickListener != null){
-                    mOnItemClickListener.onClick(position, v);
+                    mOnItemClickListener.onClick(position, holder.girlImg);
                 }
             }
         });

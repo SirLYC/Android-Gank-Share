@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,23 +17,15 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.lyc.gank.bean.ResultItem;
-import com.lyc.gank.database.Item;
-import com.lyc.gank.util.ShareUtil;
+import com.lyc.gank.util.Shares;
 import com.lyc.gank.util.TipUtil;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
-import org.litepal.crud.DataSupport;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 
 /**
@@ -63,9 +54,7 @@ public class WebActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_web);
-
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
         resultItem = (ResultItem) intent.getSerializableExtra("item");
@@ -130,7 +119,9 @@ public class WebActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.web_share:
-                ShareUtil.shareItem(this, resultItem);
+                String text = getString(R.string.share_found)
+                        + "\n" + resultItem.title + "\n" + resultItem.url;
+                Shares.share(this, text);
                 break;
             case R.id.web_refresh:
                 if(webView != null)
@@ -144,7 +135,7 @@ public class WebActivity extends AppCompatActivity {
                 break;
             case R.id.web_launch:
                 Intent intent = new Intent();
-                intent.setAction("android.intent.setAction.VIEW");
+                intent.setAction(Intent.ACTION_VIEW);
                 Uri uri = Uri.parse(resultItem.url);
                 intent.setData(uri);
                 startActivity(intent);

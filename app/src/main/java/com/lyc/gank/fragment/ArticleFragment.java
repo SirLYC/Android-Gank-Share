@@ -28,7 +28,8 @@ public class ArticleFragment extends GankDataFragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_article, container, false);
-        setRecyclerView(view);
+        mRecyclerView = ButterKnife.findById(view, R.id.recycler_view_article);
+        setRecyclerView();
         return view;
     }
 
@@ -50,36 +51,11 @@ public class ArticleFragment extends GankDataFragment {
         return fragment;
     }
 
-    private void setRecyclerView(View view) {
-        mRecyclerView = ButterKnife.findById(view, R.id.recycler_view_article);
+    protected void setRecyclerView() {
         ArticleRecyclerAdapter mAdapter = new ArticleRecyclerAdapter(mData, getContext());
         adapter = mAdapter;
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int pos, View v) {
-                ResultItem item = mData.get(pos);
-                Intent intent = new Intent();
-                switch (item.type){
-                    case "休息视频":
-                        intent.setAction("android.intent.setAction.VIEW");
-                        Uri uri = Uri.parse(item.url);
-                        intent.setData(uri);
-                        startActivity(intent);
-                        break;
-                    default:
-                        intent.setClassName(getContext(), WebActivity.class.getName());
-                        intent.putExtra("item", item);
-                        startActivity(intent);
-                        break;
-                }
-            }
-            @Override
-            public boolean onLongClick(int pos, View v) {
-                itemNow = pos;
-                return false;
-            }
-        });
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        super.setRecyclerView();
     }
 }

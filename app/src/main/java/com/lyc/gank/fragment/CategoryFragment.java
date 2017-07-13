@@ -70,7 +70,7 @@ public class CategoryFragment extends BaseFragment {
     private void setViewPager() {
         adapter = new CategoryPagerAdapter(getActivity().getSupportFragmentManager(), mFragmentList, titles);
         pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(6);
+        pager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(pager);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

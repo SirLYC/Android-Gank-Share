@@ -1,25 +1,18 @@
 package com.lyc.gank.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.adapter.GirlRecyclerAdapter;
-import com.lyc.gank.bean.ImageUrls;
 import com.lyc.gank.MainActivity;
-import com.lyc.gank.PhotoActivity;
 import com.lyc.gank.R;
-import com.lyc.gank.util.TipUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,20 +82,6 @@ public class GirlFragment extends GankDataFragment {
         adapter = mAdapter;
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int pos, View v) {
-                Intent intent = new Intent(mActivity, PhotoActivity.class);
-                intent.putExtra("urls", new ImageUrls(mData));
-                intent.putExtra("page_now", pos);
-                startActivity(intent);
-            }
-
-            @Override
-            public boolean onLongClick(int pos, View v) {
-                itemNow = pos;
-                return false;
-            }
-        });
+        super.setRecyclerView();
     }
 }

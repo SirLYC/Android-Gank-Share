@@ -11,21 +11,31 @@
     <string name="load_failed">加载失败，请检查网络设置</string>
     <string name="save_img_success">成功保存妹子到</string>
     <string name="internet_exception">网络出错，请检查网络后重试</string>
-    <string name="internet_is_not_ok">网络似乎不太给力</string>
+    <string name="internet_is_not_ok">网络似乎不太给力...</string>
     <string name="no_permission">没有相关权限</string>
     <string name="sure_to_delete">确定删除所选项？</string>
+    <string name="is_save_girl">保存妹子到本地吗？</string>
+    <string name="share_girl_to">分享妹子到...</string>
     <string name="retry">重试</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="copy_success">已复制到剪贴板</string>
-    <string name="github">项目地址:https://github.com/SirLYC/Android-Gank-Share</string>
-    <string name="email">作者邮箱：kevinliu.sir@qq.com</string>
-    <string name="dependencies">用到用到的开源库: cardview, glide, okhttp3, gson, litepal, photoview, ButterKnife, ShareSDK,rxjava2,retrofit在这里感谢原作者。</string>
-    <string name="about">本项目学习用，可以随意copy。如果有任何疑问或者意见以及bug反馈可以直接通过下面的按钮qq联系我哦！</string>
+    <string name="introduce_title">应用简介</string>
+    <string name="introduce">分享每日技术干货，精选妹子图，休息视频，感谢代码家提供数据接口，接口api文档：http://gank.io/api</string>
+    <string name="github_title">项目地址</string>
+    <string name="github">https://github.com/SirLYC/Android-Gank-Share\n完全开源，可随意copy，路过就顺带star一个呗~</string>
+    <string name="contact_me">联系我</string>
+    <string name="email">邮箱：kevinliu.sir@qq.com</string>
+    <string name="csdn_blog">csdn博客：http://blog.csdn.net/lycayf1</string>
+    <string name="dependencies_title">开源大法好啊</string>
+    <string name="dependencies">感谢各路大神提供的优秀的开源库（点击下方项目名称可以跳转到项目首页）</string>
+    <string name="contact_by_qq">拉开标题栏，可以直接点击浮动按钮qq联系我哦！</string>
+    <string name="share_found">Hi!~我刚刚在干货集中营发现了一个好东西：</string>
     <string name="main_activity">MainActivity</string>
     <string name="key_date_main">背景更新时间</string>
     <string name="key_date_recommend">推荐更新时间</string>
     <string name="url_background">背景url</string>
+    <string name="share">分享</string>
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">日</string>
@@ -33,4 +43,17 @@
     <string name="minute">分</string>
     <string name="second">秒</string>
     <string name="data">data</string>
+    <string name="photo">photo</string>
+    <string name="reference">该项目部分内容参考至GankMeizhi项目，如主题配色，单张图片展示以及保存图片工具等。GankMeizhi是一个很值得学习的优秀项目，在这里送上地址：https://github.com/drakeet/Meizhi</string>
+
+    <!--第三方库-->
+    <string name="glide">https://github.com/bumptech/glide</string>
+    <string name="retrofit">http://square.github.io/retrofit/</string>
+    <string name="rxjava">https://github.com/ReactiveX/RxJava</string>
+    <string name="gson">https://github.com/google/gson</string>
+    <string name="okhttp">http://square.github.io/okhttp/</string>
+    <string name="picasso">http://square.github.io/picasso/</string>
+    <string name="litepal">https://github.com/LitePalFramework/LitePal#latest-downloads/</string>
+    <string name="photoview">https://github.com/chrisbanes/PhotoView</string>
+    <string name="butterknife">http://jakewharton.github.io/butterknife/</string>
 </resources>

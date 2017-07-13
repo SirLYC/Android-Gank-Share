@@ -18,13 +18,14 @@ import android.widget.ImageView;
 
 import com.lyc.gank.MainActivity;
 import com.lyc.gank.R;
-import com.lyc.gank.SinglePhotoActivity;
 import com.lyc.gank.WebActivity;
 import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.adapter.CollectRecyclerAdapter;
 import com.lyc.gank.bean.ResultItem;
 import com.lyc.gank.database.Item;
 import com.lyc.gank.view.EmptyView;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.litepal.crud.DataSupport;
 
@@ -194,8 +195,8 @@ public class CollectFragment extends BaseFragment {
     private void setOnItemListener(){
         adapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onClick(int pos, View v) {
-                ResultItem item = mItemList.get(pos).toResultItem();
+            public void onClick(int pos, final View v) {
+                final ResultItem item = mItemList.get(pos).toResultItem();
                 if(onSelect){
                     addOrRemove(pos);
                 }else {
@@ -208,9 +209,18 @@ public class CollectFragment extends BaseFragment {
                             startActivity(intent);
                             break;
                         case "福利":
-                            intent.setClass(mActivity, SinglePhotoActivity.class);
-                            intent.putExtra("url", item.url);
-                            startActivity(intent);
+                            Picasso.with(mActivity).load(item.url)
+                                    .fetch(new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            startPhotoActivity(v, item.url, item.publishTime.substring(0, 10));
+                                        }
+
+                                        @Override
+                                        public void onError() {
+
+                                        }
+                                    });
                             break;
                         default:
                             intent.setClass(mActivity, WebActivity.class);

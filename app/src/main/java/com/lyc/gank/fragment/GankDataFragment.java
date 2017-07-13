@@ -1,7 +1,5 @@
 package com.lyc.gank.fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -9,9 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.google.gson.Gson;
 import com.lyc.gank.R;
-import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.bean.Results;
 import com.lyc.gank.util.TimeUtil;
 
@@ -20,6 +16,7 @@ import java.util.Date;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -77,7 +74,6 @@ public class GankDataFragment extends GankBaseFragment {
         });
         registerForContextMenu(mRecyclerView);
         if(getUserVisibleHint() && isFirstVisibleToUser){
-            Log.e(toString(), "first");
             onFirstLoadData();
         }
     }
@@ -95,7 +91,7 @@ public class GankDataFragment extends GankBaseFragment {
 
     /**
      * 实现懒加载
-     * @param isVisibleToUser
+     * @param isVisibleToUser 是否当前可见
      */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -133,6 +129,13 @@ public class GankDataFragment extends GankBaseFragment {
         gankIoApi.getDataResults(type, count, page)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
+                .filter(new Predicate<Results>() {
+                    @Override
+                    public boolean test(Results results) throws Exception {
+                        Log.e("same", results.resultItems.get(0)._id.equals(lastIdOnServer)+"");
+                        return !results.resultItems.get(0)._id.equals(lastIdOnServer);
+                    }
+                })
                 .subscribe(new Observer<Results>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -147,6 +150,14 @@ public class GankDataFragment extends GankBaseFragment {
                             mData.clear();
                         }
                         mData.addAll(value.resultItems);
+                        if(flag == FLAG_ADD){
+                            for (int i = mData.size() - 20; i < mData.size(); i++){
+                                adapter.notifyItemInserted(i);
+                            }
+                        }else {
+                            adapter.notifyDataSetChanged();
+                        }
+                        lastIdOnServer = mData.get(0)._id;
                         today = new Date();
                         saveData();
                     }
@@ -175,7 +186,6 @@ public class GankDataFragment extends GankBaseFragment {
                         if(mOnLoadListener != null) {
                             mOnLoadListener.onFinish();
                         }
-                        adapter.notifyDataSetChanged();
                     }
                 });
     }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -15,20 +16,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.lyc.gank.adapter.MainPagerAdapter;
-import com.lyc.gank.fragment.CategoryFragment;
-import com.lyc.gank.fragment.CollectFragment;
-import com.lyc.gank.fragment.GirlFragment;
-import com.lyc.gank.fragment.GankRecommendFragment;
 import com.lyc.gank.api.BingPicApi;
 import com.lyc.gank.api.RetrofitFactory;
+import com.lyc.gank.fragment.CategoryFragment;
+import com.lyc.gank.fragment.CollectFragment;
+import com.lyc.gank.fragment.GankRecommendFragment;
+import com.lyc.gank.fragment.GirlFragment;
 import com.lyc.gank.receiver.InternetReceiver;
 import com.lyc.gank.receiver.TimeReceiver;
 import com.lyc.gank.util.TimeUtil;
@@ -41,7 +40,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.sharesdk.framework.ShareSDK;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -55,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     @BindView(R.id.pager_main)
     ViewPager fragmentPager;
+
+    public static final String KEY_BG_URL = "bg url";
 
     private BingPicApi mBingPicApi = RetrofitFactory.getBingPicApi();
 
@@ -75,9 +75,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+        }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        ShareSDK.initSDK(this);
         QbSdk.initX5Environment(this, null);
         init();
         setViewPager();
@@ -111,10 +114,6 @@ public class MainActivity extends AppCompatActivity {
         return today;
     }
 
-    public void setToday(Date today) {
-        this.today = today;
-    }
-
     private void setNavigationView() {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -143,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.about:
                         intent.setClass(MainActivity.this, AboutActivity.class);
+                        intent.putExtra(KEY_BG_URL,url);
                         startActivity(intent);
                         break;
                     case R.id.exit:
@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setBackGround(){
-        String url = getUrl();
+        url = getUrl();
         Date now = new Date();
         Date last = getLastDate();
         needRefresh = false;
@@ -269,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
         dateText.setText(TimeUtil.getDateString(new Date()));
         Glide.with(MainActivity.this)
                 .load(url)
+                .skipMemoryCache(true)
                 .centerCrop()
                 .into(bgImg);
         needRefresh = false;

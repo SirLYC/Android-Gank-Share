@@ -1,6 +1,6 @@
 ## 干货集中营Gank.io客户端
 ### 下载地址
-[V2.1.2](http://pan.baidu.com/s/1nvDj0cp)
+[V2.1.2](http://pan.baidu.com/s/1nv2uj8l)
 >> 如果网盘挂了可以随时联系我
 >> 项目的app目录下有各版本的release版app，网盘只提供最新下载地址
 ---
@@ -17,6 +17,7 @@
 - 重写图片展示页面，参考项目[GankMeizhi](https://github.com/drakeet/Meizhi)
 - 重写关于页面，提供第三库的项目首页或wiki
 - 修复休息视频ActivityNotFound的bug
+- 更新应用图标（以前是在别人项目copy的，第一次用ps，做的有点丑）
 ---
 #### V2.1.1更新（2017.7.12）
 - 加入缓存功能，加载数据的同时保存到本地

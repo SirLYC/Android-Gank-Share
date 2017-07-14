@@ -1,6 +1,6 @@
 ## 干货集中营Gank.io客户端
 ### 下载地址
-[V2.1.2](http://pan.baidu.com/s/1gfsxcvp)
+[百度网盘](http://pan.baidu.com/s/1nv2uj8l)
 >> 如果网盘挂了可以随时联系我
 >> 项目的app目录下有各版本的release版app，网盘只提供最新下载地址
 ---

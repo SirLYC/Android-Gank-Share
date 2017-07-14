@@ -49,4 +49,15 @@ public class TimeUtil {
         return (dayLast != dayNow && hourLast <= 13)
                 || (dayLast == dayNow && hourNow > 13 && hourLast <= 13);
     }
+
+    public static boolean imgNeedRefresh(Date last, Date now){
+        if(last == null)
+            return true;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        int dayNow = calendar.get(Calendar.DAY_OF_MONTH);
+        calendar.setTime(last);
+        int dayLast = calendar.get(Calendar.DAY_OF_MONTH);
+        return dayNow != dayLast;
+    }
 }

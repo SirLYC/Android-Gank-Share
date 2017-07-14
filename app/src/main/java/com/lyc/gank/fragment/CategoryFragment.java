@@ -121,7 +121,7 @@ public class CategoryFragment extends BaseFragment {
      */
     private void init(){
         if(mFragmentList.size() == 0) {
-            for (String title : titles) {
+            for (String title: titles) {
                 mFragmentList.add(ArticleFragment.getInstance(title));
             }
         }

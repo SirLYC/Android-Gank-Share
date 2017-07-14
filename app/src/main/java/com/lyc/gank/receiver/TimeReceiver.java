@@ -10,7 +10,6 @@ import com.lyc.gank.MainActivity;
 import com.lyc.gank.fragment.GankRecommendFragment;
 import com.lyc.gank.util.TimeUtil;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -31,7 +30,7 @@ public class TimeReceiver extends BroadcastReceiver{
             return;
         Date now = new Date();
         if(activity != null) {
-            activity.setNeedRefresh(TimeUtil.needRefresh(activity.getToday(), now));
+            activity.setNeedRefresh(TimeUtil.imgNeedRefresh(activity.getToday(), now));
             if (activity.isNeedRefresh()) {
                 activity.loadBackGround();
             }

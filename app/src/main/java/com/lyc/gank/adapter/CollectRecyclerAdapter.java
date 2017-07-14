@@ -8,18 +8,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.lyc.gank.database.Item;
+import com.lyc.gank.bean.CollectItem;
 import com.lyc.gank.R;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 显示收藏的adapter
  */
 
-public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseHolder> {
+public class CollectRecyclerAdapter extends BaseRecyclerAdapter<CollectRecyclerAdapter.CollectHolder> {
 
-    private List<Item> mData;
+    private List<CollectItem> mData;
     private Context mContext;
     private boolean onSelect = false;
 
@@ -27,7 +30,7 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
     private static final int ITEM_WITHOUT_IMG = 1;
     private static final int ITEM_GIRLS = 2;
 
-    public CollectRecyclerAdapter(List<Item> resultItemList, Context context) {
+    public CollectRecyclerAdapter(List<CollectItem> resultItemList, Context context) {
         mData = resultItemList;
         mContext = context;
     }
@@ -37,53 +40,36 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
     }
 
     @Override
-    public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == ITEM_WITH_IMG || viewType ==ITEM_GIRLS) {
+    public CollectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == ITEM_WITH_IMG) {
             View view = LayoutInflater.from(mContext)
                     .inflate(R.layout.item_collect_with_img, parent, false);
-            return new ItemWithImg(view);
-        }else {
-            View view = LayoutInflater.from(mContext)
-                    .inflate(R.layout.item_collect_without_img, parent, false);
-            return new ItemWithoutImg(view);
+            return new CollectHolderWithImg(view);
         }
+        View view = LayoutInflater.from(mContext)
+                .inflate(R.layout.item_collect_without_img, parent, false);
+        return new CollectHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final BaseRecyclerAdapter.BaseHolder holder, final int position) {
-        final Item item = mData.get(position);
-        String author = item.getAuthor() == null? "匿名":item.getAuthor();
-        String imgUrl = null;
+    public void onBindViewHolder(final CollectHolder holder, final int position) {
+        final CollectItem item = mData.get(position);
+        String author = item.author == null? "匿名":item.author;
         final int type = getItemViewType(position);
-        if(type == ITEM_GIRLS)
-            imgUrl = item.getUrl();
-        else if(type == ITEM_WITH_IMG)
-            imgUrl = item.getImages().get(0);
 
-        if(type == ITEM_WITHOUT_IMG){
-            ItemWithoutImg mHolder = (ItemWithoutImg) holder;
-            mHolder.title.setText(item.getTitle());
-            mHolder.publishTime.setText(item.getPublishTime().substring(0, 10));
-            mHolder.type.setText(item.getType());
-            mHolder.author.setText(author);
-            if(onSelect){
-                mHolder.check.setVisibility(View.VISIBLE);
-            }else {
-                mHolder.check.setVisibility(View.GONE);
-            }
+        holder.title.setText(item.title);
+        holder.publishTime.setText(item.publishTime);
+        holder.type.setText(item.type);
+        holder.author.setText(author);
+        if(onSelect){
+            holder.check.setVisibility(View.VISIBLE);
         }else {
-            ItemWithImg mHolder = (ItemWithImg) holder;
-            mHolder.title.setText(item.getTitle());
-            mHolder.publishTime.setText(item.getPublishTime().substring(0, 10));
-            mHolder.type.setText(item.getType());
-            mHolder.author.setText(author);
-            Glide.with(mContext).load(imgUrl)
-                    .into(mHolder.itemImg);
-            if(onSelect){
-                mHolder.check.setVisibility(View.VISIBLE);
-            }else {
-                mHolder.check.setVisibility(View.GONE);
-            }
+            holder.check.setVisibility(View.GONE);
+        }
+
+        if(type == ITEM_WITH_IMG){
+            Glide.with(mContext).load(item.imgUrl)
+                    .into(((CollectHolderWithImg)holder).itemImg);
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +77,7 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
             public void onClick(View v) {
                 if(mOnItemClickListener != null){
                     if(type == ITEM_GIRLS) {
-                        v = ((ItemWithImg) holder).itemImg;
+                        v = ((CollectHolderWithImg) holder).itemImg;
                     }
                     mOnItemClickListener.onClick(position, v);
                 }
@@ -110,51 +96,43 @@ public class CollectRecyclerAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
         return mData.size();
     }
 
-    private class ItemWithImg extends BaseHolder{
-        TextView author;
-        TextView title;
+    class CollectHolderWithImg extends CollectHolder{
+        @BindView(R.id.item_img)
         ImageView itemImg;
-        ImageView check;
-        TextView publishTime;
-        TextView type;
 
-        ItemWithImg(View itemView) {
+        CollectHolderWithImg(View itemView) {
             super(itemView);
-            author = (TextView) itemView.findViewById(R.id.text_author);
-            title = (TextView) itemView.findViewById(R.id.text_title);
-            itemImg = (ImageView)itemView.findViewById(R.id.item_img);
-            publishTime = (TextView) itemView.findViewById(R.id.text_publish_time);
-            type = (TextView) itemView.findViewById(R.id.text_type);
-            check = (ImageView) itemView.findViewById(R.id.check_img);
         }
     }
 
-    private class ItemWithoutImg extends BaseHolder{
+    class CollectHolder extends BaseRecyclerAdapter.BaseHolder{
+        @BindView(R.id.text_author)
         TextView author;
+
+        @BindView(R.id.text_title)
         TextView title;
+
+        @BindView(R.id.text_publish_time)
         TextView publishTime;
+
+        @BindView(R.id.text_type)
         TextView type;
+
+        @BindView(R.id.check_img)
         ImageView check;
 
-        ItemWithoutImg(View itemView) {
+        CollectHolder(View itemView) {
             super(itemView);
-            author = (TextView) itemView.findViewById(R.id.text_author);
-            title = (TextView) itemView.findViewById(R.id.text_title);
-            publishTime = (TextView) itemView.findViewById(R.id.text_publish_time);
-            type = (TextView) itemView.findViewById(R.id.text_type);
-            check = (ImageView) itemView.findViewById(R.id.check_img);
+            ButterKnife.bind(this, itemView);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        Item item = mData.get(position);
-        if(item.getImages() != null && item.getImages().size() > 0){
+        CollectItem item = mData.get(position);
+        if(item.imgUrl != null){
             return ITEM_WITH_IMG;
-        }else if(item.getType().equals("\u798f\u5229")){
-            return ITEM_GIRLS;
-        }else {
-            return ITEM_WITHOUT_IMG;
         }
+        return ITEM_WITHOUT_IMG;
     }
 }

@@ -22,7 +22,7 @@ import com.lyc.gank.WebActivity;
 import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.adapter.CollectRecyclerAdapter;
 import com.lyc.gank.bean.ResultItem;
-import com.lyc.gank.database.Item;
+import com.lyc.gank.bean.CollectItem;
 import com.lyc.gank.view.EmptyView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -63,9 +63,9 @@ public class CollectFragment extends BaseFragment {
     @BindView(R.id.coordinator_layout_collect)
     ViewGroup parent;
 
-    List<Item> mItemList = new ArrayList<>();
+    List<CollectItem> mItemList = new ArrayList<>();
 
-    CollectRecyclerAdapter adapter;
+    CollectRecyclerAdapter mAdapter;
 
     private Set<Integer> posSet = new HashSet<>();
 
@@ -83,8 +83,8 @@ public class CollectFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_collect, container, false);
         ButterKnife.bind(this, view);
         initToolbar();
-        adapter = new CollectRecyclerAdapter(mItemList, getContext());
-        mRecyclerView.setAdapter(adapter);
+        mAdapter = new CollectRecyclerAdapter(mItemList, getContext());
+        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         setOnItemListener();
         isPrepared = true;
@@ -169,15 +169,15 @@ public class CollectFragment extends BaseFragment {
     }
 
     private void loadData(){
-        Observable.create(new ObservableOnSubscribe<List<Item>>() {
+        Observable.create(new ObservableOnSubscribe<List<CollectItem>>() {
             @Override
-            public void subscribe(ObservableEmitter<List<Item>> e) throws Exception {
+            public void subscribe(ObservableEmitter<List<CollectItem>> e) throws Exception {
                 mItemList.clear();
-                e.onNext(DataSupport.findAll(Item.class));
+                e.onNext(DataSupport.findAll(CollectItem.class));
             }
-        }).map(new Function<List<Item>, Boolean>() {
+        }).map(new Function<List<CollectItem>, Boolean>() {
             @Override
-            public Boolean apply(List<Item> items) throws Exception {
+            public Boolean apply(List<CollectItem> items) throws Exception {
                 return items != null && items.size() > 0
                         && mItemList.addAll(items);
             }
@@ -187,13 +187,13 @@ public class CollectFragment extends BaseFragment {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         showEmptyView(!aBoolean);
-                        adapter.notifyDataSetChanged();
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
     }
 
     private void setOnItemListener(){
-        adapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onClick(int pos, final View v) {
                 final ResultItem item = mItemList.get(pos).toResultItem();
@@ -213,7 +213,7 @@ public class CollectFragment extends BaseFragment {
                                     .fetch(new Callback() {
                                         @Override
                                         public void onSuccess() {
-                                            startPhotoActivity(v, item.url, item.publishTime.substring(0, 10));
+                                            startPhotoActivity(v, item.url, item.publishTime);
                                         }
 
                                         @Override
@@ -249,8 +249,8 @@ public class CollectFragment extends BaseFragment {
             return;
         onSelect = true;
         isSelectAll = false;
-        adapter.setOnSelect(true);
-        adapter.notifyDataSetChanged();
+        mAdapter.setOnSelect(true);
+        mAdapter.notifyDataSetChanged();
         toolbar.setTitle("选择");
         toolbar.setNavigationIcon(R.drawable.ic_cancel);
     }
@@ -262,8 +262,8 @@ public class CollectFragment extends BaseFragment {
             unSelect(p);
         }
         posSet.clear();
-        adapter.setOnSelect(false);
-        adapter.notifyDataSetChanged();
+        mAdapter.setOnSelect(false);
+        mAdapter.notifyDataSetChanged();
         fab.hide();
         toolbar.setTitle("收藏列表");
         toolbar.setNavigationIcon(R.drawable.ic_menu);
@@ -322,12 +322,12 @@ public class CollectFragment extends BaseFragment {
     }
 
     private void removeSelectedItems(){
-        List<Item> selectItems = new ArrayList<>();
+        List<CollectItem> selectItems = new ArrayList<>();
         for (Integer pos : posSet) {
             selectItems.add(mItemList.get(pos));
         }
-        for (Item item : selectItems) {
-            DataSupport.delete(Item.class, item.getId());
+        for (CollectItem item : selectItems) {
+            DataSupport.delete(CollectItem.class, item.id);
             mItemList.remove(item);
         }
         if(isSelectAll){

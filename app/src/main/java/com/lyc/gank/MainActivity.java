@@ -273,7 +273,6 @@ public class MainActivity extends AppCompatActivity {
                 .centerCrop()
                 .into(bgImg);
         needRefresh = false;
-        today = new Date();
     }
 
     /**

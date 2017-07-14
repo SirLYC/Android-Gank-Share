@@ -13,6 +13,9 @@ import com.lyc.gank.R;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * 显示妹子的adapter
  */
@@ -37,8 +40,8 @@ public class GirlRecyclerAdapter extends BaseRecyclerAdapter<GirlRecyclerAdapter
     @Override
     public void onBindViewHolder(final GirlHolder holder, final int position) {
         final ResultItem item = mData.get(position);
-        holder.date.setText(item.publishTime.substring(0, 10));
-        Glide.with(mContext).load(item.url)
+        holder.date.setText(item.publishTime);
+        Glide.with(mContext).load(item.imgUrl)
                 .skipMemoryCache(true)
                 .placeholder(R.drawable.loading)
                 .into(holder.girlImg);
@@ -64,13 +67,15 @@ public class GirlRecyclerAdapter extends BaseRecyclerAdapter<GirlRecyclerAdapter
     }
 
     class GirlHolder extends BaseRecyclerAdapter.BaseHolder{
+        @BindView(R.id.img_girl)
         ImageView girlImg;
+
+        @BindView(R.id.text_img_date)
         TextView date;
+
         GirlHolder(View itemView) {
             super(itemView);
-            girlImg = (ImageView) itemView.findViewById(R.id.img_girl);
-            date = (TextView) itemView.findViewById(R.id.text_img_date);
-            view = itemView;
+            ButterKnife.bind(this, itemView);
         }
     }
 }

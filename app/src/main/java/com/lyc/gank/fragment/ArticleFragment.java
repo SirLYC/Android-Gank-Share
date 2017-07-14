@@ -1,8 +1,6 @@
 package com.lyc.gank.fragment;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.adapter.ArticleRecyclerAdapter;
-import com.lyc.gank.bean.ResultItem;
 import com.lyc.gank.R;
-import com.lyc.gank.WebActivity;
 
 import butterknife.ButterKnife;
 
@@ -39,7 +34,6 @@ public class ArticleFragment extends GankDataFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             type = bundle.getString(KEY_TYPE);
-            Log.e(toString(), type + "");
         }
     }
 

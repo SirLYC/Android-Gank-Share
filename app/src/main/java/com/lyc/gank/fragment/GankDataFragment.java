@@ -16,6 +16,7 @@ import java.util.Date;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
@@ -127,15 +128,28 @@ public class GankDataFragment extends GankBaseFragment {
             }
         }
         gankIoApi.getDataResults(type, count, page)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .filter(new Predicate<Results>() {
                     @Override
                     public boolean test(Results results) throws Exception {
-                        Log.e("same", results.resultItems.get(0)._id.equals(lastIdOnServer)+"");
-                        return !results.resultItems.get(0)._id.equals(lastIdOnServer);
+                        return !results.resultItems.get(0).idOnServer.equals(lastIdOnServer);
                     }
                 })
+                .observeOn(Schedulers.io())
+                .doOnNext(new Consumer<Results>() {
+                    @Override
+                    public void accept(Results results) throws Exception {
+                        if(flag == FLAG_INIT || flag == FLAG_REFRESH) {
+                            mData.clear();
+                        }
+                        mData.addAll(results.resultItems);
+                        if(flag != FLAG_ADD) {
+                            today = new Date();
+                            saveData();
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Results>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -146,10 +160,6 @@ public class GankDataFragment extends GankBaseFragment {
 
                     @Override
                     public void onNext(Results value) {
-                        if(flag == FLAG_INIT || flag == FLAG_REFRESH) {
-                            mData.clear();
-                        }
-                        mData.addAll(value.resultItems);
                         if(flag == FLAG_ADD){
                             for (int i = mData.size() - 20; i < mData.size(); i++){
                                 adapter.notifyItemInserted(i);
@@ -157,13 +167,12 @@ public class GankDataFragment extends GankBaseFragment {
                         }else {
                             adapter.notifyDataSetChanged();
                         }
-                        lastIdOnServer = mData.get(0)._id;
-                        today = new Date();
-                        saveData();
+                        lastIdOnServer = mData.get(0).idOnServer;
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         showNoInternetEmptyView(true);
                         needRefresh = true;
                         if(mOnLoadListener != null) {
@@ -181,7 +190,6 @@ public class GankDataFragment extends GankBaseFragment {
                     @Override
                     public void onComplete() {
                         needRefresh = false;
-                        today = new Date();
                         showNoInternetEmptyView(false);
                         if(mOnLoadListener != null) {
                             mOnLoadListener.onFinish();

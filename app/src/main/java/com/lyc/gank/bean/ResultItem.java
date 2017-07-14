@@ -2,6 +2,9 @@ package com.lyc.gank.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.annotation.Column;
+import org.litepal.crud.DataSupport;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +14,7 @@ import java.util.List;
 
 public class ResultItem implements Serializable{
     @SerializedName("_id")
-    public String _id;
+    public String idOnServer;
 
     @SerializedName("desc")
     public String title;
@@ -27,4 +30,6 @@ public class ResultItem implements Serializable{
     public String author;
 
     public List<String> images;
+
+    public String imgUrl;
 }

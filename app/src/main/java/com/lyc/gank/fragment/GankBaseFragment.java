@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +28,7 @@ import com.lyc.gank.WebActivity;
 import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.bean.ResultItem;
 import com.lyc.gank.bean.Results;
-import com.lyc.gank.database.Item;
+import com.lyc.gank.bean.CollectItem;
 import com.lyc.gank.api.GankIoApi;
 import com.lyc.gank.api.RetrofitFactory;
 import com.lyc.gank.util.ImageSave;
@@ -50,6 +51,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -59,6 +61,10 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public abstract class GankBaseFragment extends BaseFragment {
+    public static final String KEY_DATA = "DATA";
+
+    public static final String NO_DATA = "no data";
+
     /**
      * 数据源
      */
@@ -81,6 +87,8 @@ public abstract class GankBaseFragment extends BaseFragment {
     protected EmptyView noInternetEmptyView;
 
     protected boolean isFirstVisibleToUser = true;
+
+    private boolean hasLocalData;
 
     protected Date today = new Date();
 
@@ -134,17 +142,56 @@ public abstract class GankBaseFragment extends BaseFragment {
      * @return 是否有本地数据
      */
     protected boolean loadDataFromLocal(){
-        SharedPreferences preferences = getContext()
-                .getSharedPreferences(type, Context.MODE_PRIVATE);
-        String json = preferences.getString(getString(R.string.data), null);
-        if(json != null){
-            Results results = new Gson().fromJson(json, Results.class);
-            mData.addAll(results.resultItems);
-            adapter.notifyDataSetChanged();
-            lastIdOnServer = mData.get(0)._id;
-            return true;
-        }
-        return false;
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                SharedPreferences preferences = getContext()
+                        .getSharedPreferences(type, Context.MODE_PRIVATE);
+                e.onNext(preferences.getString(KEY_DATA, NO_DATA));
+            }
+        }).filter(new Predicate<String>() {
+            @Override
+            public boolean test(String s) throws Exception {
+                return hasLocalData = !s.equals(NO_DATA);
+            }
+        }).map(new Function<String, Results>() {
+            @Override
+            public Results apply(String json) throws Exception {
+                return new Gson().fromJson(json, Results.class);
+            }
+        }).observeOn(Schedulers.io())
+                .filter(new Predicate<Results>() {
+                    @Override
+                    public boolean test(Results results) throws Exception {
+                        return results != null
+                                    && results.resultItems != null
+                                    && results.resultItems.size() > 0;
+                    }
+                })
+                .doOnNext(new Consumer<Results>() {
+                    @Override
+                    public void accept(Results results) throws Exception {
+                        mData.addAll(results.resultItems);
+                        lastIdOnServer = mData.get(0).idOnServer;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Results>() {
+                    @Override
+                    public void accept(Results r) throws Exception {
+                        adapter.notifyDataSetChanged();
+                        Log.e(toString(), mData.size() + "");
+                        hasLocalData = true;
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hasLocalData =false;
+                    }
+                });
+
+        Log.e(type, "has" + hasLocalData);
+        return hasLocalData;
     }
 
 
@@ -166,15 +213,12 @@ public abstract class GankBaseFragment extends BaseFragment {
 
     protected void saveData(){
         Results results = new Results();
-        if(mData.size() <= 40) {
-            results.resultItems = mData;
-        }else {
-            results.resultItems = mData.subList(0, 40);
-        }
+        int lastIndex = mData.size() > 40? 40:mData.size();
+        results.resultItems = mData.subList(0, lastIndex);
         String json = new Gson().toJson(results);
         SharedPreferences.Editor editor =
                 getContext().getSharedPreferences(type, MODE_PRIVATE).edit();
-        editor.putString(getString(R.string.data), json);
+        editor.putString(KEY_DATA, json);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
         editor.putInt(getString(R.string.year), calendar.get(Calendar.YEAR));
@@ -187,21 +231,21 @@ public abstract class GankBaseFragment extends BaseFragment {
     }
 
     protected void collect(final ResultItem item, final View v){
-        Observable.create(new ObservableOnSubscribe<Item>() {
+        Observable.create(new ObservableOnSubscribe<CollectItem>() {
             @Override
-            public void subscribe(ObservableEmitter<Item> e) throws Exception {
-                e.onNext(new Item(item));
+            public void subscribe(ObservableEmitter<CollectItem> e) throws Exception {
+                e.onNext(new CollectItem(item));
             }
-        }).map(new Function<Item, Boolean>() {
+        }).map(new Function<CollectItem, Boolean>() {
             @Override
-            public Boolean apply(Item item) throws Exception {
+            public Boolean apply(CollectItem item) throws Exception {
                 return DataSupport
-                        .where("idOnServer = ?", item.getIdOnServer())
-                        .find(Item.class)
+                        .where("idOnServer = ?", item.idOnServer)
+                        .find(CollectItem.class)
                         .isEmpty() && item.save();
             }
-        }).subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
@@ -253,7 +297,7 @@ public abstract class GankBaseFragment extends BaseFragment {
                         Picasso.with(mActivity).load(item.url).fetch(new Callback() {
                             @Override
                             public void onSuccess() {
-                                startPhotoActivity(v, item.url, item.publishTime.substring(0, 10));
+                                startPhotoActivity(v, item.url, item.publishTime);
                             }
 
                             @Override

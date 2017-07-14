@@ -24,14 +24,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
-
-import static android.R.attr.value;
 
 public class GankRecommendFragment extends GankBaseFragment {
 
@@ -101,7 +98,6 @@ public class GankRecommendFragment extends GankBaseFragment {
 
     private void loadData(){
         gankIoApi.getReconmmendResults(TimeUtil.getDateString(mDate))
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .map(new Function<RecommendResults, List<ResultItem>>() {
                     @Override
@@ -112,9 +108,10 @@ public class GankRecommendFragment extends GankBaseFragment {
                 .map(new Function<List<ResultItem>, Integer>() {
                     @Override
                     public Integer apply(List<ResultItem> list) throws Exception {
-                        if(list != null && list.size() > 1 && !list.get(0)._id.equals(lastIdOnServer)) {
+                        if(list != null && list.size() > 1 && !list.get(0).idOnServer.equals(lastIdOnServer)) {
                             mData.clear();
                             mData.addAll(list);
+                            lastIdOnServer = mData.get(0).idOnServer;
                             return STATE_REFRESH;
                         }
 
@@ -125,21 +122,20 @@ public class GankRecommendFragment extends GankBaseFragment {
                         return STATE_NO_CHANGE;
                     }
                 })
-                .subscribe(new Observer<Integer>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public void accept(Disposable disposable) throws Exception {
                         refreshLayout.setRefreshing(true);
                     }
-
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<Integer>() {
                     @Override
-                    public void onNext(Integer value) {
-                        switch (value){
+                    public void accept(Integer integer) throws Exception {
+                        switch (integer){
                             case STATE_REFRESH:
                                 mAdapter.notifyDataSetChanged();
                                 refreshLayout.setRefreshing(false);
-                                needRefresh = false;
-                                saveData();
-                                today = new Date();
                                 break;
                             case STATE_NO_DATA:
                                 mDate = TimeUtil.getYesterday(mDate);
@@ -151,9 +147,26 @@ public class GankRecommendFragment extends GankBaseFragment {
                                 break;
                         }
                     }
-
+                })
+                .observeOn(Schedulers.io())
+                .doOnNext(new Consumer<Integer>() {
                     @Override
-                    public void onError(Throwable e) {
+                    public void accept(Integer integer) throws Exception {
+                        if(integer == STATE_REFRESH){
+                            today = new Date();
+                            saveData();
+                            needRefresh = false;
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
                         refreshLayout.setRefreshing(false);
                         showNoInternetEmptyView(true);
                         needRefresh = true;
@@ -165,9 +178,6 @@ public class GankRecommendFragment extends GankBaseFragment {
                                     }
                                 }).show();
                     }
-
-                    @Override
-                    public void onComplete() {}
                 });
     }
 

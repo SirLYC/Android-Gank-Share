@@ -2,6 +2,7 @@ package com.lyc.gank.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.lyc.gank.R;
 
@@ -23,6 +24,17 @@ public abstract class BaseRecyclerAdapter<VH extends BaseRecyclerAdapter.BaseHol
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         mOnItemClickListener = onItemClickListener;
+    }
+
+    @Override
+    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+        ((RecyclerView)parent).addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+        return null;
     }
 
     class BaseHolder extends RecyclerView.ViewHolder{

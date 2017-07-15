@@ -1,6 +1,7 @@
 package com.lyc.gank.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,6 @@ public class ArticleRecyclerAdapter extends BaseRecyclerAdapter<ArticleRecyclerA
                     .inflate(R.layout.item_article_without_img, parent, false);
             return new ArticleHolder(view);
         }
-
         View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.item_article_with_img, parent, false);
         return new ArticleHolderWithImg(view);
@@ -52,13 +52,12 @@ public class ArticleRecyclerAdapter extends BaseRecyclerAdapter<ArticleRecyclerA
     public void onBindViewHolder(final ArticleHolder holder, final int position) {
         final ResultItem resultItem = mData.get(position);
         String title = resultItem.title;
-        if(title.length() > 75){
-            title = title.substring(0, 75) + "...";
-        }
-
-        Log.e(resultItem.type, resultItem.imgUrl + "");
-
         final int type = getItemViewType(position);
+        if(title.length() > 80 && type == ITEM_WITHOUT_IMG){
+            title = title.substring(0, 75) + "...";
+        }else if(title.length() > 50 && type == ITEM_WITH_IMG){
+            title = title.substring(0, 50) + "...";
+        }
         String author = resultItem.author == null? "匿名":resultItem.author;
 
         holder.title.setText(title);

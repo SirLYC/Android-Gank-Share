@@ -1,4 +1,4 @@
-package com.lyc.gank.fragment;
+package com.lyc.gank.fragment.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

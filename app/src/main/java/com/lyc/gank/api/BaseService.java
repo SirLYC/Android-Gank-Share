@@ -5,6 +5,7 @@ package com.lyc.gank.api;
  */
 
 public class BaseService {
-    public static final String GANK_IO_BASE_URL = "http://gank.io/api/"
-            ,GUO_LIN_TECH_BASE_URL = "http://guolin.tech/api/";
+    static final String GANK_IO_BASE_URL = "http://gank.io/api/"
+            ,GUO_LIN_TECH_BASE_URL = "http://guolin.tech/api/"
+            ,JIN_SHAN = "http://open.iciba.com/";
 }

@@ -23,7 +23,9 @@ import com.lyc.gank.adapter.BaseRecyclerAdapter;
 import com.lyc.gank.adapter.CollectRecyclerAdapter;
 import com.lyc.gank.bean.ResultItem;
 import com.lyc.gank.bean.CollectItem;
+import com.lyc.gank.fragment.base.BaseFragment;
 import com.lyc.gank.view.EmptyView;
+import com.lyc.gank.view.ItemDecoration;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -83,13 +85,18 @@ public class CollectFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_collect, container, false);
         ButterKnife.bind(this, view);
         initToolbar();
-        mAdapter = new CollectRecyclerAdapter(mItemList, getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        setOnItemListener();
+        setRecyclerView();
         isPrepared = true;
         loadData();
         return view;
+    }
+
+    private void setRecyclerView() {
+        mAdapter = new CollectRecyclerAdapter(mItemList, getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.addItemDecoration(new ItemDecoration(mActivity, RecyclerView.HORIZONTAL));
+        setOnItemListener();
     }
 
     @OnClick(R.id.fab_delete_select)

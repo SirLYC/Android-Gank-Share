@@ -9,7 +9,7 @@
     <string name="already_in_collect">已经在列表中了！</string>
     <string name="collect_success">收藏成功</string>
     <string name="load_failed">加载失败，请检查网络设置</string>
-    <string name="save_img_success">成功保存妹子到</string>
+    <string name="save_img_success">成功保存图片到</string>
     <string name="internet_exception">网络出错，请检查网络后重试</string>
     <string name="internet_is_not_ok">网络似乎不太给力...</string>
     <string name="no_permission">没有相关权限</string>
@@ -21,7 +21,7 @@
     <string name="cancel">取消</string>
     <string name="copy_success">已复制到剪贴板</string>
     <string name="introduce_title">应用简介</string>
-    <string name="introduce">分享每日技术干货，精选妹子图，休息视频，感谢代码家提供数据接口，接口api文档：http://gank.io/api</string>
+    <string name="introduce">分享每日技术干货，精选妹子图，休息视频，感谢代码家提供数据接口，接口api文档：http://gank.io/api，还有正能量满满的金山词霸每日一句开放api:http://open.iciba.com/?c=api</string>
     <string name="github_title">项目地址</string>
     <string name="github">https://github.com/SirLYC/Android-Gank-Share\n完全开源，可随意copy，路过就顺带star一个呗~</string>
     <string name="contact_me">联系我</string>

@@ -38,7 +38,6 @@ public class TimeReceiver extends BroadcastReceiver{
 
         if(recommendFragment != null){
             recommendFragment.setNeedRefresh(TimeUtil.needRefresh(recommendFragment.getToday(), now));
-
             recommendFragment.refresh();
         }
     }

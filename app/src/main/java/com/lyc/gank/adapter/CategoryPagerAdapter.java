@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.lyc.gank.fragment.GankDataFragment;
+import com.lyc.gank.fragment.base.GankDataFragment;
 
 import java.util.List;
 

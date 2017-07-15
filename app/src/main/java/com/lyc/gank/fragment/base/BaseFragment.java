@@ -1,4 +1,4 @@
-package com.lyc.gank.fragment;
+package com.lyc.gank.fragment.base;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +17,8 @@ import com.lyc.gank.R;
  */
 
 public class BaseFragment extends Fragment{
-    AppCompatActivity mActivity;
+    protected AppCompatActivity mActivity;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -31,9 +32,7 @@ public class BaseFragment extends Fragment{
      * @param title 图片的标题
      */
     protected void startPhotoActivity(View sharedView, String url, String title){
-        Intent intent = new Intent(mActivity, PhotoActivity.class);
-        intent.putExtra(PhotoActivity.KEY_IMG_URL, url);
-        intent.putExtra(PhotoActivity.KEY_IMG_TITLE, title);
+        Intent intent = PhotoActivity.getIntent(mActivity, url, title);
         ActivityOptionsCompat optionsCompat =  ActivityOptionsCompat
                 .makeSceneTransitionAnimation(mActivity, sharedView, getString(R.string.photo));
         try {

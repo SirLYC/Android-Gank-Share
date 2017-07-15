@@ -10,14 +10,42 @@ import java.util.Date;
  */
 
 public class TimeUtil {
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+
+    private static final SimpleDateFormat lineFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private static Calendar calendar = Calendar.getInstance();
 
     private TimeUtil(){}
 
+    public static Date fromDateLine(String text){
+        Date date = null;
+        try {
+            date = lineFormat.parse(text);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
+    public static Date fromDateString(String text){
+        Date date = null;
+        try {
+            date = format.parse(text);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
     public static String getDateString(Date date){
         return format.format(date);
+    }
+
+    public static String getDateLine(Date date){
+        return lineFormat.format(date);
     }
 
     public static Date getYesterday(Date date){

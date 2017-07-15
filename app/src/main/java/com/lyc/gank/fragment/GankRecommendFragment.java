@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.lyc.gank.bean.RecommendResults;
 import com.lyc.gank.bean.ResultItem;
 import com.lyc.gank.MainActivity;
 import com.lyc.gank.R;
+import com.lyc.gank.fragment.base.GankBaseFragment;
 import com.lyc.gank.util.TimeUtil;
 
 import java.util.Date;
@@ -23,7 +25,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -167,6 +168,7 @@ public class GankRecommendFragment extends GankBaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Log.e(type, throwable.toString());
                         refreshLayout.setRefreshing(false);
                         showNoInternetEmptyView(true);
                         needRefresh = true;

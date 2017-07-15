@@ -1,4 +1,4 @@
-package com.lyc.gank.fragment;
+package com.lyc.gank.fragment.base;
 
 import android.Manifest;
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +31,12 @@ import com.lyc.gank.bean.Results;
 import com.lyc.gank.bean.CollectItem;
 import com.lyc.gank.api.GankIoApi;
 import com.lyc.gank.api.RetrofitFactory;
+import com.lyc.gank.fragment.GirlFragment;
 import com.lyc.gank.util.ImageSave;
 import com.lyc.gank.util.Shares;
 import com.lyc.gank.util.TipUtil;
 import com.lyc.gank.view.EmptyView;
+import com.lyc.gank.view.ItemDecoration;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -279,6 +281,7 @@ public abstract class GankBaseFragment extends BaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Log.e(type, throwable.getMessage());
                         TipUtil.showShort(mActivity, R.string.internet_is_not_ok);
                     }
                 });
@@ -287,6 +290,8 @@ public abstract class GankBaseFragment extends BaseFragment {
     protected void setRecyclerView(){
         //TODO:子类需要先初始化adapter然后调用这个方法
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        if(!(this instanceof GirlFragment))
+            mRecyclerView.addItemDecoration(new ItemDecoration(mActivity, RecyclerView.HORIZONTAL));
         adapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onClick(final int pos, final View v) {
@@ -301,9 +306,7 @@ public abstract class GankBaseFragment extends BaseFragment {
                             }
 
                             @Override
-                            public void onError() {
-
-                            }
+                            public void onError() {}
                         });
                         break;
                     case "休息视频":
@@ -334,10 +337,10 @@ public abstract class GankBaseFragment extends BaseFragment {
         if(getUserVisibleHint()){
             ResultItem i = mData.get(itemNow);
             switch (item.getItemId()){
-                case 0:
+                case R.id.collect_gank:
                     collect(i, getView());
                     break;
-                case 1:
+                case R.id.share_gank:
                     if(i.type.equals("福利")){
                         ImageSave.saveImageAndGetPathObservable(getContext(), i.url, i.title)
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -358,8 +361,10 @@ public abstract class GankBaseFragment extends BaseFragment {
                         Shares.share(getContext(), text);
                     }
                     break;
-                case 2:
+                case R.id.save_gank:
                     saveImgWithPermissionCheck(i);
+                    break;
+                default:
                     break;
             }
             return true;
@@ -380,10 +385,11 @@ public abstract class GankBaseFragment extends BaseFragment {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(Menu.NONE, 0, Menu.NONE, "收藏");
-        menu.add(Menu.NONE, 1, Menu.NONE, "分享");
+        MenuInflater inflater = mActivity.getMenuInflater();
         if(mData.get(itemNow).type.equals("福利"))
-            menu.add(Menu.NONE, 2, Menu.NONE, "保存妹子");
+            inflater.inflate(R.menu.menu_girl, menu);
+        else
+            inflater.inflate(R.menu.menu_item, menu);
     }
 
     @Override

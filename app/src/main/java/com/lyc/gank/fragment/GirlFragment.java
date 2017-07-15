@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.lyc.gank.adapter.GirlRecyclerAdapter;
 import com.lyc.gank.MainActivity;
 import com.lyc.gank.R;
+import com.lyc.gank.fragment.base.GankDataFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

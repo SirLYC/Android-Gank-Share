@@ -4,13 +4,13 @@ package com.lyc.gank.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lyc.gank.adapter.ArticleRecyclerAdapter;
 import com.lyc.gank.R;
+import com.lyc.gank.fragment.base.GankDataFragment;
 
 import butterknife.ButterKnife;
 

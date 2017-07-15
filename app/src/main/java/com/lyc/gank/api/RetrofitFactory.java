@@ -29,6 +29,8 @@ public class RetrofitFactory {
 
     private static BingPicApi mBingPicApi;
 
+    private static JinshanApi mJinshanApi;
+
     private static final Object monitor = new Object();
 
     private static void init(){
@@ -64,6 +66,12 @@ public class RetrofitFactory {
                 .addConverterFactory(GsonConverterFactory.create(gson));
         mRetrofit = builder.build();
         mGankIoApi = mRetrofit.create(GankIoApi.class);
+
+        builder.baseUrl(BaseService.JIN_SHAN);
+        mRetrofit = builder.build();
+        mJinshanApi = mRetrofit.create(JinshanApi.class);
+
+        //bing
         builder = new Retrofit.Builder()
                 .baseUrl(BaseService.GUO_LIN_TECH_BASE_URL)
                 .client(client)
@@ -86,6 +94,14 @@ public class RetrofitFactory {
             if(mBingPicApi == null)
                 init();
             return mBingPicApi;
+        }
+    }
+
+    public static JinshanApi getJinshanApi(){
+        synchronized (monitor){
+            if(mJinshanApi == null)
+                init();
+            return mJinshanApi;
         }
     }
 }

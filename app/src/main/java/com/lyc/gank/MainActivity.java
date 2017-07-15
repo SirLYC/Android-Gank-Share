@@ -8,12 +8,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,9 +25,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.lyc.gank.adapter.MainPagerAdapter;
-import com.lyc.gank.api.BingPicApi;
+import com.lyc.gank.api.JinshanApi;
 import com.lyc.gank.api.RetrofitFactory;
+import com.lyc.gank.bean.EveryDayAWord;
 import com.lyc.gank.fragment.CategoryFragment;
 import com.lyc.gank.fragment.CollectFragment;
 import com.lyc.gank.fragment.GankRecommendFragment;
@@ -31,6 +37,8 @@ import com.lyc.gank.fragment.GirlFragment;
 import com.lyc.gank.receiver.InternetReceiver;
 import com.lyc.gank.receiver.TimeReceiver;
 import com.lyc.gank.util.TimeUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.tencent.smtt.sdk.QbSdk;
 
 import java.util.ArrayList;
@@ -40,37 +48,53 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.drawer_main)
     DrawerLayout mDrawer;
+
     @BindView(R.id.nav_main)
     NavigationView navigationView;
+
     @BindView(R.id.pager_main)
     ViewPager fragmentPager;
 
-    public static final String KEY_BG_URL = "bg url";
+    View header;
 
-    private BingPicApi mBingPicApi = RetrofitFactory.getBingPicApi();
+    TextView dateText;
+
+    TextView wordText;
+
+    ImageView bgImg;
+
+    private static final String TAG = "MainActivity";
+
+    private static final String KEY_EVERY_WORD = "every";
+
+    private static final String DEFAULT_WORD = "干货集中营——分享每日技术干货";
+
+    private JinshanApi mJinshanApi = RetrofitFactory.getJinshanApi();
 
     private MainPagerAdapter adapter;
 
     private List<Fragment> mFragmentList = new ArrayList<>();
 
-    private boolean needRefresh = false;
+    private boolean needRefresh;
 
-    private Date today = new Date();
+    private Date today;
 
     private TimeReceiver timeReceiver;
 
     private InternetReceiver internetReceiver;
 
-    private String url;
+    private EveryDayAWord word;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.about:
                         intent.setClass(MainActivity.this, AboutActivity.class);
-                        intent.putExtra(KEY_BG_URL,url);
                         startActivity(intent);
                         break;
                     case R.id.exit:
@@ -161,10 +184,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void init() {
+        today = getLastDate();
+        header = navigationView.getHeaderView(0);
+        wordText = ButterKnife.findById(header, R.id.text_everyday_word);
+        dateText = ButterKnife.findById(header, R.id.text_date);
+        bgImg = ButterKnife.findById(header, R.id.header_bg);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!needRefresh && word.fenxiang_img != null){
+                    Picasso.with(MainActivity.this).load(word.fenxiang_img)
+                            .fetch(new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    startPhotoActivity();
+                                }
+                                @Override
+                                public void onError() {}
+                            });
+                }
+            }
+        });
         mFragmentList.add(new GankRecommendFragment());
         mFragmentList.add(new CategoryFragment());
         mFragmentList.add(new GirlFragment());
         mFragmentList.add(new CollectFragment());
+    }
+
+    private void startPhotoActivity(){
+        Intent intent = PhotoActivity.getIntent(MainActivity.this, word.fenxiang_img, word.caption + word.dateline);
+        ActivityOptionsCompat optionsCompat =  ActivityOptionsCompat
+                .makeSceneTransitionAnimation(MainActivity.this, bgImg, PhotoActivity.KEY_PHOTO);
+        try {
+            ActivityCompat.startActivity(MainActivity.this, intent, optionsCompat.toBundle());
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -241,88 +297,95 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setBackGround(){
-        url = getUrl();
-        Date now = new Date();
-        Date last = getLastDate();
-        needRefresh = false;
-        if(last == null || url == null) {
-            needRefresh = true;
-        }else{
-            needRefresh = TimeUtil.needRefresh(last, now);
-        }
-        if(needRefresh){
-            loadBackGround();
-        }else {
-            loadBackGround(url);
-        }
-    }
-
     /**
-     * 有缓存时的加载
-     * @param url 上一次的图片背景url
+     * 有缓存时的加载本地数据
      */
-    public void loadBackGround(String url){
-        View header = navigationView.getHeaderView(0);
-        final TextView dateText = ButterKnife.findById(header, R.id.text_date);
-        final ImageView bgImg = ButterKnife.findById(header, R.id.header_bg);
-        dateText.setText(TimeUtil.getDateString(new Date()));
-        Glide.with(MainActivity.this)
-                .load(url)
-                .skipMemoryCache(true)
-                .centerCrop()
-                .into(bgImg);
-        needRefresh = false;
+    public void setBackGround(){
+        Observable.create(new ObservableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
+                word = getEveryDayAWord();
+                if(word != null){
+                    e.onNext(true);
+                }else {
+                    e.onNext(false);
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if(aBoolean){
+                            wordText.setText(word.content + "\n" + word.note);
+                            dateText.setText(word.dateline);
+                            Glide.with(MainActivity.this)
+                                    .load(word.picture2)
+                                    .error(R.drawable.bg_about_default)
+                                    .into(bgImg);
+                            needRefresh = false;
+                        }
+
+                        if(!aBoolean || TimeUtil.imgNeedRefresh(today, new Date())){
+                            loadBackGround();
+                        }
+                    }
+                });
     }
 
     /**
      * 直接从服务器加载
      */
     public void loadBackGround() {
-        View header = navigationView.getHeaderView(0);
-        final TextView dateText = ButterKnife.findById(header, R.id.text_date);
-        final ImageView bgImg = ButterKnife.findById(header, R.id.header_bg);
-        mBingPicApi.getBingPic()
-                .observeOn(AndroidSchedulers.mainThread())
+        mJinshanApi.getEveryWord()
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<String>() {
+                .observeOn(Schedulers.io())
+                .doOnNext(new Consumer<EveryDayAWord>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        dateText.setText(TimeUtil.getDateString(new Date()));
+                    public void accept(EveryDayAWord everyDayAWord) throws Exception {
+                        today = TimeUtil.fromDateLine(word.dateline);
+                        saveData(everyDayAWord);
                     }
-
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<EveryDayAWord>() {
                     @Override
-                    public void onNext(String value) {
+                    public void accept(EveryDayAWord everyDayAWord) throws Exception {
+                        word = everyDayAWord;
+                        wordText.setText(everyDayAWord.content + "\n" + everyDayAWord.note);
+                        dateText.setText(everyDayAWord.dateline);
                         Glide.with(MainActivity.this)
-                                .load(value)
-                                .centerCrop()
+                                .load(everyDayAWord.picture2)
+                                .error(R.drawable.bg_about_default)
                                 .into(bgImg);
-                        url = value;
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        needRefresh = true;
-                    }
-
-                    @Override
-                    public void onComplete() {
                         needRefresh = false;
-                        today = new Date();
-                        saveData(url, today);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e(toString(), throwable.toString());
+                        wordText.setText(DEFAULT_WORD);
+                        dateText.setText(TimeUtil.getDateLine(today));
+                        Glide.with(MainActivity.this)
+                                .load(R.drawable.bg_about_default)
+                                .into(bgImg);
+                        needRefresh = true;
                     }
                 });
     }
 
-    private String getUrl(){
+    private EveryDayAWord getEveryDayAWord(){
         SharedPreferences preferences =
-                getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE);
-        return preferences.getString(getString(R.string.url_background), null);
+                getSharedPreferences(TAG, MODE_PRIVATE);
+        String json = preferences.getString(KEY_EVERY_WORD, null);
+        if(json != null){
+            return new Gson().fromJson(json, EveryDayAWord.class);
+        }
+        return null;
     }
 
     private Date getLastDate(){
         SharedPreferences preferences =
-                getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE);
+                getSharedPreferences(TAG, MODE_PRIVATE);
         int year = preferences.getInt(getString(R.string.year), -1);
         if(year == -1)
             return null;
@@ -336,12 +399,12 @@ public class MainActivity extends AppCompatActivity {
         return calendar.getTime();
     }
 
-    private void saveData(String url, Date date){
+    private void saveData(EveryDayAWord everyDayAWord){
         SharedPreferences.Editor editor =
-                getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE).edit();
-        editor.putString(getString(R.string.url_background), url);
+                getSharedPreferences(TAG, MODE_PRIVATE).edit();
+        editor.putString(KEY_EVERY_WORD, new Gson().toJson(everyDayAWord));
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(today);
         editor.putInt(getString(R.string.year), calendar.get(Calendar.YEAR));
         editor.putInt(getString(R.string.month), calendar.get(Calendar.MONTH));
         editor.putInt(getString(R.string.day), calendar.get(Calendar.DAY_OF_MONTH));

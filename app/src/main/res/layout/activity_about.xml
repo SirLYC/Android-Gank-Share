@@ -140,10 +140,10 @@
                 style="@style/AboutContentText"
                 android:text="@string/photoview"/>
             <TextView
-                android:autoLink="web"
                 style="@style/AboutContentText"
                 android:text="@string/butterknife"/>
             <TextView
+                android:autoLink="web"
                 style="@style/AboutContentText"
                 android:text="@string/reference"/>
         </LinearLayout>

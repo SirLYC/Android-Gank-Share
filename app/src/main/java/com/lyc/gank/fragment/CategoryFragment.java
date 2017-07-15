@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,8 @@ import android.view.ViewGroup;
 import com.lyc.gank.MainActivity;
 import com.lyc.gank.R;
 import com.lyc.gank.adapter.CategoryPagerAdapter;
-import com.lyc.gank.util.TipUtil;
+import com.lyc.gank.fragment.base.BaseFragment;
+import com.lyc.gank.fragment.base.GankDataFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,6 @@ public class CategoryFragment extends BaseFragment {
             public void onPageSelected(int position) {
                 int visibilityOld = fragmentNow.getFABVisibility();
                 fragmentNow = mFragmentList.get(position);
-                Log.e(fragmentNow.toString(), position + "");
                 int visibilityNew = fragmentNow.getFABVisibility();
                 if(visibilityNew != visibilityOld){
                     if(visibilityOld == View.INVISIBLE && visibilityNew == View.VISIBLE){

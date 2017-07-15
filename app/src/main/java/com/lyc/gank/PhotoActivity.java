@@ -1,6 +1,7 @@
 package com.lyc.gank;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +43,8 @@ public class PhotoActivity extends AppCompatActivity {
     public static final String KEY_IMG_URL = "url";
 
     public static final String KEY_IMG_TITLE = "title";
+
+    public static final String KEY_PHOTO = "photo";
 
     private String url;
 
@@ -197,5 +201,12 @@ public class PhotoActivity extends AppCompatActivity {
                 .setInterpolator(new DecelerateInterpolator(2))
                 .start();
         mIsHidden = !mIsHidden;
+    }
+
+    public static Intent getIntent(Context context, String url, String title){
+        Intent intent = new Intent(context, PhotoActivity.class);
+        intent.putExtra(KEY_IMG_URL, url);
+        intent.putExtra(KEY_IMG_TITLE, title);
+        return intent;
     }
 }

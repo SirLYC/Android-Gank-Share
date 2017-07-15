@@ -1,6 +1,6 @@
 ## 干货集中营Gank.io客户端
 ### 下载地址
-[百度网盘](http://pan.baidu.com/s/1nv2uj8l)
+[百度网盘](http://pan.baidu.com/s/1mioPfcs)
 >> 如果网盘挂了可以随时联系我
 >> 项目的app目录下有各版本的release版app，网盘只提供最新下载地址
 ---
@@ -11,6 +11,9 @@
 ---
 ### 版本说明
 ---
+#### V2.2.0更新（2017.7.15）
+- 列表界面优化，更简洁，节省资源
+- 导航页面增加金山词霸每日一句，看妹子的时候还能学英语哦
 #### V2.1.3更新（2017.7.14）
 - 将缓存改为异步，以前会阻塞主线程
 - 优化数据库,列表适配器
@@ -48,12 +51,23 @@
 - ...
 ---
 ### 应用截图
+#### V2.2.0更新（2017.7.15）
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(1).jpg) 
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(2).jpg)
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(3).jpg) 
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(4).jpg) 
+![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(5).jpg) 
+
+---
+
 #### V2.1更新（2017.7.12）
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(1).jpg) 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(2).jpg)
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(3).jpg) 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(4).jpg) 
+
 ---
+
 #### V2.0更新（2017.6.13）
 
 ![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(1).png) 
@@ -67,4 +81,4 @@
 - 本项目是学习用的，可以随意copy
 - 欢迎反映bug（如果有报错信息更好）或者提需求
 - 最后感谢 [代码家](http://gank.io) 提供数据接口
-- 近期有考试，暂时不会更新...
+- ~~近期有考试，暂时不会更新...~~

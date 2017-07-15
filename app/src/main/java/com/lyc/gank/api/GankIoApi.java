@@ -13,8 +13,8 @@ import retrofit2.http.Path;
 
 public interface GankIoApi {
     @GET("data/{type}/{count}/{page}")
-    public Observable<Results> getDataResults(@Path("type") String type, @Path("count") int count, @Path("page") int page);
+    Observable<Results> getDataResults(@Path("type") String type, @Path("count") int count, @Path("page") int page);
 
     @GET("day/{dateString}")
-    public Observable<RecommendResults> getReconmmendResults(@Path("dateString") String date);
+    Observable<RecommendResults> getReconmmendResults(@Path("dateString") String date);
 }

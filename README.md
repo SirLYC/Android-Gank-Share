@@ -1,6 +1,6 @@
 ## 干货集中营Gank.io客户端
 ### 下载地址
-[百度网盘](http://pan.baidu.com/s/1mioPfcs)
+[百度网盘](http://pan.baidu.com/s/1sl4oamx)
 >> 如果网盘挂了可以随时联系我
 >> 项目的app目录下有各版本的release版app，网盘只提供最新下载地址
 ---
@@ -76,6 +76,14 @@
 
 ---
 
+### 打赏
+
+>> 如果您觉得不错想要支持我的话可以通过以下方式打赏
+
+![wechat](https://github.com/SirLYC/Android-Gank-Share/blob/master/wechat.png)
+
+![alipay](https://github.com/SirLYC/Android-Gank-Share/blob/master/alipay.png) 
+---
 ### 关于
 - 作者邮箱： **kevinliu.sir@qq.com**   qq: **972694341**
 - 本项目是学习用的，可以随意copy

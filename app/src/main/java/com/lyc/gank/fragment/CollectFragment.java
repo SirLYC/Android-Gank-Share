@@ -125,8 +125,8 @@ public class CollectFragment extends BaseFragment {
             EmptyView.Builder builder = new EmptyView.Builder();
             emptyView = builder.with(mActivity)
                     .parent(parent)
-                    .emptyHint(getString(R.string.empty_hint_collect))
-                    .buttonText(getString(R.string.go_to_category))
+                    .emptyHint(R.string.empty_hint_collect)
+                    .buttonText(R.string.go_to_category)
                     .listener(new EmptyView.onClickListener() {
                         @Override
                         public void onClick(View v) {

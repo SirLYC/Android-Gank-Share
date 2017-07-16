@@ -343,14 +343,16 @@ public class MainActivity extends AppCompatActivity {
                 .doOnNext(new Consumer<EveryDayAWord>() {
                     @Override
                     public void accept(EveryDayAWord everyDayAWord) throws Exception {
-                        today = TimeUtil.fromDateLine(word.dateline);
+                        word = everyDayAWord;
+                        if(word != null) {
+                            today = TimeUtil.fromDateLine(word.dateline);
+                        }
                         saveData(everyDayAWord);
                     }
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<EveryDayAWord>() {
                     @Override
                     public void accept(EveryDayAWord everyDayAWord) throws Exception {
-                        word = everyDayAWord;
                         wordText.setText(everyDayAWord.content + "\n" + everyDayAWord.note);
                         dateText.setText(everyDayAWord.dateline);
                         Glide.with(MainActivity.this)

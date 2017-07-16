@@ -52,27 +52,19 @@
 ---
 ### 应用截图
 #### V2.2.0更新（2017.7.15）
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(1).jpg) 
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(2).jpg)
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(3).jpg) 
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(4).jpg) 
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.2.0/pic%20(5).jpg) 
+<img src="/pic2.2.0/pic%20(1).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
+<img src="/pic2.2.0/pic%20(2).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
+<img src="/pic2.2.0/pic%20(3).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
+<img src="/pic2.2.0/pic%20(4).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
+<img src="/pic2.2.0/pic%20(5).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
 
 ---
 
 #### V2.1更新（2017.7.12）
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(1).jpg) 
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(2).jpg)
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(3).jpg) 
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.1.1/pic%20(4).jpg) 
-
----
-
-#### V2.0更新（2017.6.13）
-
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(1).png) 
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(2).png)
-![image](https://github.com/SirLYC/Android-Gank-Share/blob/master/pic2.0/pic%20(3).png) 
+<img src="/pic2.1.1/pic%20(1).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
+<img src="/pic2.1.1/pic%20(2).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
+<img src="/pic2.1.1/pic%20(3).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
+<img src="/pic2.1.1/pic%20(4).jpg" alt="screenshot" title="screenshot" width="270" height="486" />
 
 ---
 
@@ -80,9 +72,10 @@
 
 >> 如果您觉得不错想要支持我的话可以通过以下方式打赏
 
-![wechat](https://github.com/SirLYC/Android-Gank-Share/blob/master/wechat.png)
+<img src="/wechat.png" title="wechat" width="270" height="270" />
 
-![alipay](https://github.com/SirLYC/Android-Gank-Share/blob/master/alipay.png) 
+<img src="/alipay.png" title="alipay" width="270" height="270" />
+
 ---
 ### 关于
 - 作者邮箱： **kevinliu.sir@qq.com**   qq: **972694341**

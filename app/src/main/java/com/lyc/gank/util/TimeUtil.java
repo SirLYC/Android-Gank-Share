@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by 972694341@qq.com on 2017/6/3.
+ * 对时间date进行处理的工具类
  */
 
 public class TimeUtil {

@@ -46,10 +46,10 @@ public class ArticleFragment extends GankDataFragment {
     }
 
     protected void setRecyclerView() {
-        ArticleRecyclerAdapter mAdapter = new ArticleRecyclerAdapter(mData, getContext());
+        ArticleRecyclerAdapter mAdapter = new ArticleRecyclerAdapter(mData, mActivity);
         adapter = mAdapter;
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         super.setRecyclerView();
     }
 }

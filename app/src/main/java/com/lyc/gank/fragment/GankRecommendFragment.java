@@ -75,7 +75,7 @@ public class GankRecommendFragment extends GankBaseFragment {
 
     @Override
     protected void setRecyclerView() {
-        mAdapter = new ArticleRecyclerAdapter(mData, getContext());
+        mAdapter = new ArticleRecyclerAdapter(mData, mActivity);
         adapter = mAdapter;
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

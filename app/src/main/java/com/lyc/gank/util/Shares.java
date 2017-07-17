@@ -7,7 +7,7 @@ import android.net.Uri;
 import com.lyc.gank.R;
 
 /**
- * Created by 972694341@qq.com on 2017/7/13.
+ * 调用系统的分享
  */
 
 public class Shares {

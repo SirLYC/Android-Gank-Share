@@ -147,7 +147,7 @@ public abstract class GankBaseFragment extends BaseFragment {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
-                SharedPreferences preferences = getContext()
+                SharedPreferences preferences = mActivity
                         .getSharedPreferences(type, Context.MODE_PRIVATE);
                 e.onNext(preferences.getString(KEY_DATA, NO_DATA));
             }
@@ -199,7 +199,7 @@ public abstract class GankBaseFragment extends BaseFragment {
 
     protected Date getLastDate(){
         SharedPreferences preferences =
-                getContext().getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE);
+                mActivity.getSharedPreferences(getString(R.string.main_activity), MODE_PRIVATE);
         int year = preferences.getInt(getString(R.string.year), -1);
         if(year == -1)
             return null;
@@ -316,7 +316,7 @@ public abstract class GankBaseFragment extends BaseFragment {
                         startActivity(intent);
                         break;
                     default:
-                        intent.setClassName(getContext(), WebActivity.class.getName());
+                        intent.setClassName(mActivity, WebActivity.class.getName());
                         intent.putExtra("item", item);
                         startActivity(intent);
                         break;
@@ -358,7 +358,7 @@ public abstract class GankBaseFragment extends BaseFragment {
                     }else {
                         String text = getString(R.string.share_found)
                                 + "\n" + i.title + "\n" + i.url;
-                        Shares.share(getContext(), text);
+                        Shares.share(mActivity, text);
                     }
                     break;
                 case R.id.save_gank:

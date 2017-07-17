@@ -3,8 +3,6 @@ package com.lyc.gank.util;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.widget.Toast;
 
 /**

@@ -92,9 +92,9 @@ public class CollectFragment extends BaseFragment {
     }
 
     private void setRecyclerView() {
-        mAdapter = new CollectRecyclerAdapter(mItemList, getContext());
+        mAdapter = new CollectRecyclerAdapter(mItemList, mActivity);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.addItemDecoration(new ItemDecoration(mActivity, RecyclerView.HORIZONTAL));
         setOnItemListener();
     }
@@ -102,7 +102,7 @@ public class CollectFragment extends BaseFragment {
     @OnClick(R.id.fab_delete_select)
     public void delete(){
         fab.hide();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setCancelable(false);
         builder.setMessage(R.string.sure_to_delete);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

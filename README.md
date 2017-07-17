@@ -1,6 +1,6 @@
 ## 干货集中营Gank.io客户端
 ### 下载地址
-[百度网盘](http://pan.baidu.com/s/1sl4oamx)
+[百度网盘](http://pan.baidu.com/s/1c1UMF6K)
 >> 如果网盘挂了可以随时联系我
 >> 项目的app目录下有各版本的release版app，网盘只提供最新下载地址
 ---
@@ -72,8 +72,10 @@
 
 >> 如果您觉得不错想要支持我的话可以通过以下方式打赏
 
+#### wechat
 <img src="/wechat.png" title="wechat" width="270" height="270" />
 
+#### alipay
 <img src="/alipay.png" title="alipay" width="270" height="270" />
 
 ---

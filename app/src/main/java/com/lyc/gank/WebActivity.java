@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  */
 public class WebActivity extends AppCompatActivity {
 
-    ResultItem resultItem;
+    private ResultItem resultItem;
 
     @BindView(R.id.tool_bar_web)
     Toolbar toolbar;

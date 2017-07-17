@@ -79,9 +79,9 @@ public class GirlFragment extends GankDataFragment {
 
     private void setRecyclerView(View view) {
         mRecyclerView = ButterKnife.findById(view, R.id.recycler_view_girls);
-        mAdapter = new GirlRecyclerAdapter(mData, getContext());
+        mAdapter = new GirlRecyclerAdapter(mData, mActivity);
         adapter = mAdapter;
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
         mRecyclerView.setAdapter(mAdapter);
         super.setRecyclerView();
     }

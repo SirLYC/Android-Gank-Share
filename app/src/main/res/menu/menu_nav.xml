@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group>
         <group android:checkableBehavior="single"/>
         <item
             android:icon="@drawable/ic_recommend_nav"
@@ -28,9 +27,7 @@
             android:checkable="true"
             android:id="@+id/collect"
             android:title="收藏"/>
-    </group>
 
-    <group>
         <item
             android:icon="@drawable/ic_about_nav"
             android:id="@+id/about"
@@ -40,6 +37,4 @@
             android:icon="@drawable/ic_exit_nav"
             android:id="@+id/exit"
             android:title="退出"/>
-    </group>
-
 </menu>

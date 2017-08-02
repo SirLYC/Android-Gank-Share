@@ -24,6 +24,8 @@
     <string name="introduce">分享每日技术干货，精选妹子图，休息视频，感谢代码家提供数据接口，接口api文档：http://gank.io/api，还有正能量满满的金山词霸每日一句开放api:http://open.iciba.com/?c=api</string>
     <string name="github_title">项目地址</string>
     <string name="github">https://github.com/SirLYC/Android-Gank-Share\n完全开源，可随意copy，路过就顺带star一个呗~</string>
+    <string name="share_github">也可以点击这里直接把项目主页分享给你的朋友们~</string>
+    <string name="share_project_text">一款精美的应用推荐给你~\n项目主页：https://github.com/SirLYC/Android-Gank-Share</string>
     <string name="contact_me">联系我</string>
     <string name="email">邮箱：kevinliu.sir@qq.com</string>
     <string name="csdn_blog">csdn博客：http://blog.csdn.net/lycayf1</string>

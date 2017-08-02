@@ -12,7 +12,7 @@ import java.util.List;
  * 接收返回数据的实体类
  */
 
-public class ResultItem implements Serializable{
+public class ResultItem{
     @SerializedName("_id")
     public String idOnServer;
 

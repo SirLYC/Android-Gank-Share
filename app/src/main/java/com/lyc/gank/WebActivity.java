@@ -34,7 +34,13 @@ import butterknife.ButterKnife;
  */
 public class WebActivity extends AppCompatActivity {
 
-    private ResultItem resultItem;
+    private static final String KEY_URL = "url";
+
+    private static final String KEY_TITLE = "title";
+
+    private String url;
+
+    private String title;
 
     @BindView(R.id.tool_bar_web)
     Toolbar toolbar;
@@ -56,8 +62,7 @@ public class WebActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        Intent intent = getIntent();
-        resultItem = (ResultItem) intent.getSerializableExtra("item");
+        getUrlAndTitle();
         ActionBar actionbar = getSupportActionBar();
         if(actionbar != null){
             actionbar.setDisplayHomeAsUpEnabled(true);
@@ -101,9 +106,15 @@ public class WebActivity extends AppCompatActivity {
             }
         });
 
-        if(resultItem != null){
-            webView.loadUrl(resultItem.url);
+        if(url != null){
+            webView.loadUrl(url);
         }
+    }
+
+    private void getUrlAndTitle() {
+        Intent intent = getIntent();
+        url = intent.getStringExtra(KEY_URL);
+        title = intent.getStringExtra(KEY_TITLE);
     }
 
     @Override
@@ -120,7 +131,7 @@ public class WebActivity extends AppCompatActivity {
                 break;
             case R.id.web_share:
                 String text = getString(R.string.share_found)
-                        + "\n" + resultItem.title + "\n" + resultItem.url;
+                        + "\n" + title + "\n" + url;
                 Shares.share(this, text);
                 break;
             case R.id.web_refresh:
@@ -128,15 +139,15 @@ public class WebActivity extends AppCompatActivity {
                     webView.reload();
                 break;
             case R.id.web_copy:
-                String url = webView.getUrl();
+                String urlNow = webView.getUrl();
                 ClipboardManager clip = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-                clip.setPrimaryClip(ClipData.newPlainText(null, url));
+                clip.setPrimaryClip(ClipData.newPlainText(null, urlNow));
                 TipUtil.showShort(this, R.string.copy_success);
                 break;
             case R.id.web_launch:
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
-                Uri uri = Uri.parse(resultItem.url);
+                Uri uri = Uri.parse(url);
                 intent.setData(uri);
                 startActivity(intent);
                 break;
@@ -188,5 +199,12 @@ public class WebActivity extends AppCompatActivity {
             webView.destroy();
         }
         super.onDestroy();
+    }
+
+    public static Intent getIntent(Context context, String url, String title){
+        Intent intent = new Intent(context, WebActivity.class);
+        intent.putExtra(KEY_URL, url);
+        intent.putExtra(KEY_TITLE, title);
+        return intent;
     }
 }

@@ -11,6 +11,10 @@ import android.view.View;
 import com.lyc.gank.PhotoActivity;
 import com.lyc.gank.R;
 
+import butterknife.Unbinder;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 /**
  * 本项目所有fragment的基类
  * 建立activity全局引用，防止activity重建后的内存泄漏
@@ -18,6 +22,10 @@ import com.lyc.gank.R;
 
 public class BaseFragment extends Fragment{
     protected AppCompatActivity mActivity;
+
+    protected Unbinder mUnbinder;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     public void onAttach(Context context) {
@@ -41,5 +49,26 @@ public class BaseFragment extends Fragment{
             e.printStackTrace();
             startActivity(intent);
         }
+    }
+
+    protected void addDisposable(Disposable disposable){
+        if(mCompositeDisposable == null){
+            mCompositeDisposable = new CompositeDisposable();
+        }
+        if(disposable != null) {
+            mCompositeDisposable.add(disposable);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if(mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
+        }
+        if(mUnbinder != null){
+            mUnbinder.unbind();
+        }
+        super.onDestroyView();
     }
 }

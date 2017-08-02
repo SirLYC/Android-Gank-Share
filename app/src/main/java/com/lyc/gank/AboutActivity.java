@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.lyc.gank.api.BingPicApi;
 import com.lyc.gank.api.RetrofitFactory;
 import com.lyc.gank.bean.EveryDayAWord;
+import com.lyc.gank.util.Shares;
 import com.lyc.gank.util.TimeUtil;
 
 import java.util.Calendar;
@@ -30,6 +31,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -48,6 +51,8 @@ public class AboutActivity extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbarLayout;
 
     private BingPicApi mBingPicApi = RetrofitFactory.getBingPicApi();
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private String KEY_URL = "url";
 
@@ -106,7 +111,8 @@ public class AboutActivity extends AppCompatActivity {
                                 .error(R.drawable.bg_about_default)
                                 .into(imageView);
                     }
-                }).observeOn(Schedulers.io())
+                })
+                .observeOn(Schedulers.io())
                 .doOnNext(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
@@ -114,7 +120,16 @@ public class AboutActivity extends AppCompatActivity {
                         url = s;
                         saveData();
                     }
-                }).subscribe(new Consumer<String>() {
+                })
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        if(compositeDisposable != null && disposable != null) {
+                            compositeDisposable.add(disposable);
+                        }
+                    }
+                })
+                .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {}
                 }, new Consumer<Throwable>() {
@@ -133,8 +148,13 @@ public class AboutActivity extends AppCompatActivity {
         return true;
     }
 
+    @OnClick(R.id.text_share_github)
+    void shareGithub(){
+        Shares.share(this, R.string.share_project_text);
+    }
+
     @OnClick(R.id.fab_about_contact_by_qq)
-    public void contactWithMeByQQ(){
+    void contactWithMeByQQ(){
         String url11 = "mqqwpa://im/chat?chat_type=wpa&uin=972694341&version=1";
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url11)));
     }
@@ -174,5 +194,14 @@ public class AboutActivity extends AppCompatActivity {
         editor.putInt(getString(R.string.minute), calendar.get(Calendar.MINUTE));
         editor.putInt(getString(R.string.second), calendar.get(Calendar.SECOND));
         editor.apply();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(compositeDisposable != null){
+            compositeDisposable.dispose();
+            compositeDisposable.clear();
+        }
+        super.onDestroy();
     }
 }

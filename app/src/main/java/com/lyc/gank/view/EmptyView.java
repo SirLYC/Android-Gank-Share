@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.lyc.gank.R;
 
+import org.litepal.LitePalApplication;
+
 import butterknife.ButterKnife;
 
 /**
@@ -22,7 +24,6 @@ public class EmptyView {
 
     public static class Builder{
         private EmptyView emptyView;
-        private Context context;
         private ViewGroup parent;
         private String emptyHint;
         private String buttonText;
@@ -32,17 +33,12 @@ public class EmptyView {
             emptyView = new EmptyView();
         }
 
-        public Builder with(Context context){
-            this.context = context;
-            return this;
-        }
-
         public Builder parent(ViewGroup parent){
             this.parent = parent;
             return this;
         }
         public Builder emptyHint(@StringRes int resId){
-            return emptyHint(context.getString(resId));
+            return emptyHint(LitePalApplication.getContext().getString(resId));
         }
 
         public Builder emptyHint(String emptyHint){
@@ -51,7 +47,7 @@ public class EmptyView {
         }
 
         public Builder buttonText(@StringRes int resId) {
-            return buttonText(context.getString(resId));
+            return buttonText(LitePalApplication.getContext().getString(resId));
         }
 
         public Builder buttonText(String buttonText){
@@ -68,10 +64,7 @@ public class EmptyView {
             if(parent == null)
                 throw new IllegalArgumentException("No parent viewGroup");
 
-            if(context == null)
-                throw new IllegalStateException("No context");
-
-            emptyView.view = LayoutInflater.from(context)
+            emptyView.view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.empty_view, parent, false);
             TextView textView = ButterKnife.findById(emptyView.view, R.id.text_empty_hint);
             textView.setText(emptyHint);

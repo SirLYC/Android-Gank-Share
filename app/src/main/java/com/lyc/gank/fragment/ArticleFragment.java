@@ -22,7 +22,9 @@ public class ArticleFragment extends GankDataFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_article, container, false);
+        if(view == null) {
+            view = inflater.inflate(R.layout.fragment_article, container, false);
+        }
         mRecyclerView = ButterKnife.findById(view, R.id.recycler_view_article);
         setRecyclerView();
         return view;

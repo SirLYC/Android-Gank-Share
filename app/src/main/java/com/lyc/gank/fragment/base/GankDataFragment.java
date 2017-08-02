@@ -11,6 +11,7 @@ import com.lyc.gank.R;
 import com.lyc.gank.bean.Results;
 import com.lyc.gank.util.TimeUtil;
 
+import java.io.IOException;
 import java.util.Date;
 
 import io.reactivex.Observer;
@@ -135,7 +136,6 @@ public class GankDataFragment extends GankBaseFragment {
                         return !results.resultItems.get(0).idOnServer.equals(lastIdOnServer);
                     }
                 })
-                .observeOn(Schedulers.io())
                 .doOnNext(new Consumer<Results>() {
                     @Override
                     public void accept(Results results) throws Exception {
@@ -153,6 +153,7 @@ public class GankDataFragment extends GankBaseFragment {
                 .subscribe(new Observer<Results>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        addDisposable(d);
                         if(mOnLoadListener != null) {
                             mOnLoadListener.onStart();
                         }
@@ -173,7 +174,9 @@ public class GankDataFragment extends GankBaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        showNoInternetEmptyView(true);
+                        if(view != null && e instanceof IOException) {
+                            showNoInternetEmptyView(true);
+                        }
                         needRefresh = true;
                         if(mOnLoadListener != null) {
                             mOnLoadListener.onFailed();

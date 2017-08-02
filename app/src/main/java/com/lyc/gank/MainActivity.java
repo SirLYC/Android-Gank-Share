@@ -429,6 +429,8 @@ public class MainActivity extends AppCompatActivity {
         ((GirlFragment)mFragmentList.get(2)).refresh();
     }
 
+
+
     @Override
     protected void onDestroy() {
         if(timeReceiver != null){

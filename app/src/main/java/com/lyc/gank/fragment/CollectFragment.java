@@ -43,6 +43,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -83,7 +84,7 @@ public class CollectFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_collect, container, false);
-        ButterKnife.bind(this, view);
+        mUnbinder = ButterKnife.bind(this, view);
         initToolbar();
         setRecyclerView();
         isPrepared = true;
@@ -123,8 +124,7 @@ public class CollectFragment extends BaseFragment {
     private void showEmptyView(boolean show){
         if(emptyView == null){
             EmptyView.Builder builder = new EmptyView.Builder();
-            emptyView = builder.with(mActivity)
-                    .parent(parent)
+            emptyView = builder.parent(parent)
                     .emptyHint(R.string.empty_hint_collect)
                     .buttonText(R.string.go_to_category)
                     .listener(new EmptyView.onClickListener() {
@@ -176,19 +176,28 @@ public class CollectFragment extends BaseFragment {
     }
 
     private void loadData(){
-        Observable.create(new ObservableOnSubscribe<List<CollectItem>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<CollectItem>> e) throws Exception {
-                mItemList.clear();
-                e.onNext(DataSupport.findAll(CollectItem.class));
-            }
-        }).map(new Function<List<CollectItem>, Boolean>() {
-            @Override
-            public Boolean apply(List<CollectItem> items) throws Exception {
-                return items != null && items.size() > 0
-                        && mItemList.addAll(items);
-            }
-        }).subscribeOn(Schedulers.io())
+        Observable
+                .create(new ObservableOnSubscribe<List<CollectItem>>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<List<CollectItem>> e) throws Exception {
+                        mItemList.clear();
+                        e.onNext(DataSupport.findAll(CollectItem.class));
+                    }
+                })
+                .map(new Function<List<CollectItem>, Boolean>() {
+                    @Override
+                    public Boolean apply(List<CollectItem> items) throws Exception {
+                        return items != null && items.size() > 0
+                                && mItemList.addAll(items);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        addDisposable(disposable);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Boolean>() {
                     @Override
@@ -230,8 +239,7 @@ public class CollectFragment extends BaseFragment {
                                     });
                             break;
                         default:
-                            intent.setClass(mActivity, WebActivity.class);
-                            intent.putExtra("item", item);
+                            intent = WebActivity.getIntent(mActivity, item.url, item.title);
                             startActivity(intent);
                             break;
                     }

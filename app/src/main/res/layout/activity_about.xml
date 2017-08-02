@@ -73,6 +73,11 @@
                 style="@style/AboutContentText"
                 android:text="@string/github"/>
 
+            <TextView
+                android:id="@+id/text_share_github"
+                style="@style/AboutContentText"
+                android:text="@string/share_github"/>
+
             <View style="@style/AboutDecorator"/>
 
             <!--联系我-->

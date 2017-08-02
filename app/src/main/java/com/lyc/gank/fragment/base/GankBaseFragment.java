@@ -26,11 +26,11 @@ import com.lyc.gank.MainActivity;
 import com.lyc.gank.R;
 import com.lyc.gank.WebActivity;
 import com.lyc.gank.adapter.BaseRecyclerAdapter;
-import com.lyc.gank.bean.ResultItem;
-import com.lyc.gank.bean.Results;
-import com.lyc.gank.bean.CollectItem;
 import com.lyc.gank.api.GankIoApi;
 import com.lyc.gank.api.RetrofitFactory;
+import com.lyc.gank.bean.CollectItem;
+import com.lyc.gank.bean.ResultItem;
+import com.lyc.gank.bean.Results;
 import com.lyc.gank.fragment.GirlFragment;
 import com.lyc.gank.util.ImageSave;
 import com.lyc.gank.util.Shares;
@@ -53,7 +53,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -114,8 +113,7 @@ public abstract class GankBaseFragment extends BaseFragment {
     protected void showNoInternetEmptyView(boolean show){
         if(noInternetEmptyView == null){
             EmptyView.Builder builder = new EmptyView.Builder();
-            noInternetEmptyView = builder.with(mActivity)
-                    .parent((ViewGroup) view)
+            noInternetEmptyView = builder.parent((ViewGroup) view)
                     .emptyHint(R.string.empty_hint_internet)
                     .buttonText(R.string.refresh)
                     .listener(new EmptyView.onClickListener() {
@@ -151,48 +149,32 @@ public abstract class GankBaseFragment extends BaseFragment {
                         .getSharedPreferences(type, Context.MODE_PRIVATE);
                 e.onNext(preferences.getString(KEY_DATA, NO_DATA));
             }
-        }).filter(new Predicate<String>() {
+        }).subscribeOn(Schedulers.io())
+        .map(new Function<String, Boolean>() {
             @Override
-            public boolean test(String s) throws Exception {
-                return hasLocalData = !s.equals(NO_DATA);
+            public Boolean apply(String json) throws Exception {
+                List<ResultItem> list = new Gson().fromJson(json, Results.class).resultItems;
+                if(list != null && list.size() > 0){
+                    mData.addAll(list);
+                    return hasLocalData = true;
+                }
+                return hasLocalData = false;
             }
-        }).map(new Function<String, Results>() {
-            @Override
-            public Results apply(String json) throws Exception {
-                return new Gson().fromJson(json, Results.class);
-            }
-        }).observeOn(Schedulers.io())
-                .filter(new Predicate<Results>() {
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public boolean test(Results results) throws Exception {
-                        return results != null
-                                    && results.resultItems != null
-                                    && results.resultItems.size() > 0;
-                    }
-                })
-                .doOnNext(new Consumer<Results>() {
-                    @Override
-                    public void accept(Results results) throws Exception {
-                        mData.addAll(results.resultItems);
-                        lastIdOnServer = mData.get(0).idOnServer;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Results>() {
-                    @Override
-                    public void accept(Results r) throws Exception {
-                        adapter.notifyDataSetChanged();
-                        Log.e(toString(), mData.size() + "");
-                        hasLocalData = true;
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        hasLocalData =false;
+                        hasLocalData = false;
                     }
                 });
 
-        Log.e(type, "has" + hasLocalData);
         return hasLocalData;
     }
 
@@ -304,7 +286,6 @@ public abstract class GankBaseFragment extends BaseFragment {
                             public void onSuccess() {
                                 startPhotoActivity(v, item.url, item.publishTime);
                             }
-
                             @Override
                             public void onError() {}
                         });
@@ -316,8 +297,7 @@ public abstract class GankBaseFragment extends BaseFragment {
                         startActivity(intent);
                         break;
                     default:
-                        intent.setClassName(mActivity, WebActivity.class.getName());
-                        intent.putExtra("item", item);
+                        intent = WebActivity.getIntent(mActivity, item.url, item.title);
                         startActivity(intent);
                         break;
                 }

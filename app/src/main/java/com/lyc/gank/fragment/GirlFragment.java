@@ -38,9 +38,11 @@ public class GirlFragment extends GankDataFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_girls, container, false);
+        if(view == null) {
+            view = inflater.inflate(R.layout.fragment_girls, container, false);
+        }
         type = "福利";
-        ButterKnife.bind(this, view);
+        mUnbinder = ButterKnife.bind(this, view);
         setRefreshLayout();
         setRecyclerView(view);
         ((MainActivity)mActivity).initToolbar(toolbar, "妹子图");

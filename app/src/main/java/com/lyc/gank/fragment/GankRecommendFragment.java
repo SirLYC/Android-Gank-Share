@@ -20,6 +20,7 @@ import com.lyc.gank.R;
 import com.lyc.gank.fragment.base.GankBaseFragment;
 import com.lyc.gank.util.TimeUtil;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +53,10 @@ public class GankRecommendFragment extends GankBaseFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_recommend, container, false);
-        ButterKnife.bind(this, view);
+        if(view == null) {
+            view = inflater.inflate(R.layout.fragment_recommend, container, false);
+        }
+        mUnbinder = ButterKnife.bind(this, view);
         type = "推荐";
         ((MainActivity)mActivity).initToolbar(toolbar, "今日推荐");
         mRecyclerView = ButterKnife.findById(view, R.id.recycler_view_recommend);
@@ -126,7 +129,10 @@ public class GankRecommendFragment extends GankBaseFragment {
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        refreshLayout.setRefreshing(true);
+                        addDisposable(disposable);
+                        if(refreshLayout != null) {
+                            refreshLayout.setRefreshing(true);
+                        }
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -169,8 +175,12 @@ public class GankRecommendFragment extends GankBaseFragment {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Log.e(type, throwable.toString());
-                        refreshLayout.setRefreshing(false);
-                        showNoInternetEmptyView(true);
+                        if(refreshLayout != null) {
+                            refreshLayout.setRefreshing(false);
+                        }
+                        if(throwable instanceof IOException && view != null) {
+                            showNoInternetEmptyView(true);
+                        }
                         needRefresh = true;
                         Snackbar.make(mRecyclerView, R.string.internet_exception, Snackbar.LENGTH_SHORT)
                                 .setAction(R.string.retry, new View.OnClickListener() {

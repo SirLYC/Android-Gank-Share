@@ -59,7 +59,7 @@ public class CategoryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
-        ButterKnife.bind(this, view);
+        mUnbinder = ButterKnife.bind(this, view);
         init();
         ((MainActivity)getActivity()).initToolbar(toolbar, "分类干货");
         setViewPager();
@@ -133,17 +133,23 @@ public class CategoryFragment extends BaseFragment {
             fragment.setOnLoadListener(new GankDataFragment.OnLoadListener() {
                 @Override
                 public void onStart() {
-                    refreshLayout.setRefreshing(true);
+                    if(refreshLayout != null) {
+                        refreshLayout.setRefreshing(true);
+                    }
                 }
 
                 @Override
                 public void onFinish() {
-                    refreshLayout.setRefreshing(false);
+                    if(refreshLayout != null) {
+                        refreshLayout.setRefreshing(false);
+                    }
                 }
 
                 @Override
                 public void onFailed() {
-                    refreshLayout.setRefreshing(false);
+                    if(refreshLayout != null) {
+                        refreshLayout.setRefreshing(false);
+                    }
                 }
             });
         }

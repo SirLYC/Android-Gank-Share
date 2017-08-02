@@ -99,7 +99,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration{
             final View child = parent.getChildAt(i);
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) child.getLayoutParams();
             final int top = child.getBottom() + layoutParams.bottomMargin;
-            final int bottom = top + 1;
+            final int bottom = top + mDividerHeight;
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
         }

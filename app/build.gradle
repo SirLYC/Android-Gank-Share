@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.lyc.gank"
         minSdkVersion 14
@@ -47,4 +47,6 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxjava:2.0.2'
     compile 'org.reactivestreams:reactive-streams:1.0.0'
     compile 'com.squareup.retrofit2:converter-scalars:2.0.0'
+    compile "com.github.VictorAlbertos.RxCache:runtime:1.8.1-2.x"
+    compile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3'
 }

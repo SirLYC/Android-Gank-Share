@@ -47,6 +47,9 @@
     <string name="data">data</string>
     <string name="photo">photo</string>
     <string name="database">recommend</string>
+    <string name="full_screen">全屏浏览</string>
+    <string name="copy_url">复制地址</string>
+    <string name="launch_browser">浏览器打开</string>
     <string name="reference">该项目部分内容参考至GankMeizhi项目，如主题配色，单张图片展示以及保存图片工具等。GankMeizhi是一个很值得学习的优秀项目，在这里送上地址：https://github.com/drakeet/Meizhi</string>
 
     <!--第三方库-->

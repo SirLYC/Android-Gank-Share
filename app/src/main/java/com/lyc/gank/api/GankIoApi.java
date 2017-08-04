@@ -16,5 +16,5 @@ public interface GankIoApi {
     Observable<Results> getDataResults(@Path("type") String type, @Path("count") int count, @Path("page") int page);
 
     @GET("day/{dateString}")
-    Observable<RecommendResults> getReconmmendResults(@Path("dateString") String date);
+    Observable<RecommendResults> getRecommendResults(@Path("dateString") String date);
 }

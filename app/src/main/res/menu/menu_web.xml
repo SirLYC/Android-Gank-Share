@@ -3,29 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="刷新"
+        android:title="@string/refresh"
         android:icon="@drawable/ic_refresh"
         android:id="@+id/web_refresh"
         app:showAsAction="always"/>
 
     <item
-        android:title="全屏浏览"
+        android:title="@string/full_screen"
         android:id="@+id/web_full_screen"
         app:showAsAction="never"/>
 
     <item
-        android:title="分享"
+        android:title="@string/share"
         android:id="@+id/web_share"
         app:showAsAction="never" />
 
     <item
-        android:title="复制地址"
+        android:title="@string/copy_url"
         android:id="@+id/web_copy"
         app:showAsAction="never"
         />
 
     <item
-        android:title="浏览器打开"
+        android:title="@string/launch_browser"
         android:id="@+id/web_launch"
         app:showAsAction="never"/>
 </menu>

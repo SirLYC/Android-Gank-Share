@@ -101,7 +101,7 @@ public class GankRecommendFragment extends GankBaseFragment {
     }
 
     private void loadData(){
-        gankIoApi.getReconmmendResults(TimeUtil.getDateString(mDate))
+        gankIoApi.getRecommendResults(TimeUtil.getDateString(mDate))
                 .subscribeOn(Schedulers.io())
                 .map(new Function<RecommendResults, List<ResultItem>>() {
                     @Override

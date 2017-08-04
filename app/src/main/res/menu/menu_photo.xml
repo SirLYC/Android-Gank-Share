@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/share_photo"
-        android:title="分享"
-        android:orderInCategory="100"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_share"/>
-
-    <item
         android:id="@+id/save_photo"
-        android:title="保存"
+        android:title="@string/save_img_success"
         android:orderInCategory="99"
         app:showAsAction="always"
         android:icon="@drawable/ic_save"/>
+
+    <item
+        android:id="@+id/share_photo"
+        android:title="@string/share"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_share"/>
 </menu>

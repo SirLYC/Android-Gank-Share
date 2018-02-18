@@ -88,4 +88,14 @@ public class TimeUtil {
         int dayLast = calendar.get(Calendar.DAY_OF_MONTH);
         return dayNow != dayLast;
     }
+
+    public static String publishTime(String utcTime){
+        if(utcTime == null)
+            return null;
+
+        if(utcTime.length() < 10)
+            return utcTime;
+
+        return utcTime.substring(0, 10);
+    }
 }

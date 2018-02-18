@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+
+apply plugin: 'kotlin-android'
+
+def config = rootProject.ext.config
+def deps = rootProject.ext.deps
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation deps['kotlin-stdlib']
+
+    implementation deps['annotations']
+
+    testImplementation deps['junit']
+    testImplementation deps['mockito-core']
+    testImplementation deps['mockito-inline']
+
+    androidTestImplementation deps['runner']
+    androidTestImplementation deps['espresso']
+    androidTestImplementation deps['mockito-android']
+
+    implementation deps['lifecycle-extensions']
+    annotationProcessor deps['lifecycle-compiler']
+
+    implementation deps['gson']
+
+    implementation deps['okhttp']
+    implementation deps['okhttp-logging']
+
+    implementation deps['retrofit']
+    implementation deps['retrofit-gson']
+    implementation deps['retrofit-rxjava2']
+
+    implementation deps['rxandroid']
+}

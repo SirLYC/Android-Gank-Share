@@ -1,14 +1,19 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+def config = rootProject.ext.config
+def deps = rootProject.ext.deps
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.1"
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
     defaultConfig {
         applicationId "com.lyc.gank"
-        minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 4
-        versionName "2.2.1"
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk { abiFilters "armeabi", "armeabi-v7a", "x86", "mips" }
     }
@@ -18,35 +23,48 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions{
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    implementation project(':data')
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/tbs_sdk_thirdapp_v3.1.0.1034_43100_sharewithdownload_obfs_20170301_182143.jar')
-    compile files('libs/tbs_sdk_thirdapp_v3.1.0.1034_43100_sharewithdownload_obfs_20170301_182143.jar')
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'org.litepal.android:core:1.5.0'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
-    testCompile 'junit:junit:4.12'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.0'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.2'
-    compile 'org.reactivestreams:reactive-streams:1.0.0'
-    compile 'com.squareup.retrofit2:converter-scalars:2.0.0'
-    compile "com.github.VictorAlbertos.RxCache:runtime:1.8.1-2.x"
-    compile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3'
+
+    testImplementation deps['junit']
+    testImplementation deps['mockito-core']
+    testImplementation deps['mockito-inline']
+
+    androidTestImplementation deps['runner']
+    androidTestImplementation deps['espresso']
+    androidTestImplementation deps['mockito-android']
+
+    implementation deps['kotlin-stdlib']
+
+    implementation deps['appcompat']
+    implementation deps['constraint-layout']
+    implementation deps['design']
+    implementation deps['cardview']
+
+    implementation deps['glide']
+    annotationProcessor deps['glide-compiler']
+
+    implementation deps['lifecycle-extensions']
+    annotationProcessor deps['lifecycle-compiler']
+
+    implementation deps['rxandroid']
+
+    implementation deps['gson']
+
+    implementation deps['litepal']
+
+    implementation deps['multitype']
+
+    implementation deps['picasso']
+    implementation deps['photoview']
 }

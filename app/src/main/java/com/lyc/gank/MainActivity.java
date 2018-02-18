@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -27,8 +26,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.lyc.gank.adapter.MainPagerAdapter;
-import com.lyc.gank.api.JinshanApi;
-import com.lyc.gank.api.RetrofitFactory;
 import com.lyc.gank.bean.EveryDayAWord;
 import com.lyc.gank.fragment.CategoryFragment;
 import com.lyc.gank.fragment.CollectFragment;
@@ -46,8 +43,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -57,7 +52,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.drawer_main)
+    @BindView(R.id.dl_main)
     DrawerLayout mDrawer;
 
     @BindView(R.id.nav_main)

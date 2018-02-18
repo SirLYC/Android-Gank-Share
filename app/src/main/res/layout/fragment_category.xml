@@ -16,8 +16,6 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="enterAlways|scroll">
         </android.support.v7.widget.Toolbar>
-
-
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout

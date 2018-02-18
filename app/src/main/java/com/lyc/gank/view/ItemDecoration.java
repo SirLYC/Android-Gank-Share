@@ -9,6 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import static com.lyc.gank.view.ItemDecoration.Orientation.HORIZONTAL;
+
 /**
  * 一个简单的recyclerView的item分割线
  * 支持横向纵向，支持自定义分割线（Drawable）
@@ -17,15 +22,18 @@ import android.view.View;
  */
 
 public class ItemDecoration extends RecyclerView.ItemDecoration{
+    @Retention(RetentionPolicy.SOURCE)
+    public  @interface Orientation{
+        int HORIZONTAL = RecyclerView.HORIZONTAL;
+
+        int VERTICAL = RecyclerView.VERTICAL;
+    }
+
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
     };
 
-    private final int HORIZONTAL = RecyclerView.HORIZONTAL;
-
-    private final int VERTICAL = RecyclerView.VERTICAL;
-
-    private int mOrientation;
+    private @Orientation int mOrientation;
 
     private int mDividerHeight = 1;
 
@@ -51,10 +59,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration{
         setOrientation(orientation);
     }
 
-    private void setOrientation(int orientation){
-        if(mOrientation != HORIZONTAL && mOrientation != VERTICAL){
-            throw new IllegalArgumentException("invalid orientation");
-        }
+    private void setOrientation(@Orientation int orientation){
         mOrientation = orientation;
     }
 

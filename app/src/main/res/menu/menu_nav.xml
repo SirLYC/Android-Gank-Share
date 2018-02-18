@@ -6,7 +6,7 @@
             android:checkable="true"
             android:checked="true"
             android:id="@+id/recommend"
-            android:title="今日推荐"/>
+            android:title="首页"/>
 
         <item
             android:icon="@drawable/ic_category_nav"

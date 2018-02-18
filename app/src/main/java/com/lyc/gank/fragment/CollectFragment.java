@@ -177,34 +177,18 @@ public class CollectFragment extends BaseFragment {
 
     private void loadData(){
         Observable
-                .create(new ObservableOnSubscribe<List<CollectItem>>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<List<CollectItem>> e) throws Exception {
-                        mItemList.clear();
-                        e.onNext(DataSupport.findAll(CollectItem.class));
-                    }
+                .create((ObservableOnSubscribe<List<CollectItem>>) e -> {
+                    mItemList.clear();
+                    e.onNext(DataSupport.findAll(CollectItem.class));
                 })
-                .map(new Function<List<CollectItem>, Boolean>() {
-                    @Override
-                    public Boolean apply(List<CollectItem> items) throws Exception {
-                        return items != null && items.size() > 0
-                                && mItemList.addAll(items);
-                    }
-                })
+                .map(items -> items != null && items.size() > 0
+                        && mItemList.addAll(items))
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        addDisposable(disposable);
-                    }
-                })
+                .doOnSubscribe(disposable -> addDisposable(disposable))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
-                        showEmptyView(!aBoolean);
-                        mAdapter.notifyDataSetChanged();
-                    }
+                .subscribe(aBoolean -> {
+                    showEmptyView(!aBoolean);
+                    mAdapter.notifyDataSetChanged();
                 });
     }
 

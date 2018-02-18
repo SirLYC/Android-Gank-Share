@@ -3,8 +3,12 @@
     <color name="colorPrimary">#432e2a</color>
     <color name="colorPrimaryDark">#2d1e1b</color>
     <color name="colorAccent">#d84315</color>
+
     <color name="textPrimary">#212121</color>
     <color name="textSecondary">#757575</color>
     <color name="super_light_grey">#d3d3d3</color>
+
+
     <color name="white">#ffffff</color>
+    <color name="pb_loading">@color/colorAccent</color>
 </resources>

@@ -62,4 +62,10 @@
     <string name="litepal">https://github.com/LitePalFramework/LitePal#latest-downloads/</string>
     <string name="photoview">https://github.com/chrisbanes/PhotoView</string>
     <string name="butterknife">http://jakewharton.github.io/butterknife/</string>
+    <string name="desc_article_item_image">article item image</string>
+
+    <string name="error_refresh_fail">刷新失败</string>
+    <string name="action_retry">重试</string>
+    <string name="action_load_error_retry">加载失败，点击重试</string>
+    <string name="tip_no_more">没有更多了</string>
 </resources>

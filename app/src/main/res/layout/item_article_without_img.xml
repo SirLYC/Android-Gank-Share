@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:minHeight="70dp"
+    android:orientation="vertical"
+    android:padding="@dimen/item_padding">
+
     <TextView
-        android:id="@+id/text_title"
-        style="@style/titleTextStyle"
+        android:id="@+id/tv_article_item_title"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/textPrimary"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintBottom_toTopOf="@+id/tv_article_item_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="title" />
+
+    <TextView
+        android:id="@+id/tv_article_item_info"
         android:layout_width="match_parent"
-        android:layout_height="60dp" />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            style="@style/bottomTextStyle"
-            android:id="@+id/text_type"/>
-        <TextView
-            style="@style/bottomTextStyle"
-            android:id="@+id/text_publish_time"/>
-        <TextView
-            style="@style/bottomTextStyle"
-            android:id="@+id/text_author"/>
-    </LinearLayout>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:textColor="@color/textSecondary"
+        android:textSize="@dimen/font_small"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="parent"
+        tools:text="Android 2018-2-17 liu" />
+</android.support.constraint.ConstraintLayout>

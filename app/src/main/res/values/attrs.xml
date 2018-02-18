@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LoadingProgressBar">
+        <attr name="color" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="LoadRetryView">
+        <attr name="loadLayout" format="reference" />
+        <attr name="retryLayout" format="reference" />
+        <attr name="loadHideDelay" format="boolean" />
+    </declare-styleable>
+</resources>

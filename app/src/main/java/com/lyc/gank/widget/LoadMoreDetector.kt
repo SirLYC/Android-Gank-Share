@@ -22,7 +22,6 @@ abstract class LoadMoreDetector : RecyclerView.OnScrollListener() {
                 is StaggeredGridLayoutManager -> StaggeredGridLoadMoreDetector(lm, callback)
                 else -> throw IllegalArgumentException("not support LayoutManager: ${lm.javaClass}")
             }.also {
-                recyclerView.removeOnScrollListener(it)
                 recyclerView.addOnScrollListener(it)
             }
         }

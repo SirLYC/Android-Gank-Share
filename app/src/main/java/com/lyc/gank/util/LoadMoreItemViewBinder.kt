@@ -11,11 +11,11 @@ import me.drakeet.multitype.ItemViewBinder
  * Created by Liu Yuchuan on 2018/2/18.
  */
 
-class LoadMoreItemViewBinder : ItemViewBinder<LoadMoreItem, LoadMoreItemViewBinder.ViewHolder>() {
+object LoadMoreItemViewBinder : ItemViewBinder<LoadMoreItem, LoadMoreItemViewBinder.ViewHolder>() {
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup)
             = ViewHolder(inflater.inflate(R.layout.item_load_more, parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, item: LoadMoreItem) = Unit
+    override fun onBindViewHolder(holder: ViewHolder, item: LoadMoreItem) {}
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 }

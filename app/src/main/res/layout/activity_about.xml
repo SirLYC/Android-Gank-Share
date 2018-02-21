@@ -51,106 +51,106 @@
 
             <!--介绍-->
 
-            <TextView
-                style="@style/AboutTitleText"
-                android:text="@string/introduce_title" />
+            <!--<TextView-->
+                <!--style="@style/AboutTitleText"-->
+                <!--android:text="@string/introduce_title" />-->
 
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/introduce"/>
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/introduce"/>-->
 
-            <View style="@style/AboutDecorator"/>
+            <!--<View style="@style/AboutDecorator"/>-->
 
-            <!--项目地址-->
-            <TextView
-                style="@style/AboutTitleText"
-                android:text="@string/github_title" />
-
-
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/github"/>
-
-            <TextView
-                android:id="@+id/text_share_github"
-                style="@style/AboutContentText"
-                android:text="@string/share_github"/>
-
-            <View style="@style/AboutDecorator"/>
-
-            <!--联系我-->
-            <TextView
-                style="@style/AboutTitleText"
-                android:text="@string/contact_me" />
+            <!--&lt;!&ndash;项目地址&ndash;&gt;-->
+            <!--<TextView-->
+                <!--style="@style/AboutTitleText"-->
+                <!--android:text="@string/github_title" />-->
 
 
-            <TextView
-                android:autoLink="email"
-                style="@style/AboutContentText"
-                android:text="@string/email"/>
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/github"/>-->
 
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/csdn_blog"/>
+            <!--<TextView-->
+                <!--android:id="@+id/text_share_github"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/share_github"/>-->
 
-            <TextView
-                style="@style/AboutContentText"
-                android:text="@string/contact_by_qq"
-                />
+            <!--<View style="@style/AboutDecorator"/>-->
 
-            <View style="@style/AboutDecorator"/>
+            <!--&lt;!&ndash;联系我&ndash;&gt;-->
+            <!--<TextView-->
+                <!--style="@style/AboutTitleText"-->
+                <!--android:text="@string/contact_me" />-->
 
-            <!--开源库-->
-            <TextView
-                style="@style/AboutTitleText"
-                android:text="@string/dependencies_title" />
 
-            <TextView
-                style="@style/AboutContentText"
-                android:text="@string/dependencies"/>
+            <!--<TextView-->
+                <!--android:autoLink="email"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/email"/>-->
 
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/glide"/>
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/retrofit"/>
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/rxjava"/>
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/gson"/>
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/okhttp"/>
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/picasso"/>
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/litepal"/>
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/photoview"/>
-            <TextView
-                style="@style/AboutContentText"
-                android:text="@string/butterknife"/>
-            <TextView
-                android:autoLink="web"
-                style="@style/AboutContentText"
-                android:text="@string/reference"/>
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/csdn_blog"/>-->
+
+            <!--<TextView-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/contact_by_qq"-->
+                <!--/>-->
+
+            <!--<View style="@style/AboutDecorator"/>-->
+
+            <!--&lt;!&ndash;开源库&ndash;&gt;-->
+            <!--<TextView-->
+                <!--style="@style/AboutTitleText"-->
+                <!--android:text="@string/dependencies_title" />-->
+
+            <!--<TextView-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/dependencies"/>-->
+
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/glide"/>-->
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/retrofit"/>-->
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/rxjava"/>-->
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/gson"/>-->
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/okhttp"/>-->
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/picasso"/>-->
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/litepal"/>-->
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/photoview"/>-->
+            <!--<TextView-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/butterknife"/>-->
+            <!--<TextView-->
+                <!--android:autoLink="web"-->
+                <!--style="@style/AboutContentText"-->
+                <!--android:text="@string/reference"/>-->
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

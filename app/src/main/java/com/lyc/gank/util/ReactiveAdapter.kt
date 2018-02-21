@@ -13,7 +13,7 @@ import me.drakeet.multitype.MultiTypeAdapter
  */
 class ReactiveAdapter(
         private val dataList: ObservableList<Any>
-): MultiTypeAdapter(), ListUpdateCallback{
+): MultiTypeAdapter(dataList), ListUpdateCallback{
 
     override fun onChanged(position: Int, count: Int, payload: Any?) = notifyItemChanged(position)
     override fun onMoved(fromPosition: Int, toPosition: Int) = notifyItemMoved(fromPosition, toPosition)
@@ -29,6 +29,7 @@ class ReactiveAdapter(
         fragment.fragmentManager!!.registerFragmentLifecycleCallbacks(ReactiveFragmentRegistry(fragment), false)
         dataList.addCallback(this)
     }
+
 
     inner class ReactiveActivityRegistry(
             private val activity: Activity

@@ -8,15 +8,15 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/text_title"
-            style="@style/titleTextStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
-        <ImageView
-            style="@style/ItemImgStyle"
-            android:id="@+id/item_img" />
+        <!--<TextView-->
+            <!--android:id="@+id/text_title"-->
+            <!--style="@style/titleTextStyle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="wrap_content" />-->
+        <!--<ImageView-->
+            <!--style="@style/ItemImgStyle"-->
+            <!--android:id="@+id/item_img" />-->
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -27,15 +27,15 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content">
-            <TextView
-                style="@style/bottomTextStyle"
-                android:id="@+id/text_type"/>
-            <TextView
-                style="@style/bottomTextStyle"
-                android:id="@+id/text_publish_time"/>
-            <TextView
-                style="@style/bottomTextStyle"
-                android:id="@+id/text_author"/>
+            <!--<TextView-->
+                <!--style="@style/bottomTextStyle"-->
+                <!--android:id="@+id/text_type"/>-->
+            <!--<TextView-->
+                <!--style="@style/bottomTextStyle"-->
+                <!--android:id="@+id/text_publish_time"/>-->
+            <!--<TextView-->
+                <!--style="@style/bottomTextStyle"-->
+                <!--android:id="@+id/text_author"/>-->
         </LinearLayout>
         <ImageView
             android:src="@drawable/ic_unchecked"

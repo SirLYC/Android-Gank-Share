@@ -8,6 +8,7 @@ def deps = rootProject.ext.deps
 android {
     compileSdkVersion config.compileSdkVersion
     buildToolsVersion config.buildToolsVersion
+
     defaultConfig {
         applicationId "com.lyc.gank"
         minSdkVersion config.minSdkVersion
@@ -15,8 +16,8 @@ android {
         versionCode config.versionCode
         versionName config.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk { abiFilters "armeabi", "armeabi-v7a", "x86", "mips" }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -34,7 +35,6 @@ dependencies {
     implementation project(':data')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/tbs_sdk_thirdapp_v3.1.0.1034_43100_sharewithdownload_obfs_20170301_182143.jar')
 
     testImplementation deps['junit']
     testImplementation deps['mockito-core']

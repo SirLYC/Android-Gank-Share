@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:minHeight="70dp"
+    android:minHeight="100dp"
     android:orientation="vertical"
     android:padding="@dimen/item_padding">
 

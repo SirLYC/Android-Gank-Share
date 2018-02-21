@@ -1,13 +1,13 @@
 ext {
     kotlin_version = '1.2.0'
-    support_version = '26.1.0'
+    support_version = '27.0.0'
     arch_version = '1.0.0' // Android Architecture Components
 
     config = [
-            compileSdkVersion: 26,
-            buildToolsVersion: '26.0.2',
+            compileSdkVersion: 27,
+            buildToolsVersion: '27.0.0',
             minSdkVersion    : 14,
-            targetSdkVersion : 26,
+            targetSdkVersion : 27,
             versionCode      : 5,
             versionName      : '3.0.0',
     ]

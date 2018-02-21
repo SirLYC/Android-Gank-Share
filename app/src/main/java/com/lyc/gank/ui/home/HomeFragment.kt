@@ -7,10 +7,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.lyc.data.resp.ResultItem
+import com.lyc.data.resp.GankItem
 import com.lyc.gank.R
 import com.lyc.gank.base.BaseFragment
 import com.lyc.gank.util.*
+import com.lyc.gank.view.ItemDecoration
 import com.lyc.gank.widget.LoadMoreDetector
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -31,23 +32,32 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
         homeViewModel = provideViewModel()
         reactiveAdapter = ReactiveAdapter(homeViewModel.homeList).apply {
             observe(this@HomeFragment)
-            register(ResultItem::class.java)
+            register(GankItem::class.java)
                     .to(ItemWithImgViewBinder(), ItemWithoutImgViewBinder())
                     .withClassLinker { _, t ->
-                        if(t.images.isNotEmpty()){
+                        return@withClassLinker if(t.imgUrl != null)
                             ItemWithImgViewBinder::class.java
-                        }else{
+                        else
                             ItemWithoutImgViewBinder::class.java
-                        }
+
                     }
             register(ErrorItem::class.java, ErrorItemViewBinder(homeViewModel::loadMore))
+            register(LoadMoreItem::class.java, LoadMoreItemViewBinder)
+            register(NoMoreItem::class.java, NoMoreItemViewBinder)
+        }
+
+        rv_home.let {
+            it.addItemDecoration(ItemDecoration(activity(), ItemDecoration.Orientation.HORIZONTAL))
+            it.adapter = reactiveAdapter
+            it.layoutManager = LinearLayoutManager(activity())
+            LoadMoreDetector.detect(rv_home, this)
         }
         refresher_home.setOnRefreshListener(this)
 
 
         homeViewModel.refreshState.let {
             when(it.value){
-                is RefreshState.Empty -> {}
+                is RefreshState.Empty -> homeViewModel.refresh()
                 is RefreshState.Refreshing -> refresher_home.isRefreshing = true
             }
 
@@ -69,12 +79,6 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
                 toast(it.msg)
             }
         })
-
-        rv_home.let {
-            it.adapter = reactiveAdapter
-            it.layoutManager = LinearLayoutManager(activity())
-            LoadMoreDetector.detect(rv_home, this)
-        }
     }
 
     override fun onRefresh() {
@@ -86,8 +90,8 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
     }
 
 
-    //handled by homeViewModel
-    override fun canLoadMore() = true
+    //others are handled by homeViewModel
+    override fun canLoadMore() = homeViewModel.loadState.value !is LoadState.Error
 
     override fun loadMore() {
         homeViewModel.loadMore()

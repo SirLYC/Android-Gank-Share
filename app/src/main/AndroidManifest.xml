@@ -20,14 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".WebActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:hardwareAccelerated="true" />
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".PhotoActivity" />
         <activity android:name=".ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -35,13 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".MainActivity" >
-        </activity>
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".AboutActivity" />
     </application>
 
 </manifest>

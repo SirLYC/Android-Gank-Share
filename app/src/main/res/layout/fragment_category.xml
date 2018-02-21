@@ -30,7 +30,6 @@
             app:tabTextColor="#ffffff"
             app:tabSelectedTextColor="#ffffff"
             app:tabMode="scrollable"
-            app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
             android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

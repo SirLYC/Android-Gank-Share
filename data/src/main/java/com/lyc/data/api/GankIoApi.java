@@ -1,10 +1,12 @@
 package com.lyc.data.api;
 
+import com.lyc.data.resp.DayData;
+import com.lyc.data.resp.Resp;
+import com.lyc.data.resp.GankItem;
+
 import java.util.List;
 
-import com.lyc.data.resp.CategoryResp;
 import io.reactivex.Observable;
-import com.lyc.data.resp.EveryDayRecommend;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -14,11 +16,11 @@ import retrofit2.http.Path;
 
 public interface GankIoApi {
     @GET("data/{type}/{count}/{page}")
-    Observable<CategoryResp> getDataResults(@Path("type") String type,  @Path("page") int page, @Path("count") int count);
+    Observable<Resp<List<GankItem>>> getDataResults(@Path("type") String type, @Path("page") int page, @Path("count") int count);
 
-    @GET("day/{dateString}")
-    Observable<EveryDayRecommend> getRecommendResults(@Path("dateString") String date);
+    @GET("day/{year}/{month}/{day}")
+    Observable<Resp<DayData>> getRecommendResults(@Path("year") String year, @Path("month") String month, @Path("day") String day);
 
     @GET("day/history")
-    Observable<List<String>> getHistoryDates();
+    Observable<Resp<List<String>>> getHistoryDates();
 }

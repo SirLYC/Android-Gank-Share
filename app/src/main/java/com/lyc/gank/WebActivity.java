@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
-import com.lyc.gank.bean.ResultItem;
 import com.lyc.gank.util.Shares;
 import com.lyc.gank.util.TipUtil;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -24,8 +23,6 @@ import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -42,13 +39,10 @@ public class WebActivity extends AppCompatActivity {
 
     private String title;
 
-    @BindView(R.id.tool_bar_web)
     Toolbar toolbar;
 
-    @BindView(R.id.webview_web)
     WebView webView;
 
-    @BindView(R.id.progress_web)
     ProgressBar webProgress;
 
     private boolean isFullScreen;
@@ -60,7 +54,6 @@ public class WebActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_web);
-        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getUrlAndTitle();
         ActionBar actionbar = getSupportActionBar();

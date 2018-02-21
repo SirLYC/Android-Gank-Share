@@ -10,11 +10,11 @@ import me.drakeet.multitype.ItemViewBinder
 /**
  * Created by Liu Yuchuan on 2018/2/18.
  */
-class NoMoreItemViewBinder: ItemViewBinder<ErrorItem, NoMoreItemViewBinder.ViewHolder>() {
+object NoMoreItemViewBinder: ItemViewBinder<NoMoreItem, NoMoreItemViewBinder.ViewHolder>() {
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup)
             = ViewHolder(inflater.inflate(R.layout.item_no_more, parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, item: ErrorItem) = Unit
+    override fun onBindViewHolder(holder: ViewHolder, item: NoMoreItem) {}
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 }

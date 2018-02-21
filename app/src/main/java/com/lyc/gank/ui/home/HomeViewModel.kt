@@ -5,6 +5,7 @@ import com.lyc.data.recommend.RecommendRepository
 import com.lyc.data.resp.async
 import com.lyc.gank.util.*
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by Liu Yuchuan on 2018/2/17.
@@ -19,6 +20,8 @@ class HomeViewModel : ViewModel() {
     private val dateList = mutableListOf<String>()
 
     private var loadIndex = -1
+
+    private var loadMoreDisposable: Disposable? = null
 
     companion object {
         private const val TAG = "Home"
@@ -36,9 +39,19 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun doRefresh(){
+        loadMoreDisposable?.dispose()
         recommendRepository.getDates()
                 .async()
                 .subscribe({
+
+                    //check if it needs to refresh
+                    if(dateList.isNotEmpty() && it.isNotEmpty()
+                            && it[0] == dateList[0] && homeList.isNotEmpty()){
+                        refreshState.value.result(true)?.let (refreshState::setValue)
+                        loadState.value = if(dateList.size > 1) LoadState.HasMore else LoadState.NoMore
+                        return@subscribe
+                    }
+
                     dateList.clear()
                     dateList.addAll(it)
                     if (dateList.isNotEmpty()){
@@ -54,13 +67,15 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun refreshDayRecommend(){
-        recommendRepository.getItems(dateList[0])
+        val dates = dateList[0].split("-")
+        recommendRepository.getItems(dates[0], dates[1], dates[2])
                 .async()
                 .subscribe({
                     homeList.clear()
-                    it.addAll(homeList)
+                    it.addAllTo(homeList)
                     loadIndex = 0
                     refreshState.value.result(homeList.isEmpty()).let(refreshState::setValue)
+                    loadState.value = if(dateList.size > 1) LoadState.HasMore else LoadState.NoMore
                 }, {
                     refreshState.value.error("获取${dateList[0]}干货失败").let(refreshState::setValue)
                     loge(TAG, dateList[0], it)
@@ -80,11 +95,11 @@ class HomeViewModel : ViewModel() {
         loadState.value.loadMore()?.let { nextState ->
             if(nextState is LoadState.Loading){
                 if(NetworkStateReceiver.isNetWorkConnected()){
-                    loadState.value = LoadState.Error("没有网络连接")
-                    homeList.add(ErrorItem)
-                }else{
                     loadState.value = nextState
                     doLoadMore()
+                }else{
+                    loadState.value = LoadState.Error("没有网络连接")
+                    homeList.add(ErrorItem)
                 }
             }
         }
@@ -101,11 +116,16 @@ class HomeViewModel : ViewModel() {
             return
         }
 
-        recommendRepository.getItems(dateList[loadIndex + 1])
+        if(loadState.value is LoadState.Error){
+            homeList.remove(ErrorItem)
+        }
+        homeList.add(LoadMoreItem)
+        val dates = dateList[loadIndex + 1].split("-")
+        recommendRepository.getItems(dates[0], dates[1], dates[2])
                 .async()
                 .subscribe({
-                    homeList.clear()
-                    it.addAll(homeList)
+                    homeList.remove(LoadMoreItem)
+                    it.addAllTo(homeList)
                     loadIndex++
                     if(loadIndex >= dateList.size - 1){
                         loadState.value = LoadState.NoMore
@@ -113,8 +133,18 @@ class HomeViewModel : ViewModel() {
                         loadState.value = LoadState.HasMore
                     }
                 }, {
+                    homeList.remove(LoadMoreItem)
                     loadState.value.error("加载更多失败").let(loadState::setValue)
                     loge(TAG, dateList[loadIndex + 1], it)
                 })
+                .also {
+                    compositeDisposable.add(it)
+                    loadMoreDisposable = it
+                }
+    }
+
+    override fun onCleared() {
+        compositeDisposable.dispose()
+        super.onCleared()
     }
 }

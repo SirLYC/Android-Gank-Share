@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.lyc.gank.ui.post.PostActivity">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_post_link"
+                style="@style/PostEditTextStyle"
+                android:drawableStart="@drawable/ic_link"
+                android:hint="@string/hint_link"
+                android:drawableLeft="@drawable/ic_link" />
+
+            <include layout="@layout/divider_horizontal" />
+
+            <EditText
+                android:id="@+id/et_post_who"
+                style="@style/PostEditTextStyle"
+                android:drawableStart="@drawable/ic_link"
+                android:hint="@string/hint_who"
+                android:drawableLeft="@drawable/ic_link" />
+
+            <include layout="@layout/divider_horizontal" />
+
+            <EditText
+                android:id="@+id/et_post_desc"
+                style="@style/PostEditTextStyle"
+                android:minLines="3"
+                android:gravity="top"
+                android:drawableStart="@drawable/ic_link"
+                android:hint="@string/hint_desc"
+                android:drawableLeft="@drawable/ic_link" />
+
+            <include layout="@layout/divider_horizontal" />
+
+            <TextView
+                android:id="@+id/tv_post_category"
+                android:text="@string/hint_category"
+                style="@style/PostEditTextStyle"
+                android:textColor="@color/textPrimary"
+                android:drawableStart="@drawable/ic_link"
+                android:drawableLeft="@drawable/ic_link" />
+
+            <com.lyc.gank.widget.LabelView
+                android:id="@+id/lv_post"
+                android:paddingLeft="36dp"
+                android:paddingStart="36dp"
+                android:paddingRight="8dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="18dp"
+                app:flexWrap="wrap"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_post"
+        android:src="@drawable/ic_send"
+        app:fabSize="normal"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</FrameLayout>

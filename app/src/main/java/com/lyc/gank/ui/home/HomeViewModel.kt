@@ -3,7 +3,7 @@ package com.lyc.gank.ui.home
 import android.arch.lifecycle.ViewModel
 import com.lyc.data.recommend.RecommendRepository
 import com.lyc.data.resp.async
-import com.lyc.gank.util.*
+import com.lyc.gank.utils.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -40,6 +40,9 @@ class HomeViewModel : ViewModel() {
 
     private fun doRefresh(){
         loadMoreDisposable?.dispose()
+        if (homeList.contains(LoadMoreItem)) {
+            homeList.remove(LoadMoreItem)
+        }
         recommendRepository.getDates()
                 .async()
                 .subscribe({
@@ -47,7 +50,8 @@ class HomeViewModel : ViewModel() {
                     //check if it needs to refresh
                     if(dateList.isNotEmpty() && it.isNotEmpty()
                             && it[0] == dateList[0] && homeList.isNotEmpty()){
-                        refreshState.value.result(true)?.let (refreshState::setValue)
+                        refreshState.value = RefreshState.Error("已经是最新内容")
+                        refreshState.value = RefreshState.NotEmpty
                         loadState.value = if(dateList.size > 1) LoadState.HasMore else LoadState.NoMore
                         return@subscribe
                     }
@@ -88,7 +92,7 @@ class HomeViewModel : ViewModel() {
             return
         }
 
-        if(loadState.value is LoadState.NoMore && homeList.contains(NoMoreItem)){
+        if (loadState.value is LoadState.NoMore && !homeList.contains(NoMoreItem)) {
             homeList.add(NoMoreItem)
         }
 
@@ -99,7 +103,8 @@ class HomeViewModel : ViewModel() {
                     doLoadMore()
                 }else{
                     loadState.value = LoadState.Error("没有网络连接")
-                    homeList.add(ErrorItem)
+                    if (!homeList.contains(ErrorItem))
+                        homeList.add(ErrorItem)
                 }
             }
         }
@@ -116,7 +121,7 @@ class HomeViewModel : ViewModel() {
             return
         }
 
-        if(loadState.value is LoadState.Error){
+        if (homeList.contains(ErrorItem)) {
             homeList.remove(ErrorItem)
         }
         homeList.add(LoadMoreItem)

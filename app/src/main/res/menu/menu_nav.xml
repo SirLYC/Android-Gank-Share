@@ -5,36 +5,32 @@
             android:icon="@drawable/ic_recommend_nav"
             android:checkable="true"
             android:checked="true"
-            android:id="@+id/recommend"
+            android:id="@+id/menu_home"
             android:title="首页"/>
 
         <item
             android:icon="@drawable/ic_category_nav"
             android:checkable="true"
-            android:id="@+id/category"
+            android:id="@+id/menu_category"
             android:title="分类干货"/>
 
 
         <item
             android:icon="@drawable/ic_girl_nav"
             android:checkable="true"
-            android:id="@+id/girl"
+            android:id="@+id/menu_girl"
             android:title="妹子"/>
 
 
         <item
             android:icon="@drawable/ic_collect_nav"
             android:checkable="true"
-            android:id="@+id/collect"
+            android:id="@+id/menu_collect"
             android:title="收藏"/>
 
         <item
             android:icon="@drawable/ic_about_nav"
-            android:id="@+id/about"
+            android:checkable="true"
+            android:id="@+id/menu_about"
             android:title="关于"/>
-
-        <item
-            android:icon="@drawable/ic_exit_nav"
-            android:id="@+id/exit"
-            android:title="退出"/>
 </menu>

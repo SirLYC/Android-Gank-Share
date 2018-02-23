@@ -25,7 +25,7 @@ android {
         }
     }
 
-    compileOptions{
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -36,6 +36,7 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation deps['junit']
     testImplementation deps['mockito-core']
     testImplementation deps['mockito-inline']
@@ -67,4 +68,6 @@ dependencies {
 
     implementation deps['picasso']
     implementation deps['photoview']
+
+    implementation deps['flexboxlayout']
 }

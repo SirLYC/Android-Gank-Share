@@ -9,4 +9,16 @@
         <attr name="retryLayout" format="reference" />
         <attr name="loadHideDelay" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="LabelView">
+        <attr name="textUnselectedColor" format="color" />
+        <attr name="textSelectedColor" format="color" />
+        <attr name="backgroundSelectedColor" format="color" />
+        <attr name="backgroundUnselectedColor" format="color" />
+        <attr name="labelPaddingVertical" format="dimension" />
+        <attr name="labelPaddingHorizontal" format="dimension" />
+        <attr name="labelMarginVertical" format="dimension" />
+        <attr name="labelMarginHorizontal" format="dimension" />
+        <attr name="labelTextSize" format="dimension" />
+    </declare-styleable>
 </resources>

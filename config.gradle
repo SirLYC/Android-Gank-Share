@@ -75,9 +75,12 @@ ext {
             'litepal' : 'org.litepal.android:core:1.6.0',
 
             // https://github.com/square/picasso
-            'picasso'            : 'com.squareup.picasso:picasso:2.5.2',
+            'picasso'             : 'com.squareup.picasso:picasso:2.5.2',
 
             // https://github.com/chrisbanes/PhotoView
             'photoview'           : 'com.github.chrisbanes.photoview:library:1.2.4',
+
+            // https://github.com/google/flexbox-layout
+            'flexboxlayout'       : 'com.google.android:flexbox:0.3.2'
     ]
 }

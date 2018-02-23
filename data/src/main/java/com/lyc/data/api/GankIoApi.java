@@ -7,7 +7,10 @@ import com.lyc.data.resp.GankItem;
 import java.util.List;
 
 import io.reactivex.Observable;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -23,4 +26,10 @@ public interface GankIoApi {
 
     @GET("day/history")
     Observable<Resp<List<String>>> getHistoryDates();
+
+    @POST("add2gank")
+    @FormUrlEncoded
+    Observable<Resp<String>> add2gank(@Field("url") String url, @Field("desc") String description,
+                                      @Field("type") String Type, @Field("debug") String debugBoolean,
+                                      @Field("who") String who);
 }

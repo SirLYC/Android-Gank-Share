@@ -1,6 +1,7 @@
 package com.lyc.gank.ui.home
 
 import android.arch.lifecycle.Observer
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -10,7 +11,11 @@ import android.view.ViewGroup
 import com.lyc.data.resp.GankItem
 import com.lyc.gank.R
 import com.lyc.gank.base.BaseFragment
-import com.lyc.gank.util.*
+import com.lyc.gank.ui.AbstractGankItemViewBinder
+import com.lyc.gank.ui.GankWithImgViewBinder
+import com.lyc.gank.ui.GankWithoutImgViewBinder
+import com.lyc.gank.ui.post.PostActivity
+import com.lyc.gank.utils.*
 import com.lyc.gank.view.ItemDecoration
 import com.lyc.gank.widget.LoadMoreDetector
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -19,7 +24,8 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * Created by Liu Yuchuan on 2018/2/17.
  */
 class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
-        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener
+        , AbstractGankItemViewBinder.OnGankItemClickListener {
 
     private lateinit var reactiveAdapter: ReactiveAdapter
     private lateinit var homeViewModel: HomeViewModel
@@ -33,12 +39,13 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
         reactiveAdapter = ReactiveAdapter(homeViewModel.homeList).apply {
             observe(this@HomeFragment)
             register(GankItem::class.java)
-                    .to(ItemWithImgViewBinder(), ItemWithoutImgViewBinder())
+                    .to(GankWithImgViewBinder(this@HomeFragment),
+                            GankWithoutImgViewBinder(this@HomeFragment))
                     .withClassLinker { _, t ->
                         return@withClassLinker if(t.imgUrl != null)
-                            ItemWithImgViewBinder::class.java
+                            GankWithImgViewBinder::class.java
                         else
-                            ItemWithoutImgViewBinder::class.java
+                            GankWithoutImgViewBinder::class.java
 
                     }
             register(ErrorItem::class.java, ErrorItemViewBinder(homeViewModel::loadMore))
@@ -68,7 +75,7 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
                     is RefreshState.NotEmpty -> refresher_home.isRefreshing = false
                     is RefreshState.Error -> {
                         refresher_home.isRefreshing = false
-                        refresher_home.snackBar(it.msg,getString(R.string.action_retry), this)
+                        toast(it.msg)
                     }
                 }
             })
@@ -86,7 +93,10 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
     }
 
     override fun onClick(v: View) {
-        homeViewModel.refresh()
+        when (v.id) {
+            R.id.fab_home -> startActivity(Intent(activity(), PostActivity::class.java))
+            else -> homeViewModel.refresh()
+        }
     }
 
 
@@ -95,5 +105,9 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
 
     override fun loadMore() {
         homeViewModel.loadMore()
+    }
+
+    override fun onGankItemClick(item: GankItem) {
+        //todo jump to webActivity
     }
 }

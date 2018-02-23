@@ -3,7 +3,7 @@ package com.lyc.gank
 import android.app.Application
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import com.lyc.gank.util.NetworkStateReceiver
+import com.lyc.gank.utils.NetworkStateReceiver
 
 /**
  * Created by Liu Yuchuan on 2018/2/17.

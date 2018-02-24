@@ -9,14 +9,16 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.gigavalue.mobile.widget.LinearItemDivider
 import com.lyc.data.resp.GankItem
 import com.lyc.gank.App
 import com.lyc.gank.R
 import com.lyc.gank.base.BaseFragment
-import com.lyc.gank.ui.AbstractGankItemViewBinder
 import com.lyc.gank.ui.GankWithImgViewBinder
 import com.lyc.gank.ui.GankWithoutImgViewBinder
+import com.lyc.gank.ui.OnGankItemClickListener
+import com.lyc.gank.ui.web.ArticleActivity
 import com.lyc.gank.utils.*
 import com.lyc.gank.widget.LoadMoreDetector
 import kotlinx.android.synthetic.main.fragment_single_content.*
@@ -24,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_single_content.*
 /**
  * Created by Liu Yuchuan on 2018/2/23.
  */
-class SingleContentFragment : BaseFragment(), AbstractGankItemViewBinder.OnGankItemClickListener,
+class SingleContentFragment : BaseFragment(), OnGankItemClickListener,
         LoadMoreDetector.LoadMoreCallback, SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var type: String
@@ -128,8 +130,16 @@ class SingleContentFragment : BaseFragment(), AbstractGankItemViewBinder.OnGankI
             .apply { setType(type) }
             .also { initViewModel = true }
 
-    override fun onGankItemClick(item: GankItem) {
-        //todo
+    override fun onGirlItemClick(iv: ImageView, item: GankItem) {
+        //todo: PhotoActivity
+    }
+
+    override fun onVideoItemClick(item: GankItem) {
+        //todo: Video player or user system's web browser
+    }
+
+    override fun onArticleItemClick(item: GankItem) {
+        ArticleActivity.start(activity()!!, item)
     }
 
     override fun loadMore() = singleContentViewModel.loadMore()

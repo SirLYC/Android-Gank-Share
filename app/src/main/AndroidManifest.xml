@@ -16,18 +16,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:theme="@style/AppTheme.NoActionBar"
-            android:name=".ui.MainActivity">
+            android:name=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/title_post"
-            android:name=".ui.post.PostActivity" />
+            android:name=".ui.post.PostActivity"
+            android:label="@string/title_post" />
+        <activity
+            android:name=".ui.web.ArticleActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_read_article" />
     </application>
 
 </manifest>

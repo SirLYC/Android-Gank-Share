@@ -7,25 +7,27 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.lyc.data.resp.GankItem
 import com.lyc.gank.R
-import com.lyc.gank.ui.AbstractGankItemViewBinder
+import com.lyc.gank.ui.OnGankItemClickListener
 import com.lyc.gank.utils.gankOption
 import kotlinx.android.synthetic.main.item_girl.view.*
+import me.drakeet.multitype.ItemViewBinder
 
 /**
  * Created by Liu Yuchuan on 2018/2/24.
  */
-class GirlItemViewBinder(onGankItemClickListener: OnGankItemClickListener) :
-        AbstractGankItemViewBinder<GirlItemViewBinder.ViewHolder>(onGankItemClickListener) {
-    override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
-        return ViewHolder(inflater.inflate(R.layout.item_girl, parent, false))
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, item: GankItem, payloads: MutableList<Any>) {
-        super.onBindViewHolder(holder, item, payloads)
+class GirlItemViewBinder(
+        private val onGankItemClickListener: OnGankItemClickListener
+) : ItemViewBinder<GankItem, GirlItemViewBinder.ViewHolder>() {
+    override fun onBindViewHolder(holder: ViewHolder, item: GankItem) {
+        holder.itemView.setOnClickListener { onGankItemClickListener.onGirlItemClick(holder.img, item) }
         Glide.with(holder.img)
                 .load(item.imgUrl)
                 .gankOption()
                 .into(holder.img)
+    }
+
+    override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
+        return ViewHolder(inflater.inflate(R.layout.item_girl, parent, false))
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

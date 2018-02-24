@@ -10,14 +10,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.gigavalue.mobile.widget.LinearItemDivider
 import com.lyc.data.resp.GankItem
 import com.lyc.gank.R
 import com.lyc.gank.base.BaseFragment
-import com.lyc.gank.ui.AbstractGankItemViewBinder
 import com.lyc.gank.ui.GankWithImgViewBinder
 import com.lyc.gank.ui.GankWithoutImgViewBinder
+import com.lyc.gank.ui.OnGankItemClickListener
 import com.lyc.gank.ui.post.PostActivity
+import com.lyc.gank.ui.web.ArticleActivity
 import com.lyc.gank.utils.*
 import com.lyc.gank.widget.LoadMoreDetector
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -27,7 +29,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
  */
 class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
         View.OnClickListener, SwipeRefreshLayout.OnRefreshListener
-        , AbstractGankItemViewBinder.OnGankItemClickListener {
+        , OnGankItemClickListener {
 
     private lateinit var reactiveAdapter: ReactiveAdapter
     private lateinit var homeViewModel: HomeViewModel
@@ -119,7 +121,15 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
         homeViewModel.loadMore()
     }
 
-    override fun onGankItemClick(item: GankItem) {
-        //todo jump to webActivity
+    override fun onGirlItemClick(iv: ImageView, item: GankItem) {
+        //todo: PhotoActivity
+    }
+
+    override fun onVideoItemClick(item: GankItem) {
+        //todo: Video player or user system's web browser
+    }
+
+    override fun onArticleItemClick(item: GankItem) {
+        ArticleActivity.start(activity()!!, item)
     }
 }

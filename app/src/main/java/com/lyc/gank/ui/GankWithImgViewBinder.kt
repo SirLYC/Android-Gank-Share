@@ -10,19 +10,26 @@ import com.lyc.gank.R
 import com.lyc.gank.utils.TimeUtil
 import com.lyc.gank.utils.gankOption
 import kotlinx.android.synthetic.main.item_article_with_img.view.*
+import me.drakeet.multitype.ItemViewBinder
 
 /**
  * Created by Liu Yuchuan on 2018/2/17.
  */
 class GankWithImgViewBinder(
-        onGankItemClickListener: AbstractGankItemViewBinder.OnGankItemClickListener
-) : AbstractGankItemViewBinder<GankWithImgViewBinder.ViewHolder>(onGankItemClickListener) {
+        private val onGankItemClickListener: OnGankItemClickListener
+) : ItemViewBinder<GankItem, GankWithImgViewBinder.ViewHolder>() {
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup) =
             ViewHolder(inflater.inflate(R.layout.item_article_with_img, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, item: GankItem) {
-        super.onBindViewHolder(holder, item)
+        holder.itemView.setOnClickListener {
+            when (item.type) {
+                "福利" -> onGankItemClickListener.onGirlItemClick(holder.img, item)
+                "休息视频" -> onGankItemClickListener.onVideoItemClick(item)
+                else -> onGankItemClickListener.onArticleItemClick(item)
+            }
+        }
         holder.title.text = item.title
         holder.info.text = ("${item.type} ${TimeUtil.publishTime(item.publishTime)} ${item.author}")
         Glide.with(holder.img)

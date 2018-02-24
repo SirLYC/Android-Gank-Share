@@ -1,6 +1,7 @@
 package com.lyc.data.api;
 
 import com.lyc.data.resp.DayData;
+import com.lyc.data.resp.PostResp;
 import com.lyc.data.resp.Resp;
 import com.lyc.data.resp.GankItem;
 
@@ -29,7 +30,7 @@ public interface GankIoApi {
 
     @POST("add2gank")
     @FormUrlEncoded
-    Observable<Resp<String>> add2gank(@Field("url") String url, @Field("desc") String description,
-                                      @Field("type") String Type, @Field("debug") String debugBoolean,
-                                      @Field("who") String who);
+    Observable<PostResp> add2gank(@Field("url") String url, @Field("desc") String description,
+                                  @Field("type") String Type, @Field("debug") String debugBoolean,
+                                  @Field("who") String who);
 }

@@ -10,4 +10,10 @@
     <string name="hint_who">分享者</string>
     <string name="hint_desc">描述</string>
     <string name="hint_category">分类</string>
+    <string name="tip_post_success">发送成功！</string>
+    <string name="title_home">首页</string>
+    <string name="title_discover">发现</string>
+    <string name="title_me">我的</string>
+    <string name="title_category">分类</string>
+    <string name="tip_exit">再按一次返回键退出应用</string>
 </resources>

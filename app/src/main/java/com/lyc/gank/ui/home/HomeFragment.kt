@@ -5,9 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
+import com.gigavalue.mobile.widget.LinearItemDivider
 import com.lyc.data.resp.GankItem
 import com.lyc.gank.R
 import com.lyc.gank.base.BaseFragment
@@ -16,7 +19,6 @@ import com.lyc.gank.ui.GankWithImgViewBinder
 import com.lyc.gank.ui.GankWithoutImgViewBinder
 import com.lyc.gank.ui.post.PostActivity
 import com.lyc.gank.utils.*
-import com.lyc.gank.view.ItemDecoration
 import com.lyc.gank.widget.LoadMoreDetector
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -54,13 +56,23 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
         }
 
         rv_home.let {
-            it.addItemDecoration(ItemDecoration(activity(), ItemDecoration.Orientation.HORIZONTAL))
+            it.addItemDecoration(LinearItemDivider(activity()!!))
             it.adapter = reactiveAdapter
             it.layoutManager = LinearLayoutManager(activity())
             LoadMoreDetector.detect(rv_home, this)
+            rv_home.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    val slop = ViewConfiguration.get(activity()).scaledTouchSlop
+                    if (dy < -slop) {
+                        fab_home.show()
+                    } else if (dy > slop) {
+                        fab_home.hide()
+                    }
+                }
+            })
         }
         refresher_home.setOnRefreshListener(this)
-
+        fab_home.setOnClickListener(this)
 
         homeViewModel.refreshState.let {
             when(it.value){

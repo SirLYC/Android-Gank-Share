@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
@@ -39,12 +40,11 @@ public class LabelView extends FlexboxLayout {
         colorBgSelected = ta.getColor(R.styleable.LabelView_backgroundSelectedColor, context.getResources().getColor(R.color.colorPrimary));
         colorBgUnselected = ta.getColor(R.styleable.LabelView_backgroundUnselectedColor, Color.parseColor("#d3d3d3"));
         float ratio = context.getResources().getDisplayMetrics().density;
-        labelPaddingVertical = ta.getDimensionPixelSize(R.styleable.LabelView_labelPaddingHorizontal, (int) (16 * ratio + 0.5f));
-        labelPaddingHorizontal = ta.getDimensionPixelSize(R.styleable.LabelView_labelPaddingHorizontal, (int) (8 * ratio + 0.5f));
+        labelPaddingHorizontal = ta.getDimensionPixelSize(R.styleable.LabelView_labelPaddingHorizontal, (int) (16 * ratio + 0.5f));
+        labelPaddingVertical = ta.getDimensionPixelSize(R.styleable.LabelView_labelPaddingVertical, (int) (8 * ratio + 0.5f));
         labelMarginHorizontal = ta.getDimensionPixelSize(R.styleable.LabelView_labelMarginHorizontal, (int) (16 * ratio + 0.5f));
         labelMarginVertical = ta.getDimensionPixelSize(R.styleable.LabelView_labelMarginVertical, (int) (16 * ratio + 0.5f));
-        float scale = context.getResources().getDisplayMetrics().scaledDensity;
-        labelTextSize = ta.getDimension(R.styleable.LabelView_labelTextSize, 14 * scale);
+        labelTextSize = ta.getDimension(R.styleable.LabelView_labelTextSize, 14);
         ta.recycle();
     }
 
@@ -80,9 +80,13 @@ public class LabelView extends FlexboxLayout {
         final int count = getChildCount();
         selectedPosition = 0;
         for (int i = 1; i < count; i++) {
-            unSelect((TextView) getChildAt(i));
+            TextView tv = (TextView) getChildAt(i);
+            tv.setText(labels[i]);
+            unSelect(tv);
         }
-        select(selectedPosition);
+        TextView tv = (TextView) getChildAt(0);
+        tv.setText(labels[0]);
+        select(tv);
     }
 
     private TextView newLabel() {
@@ -95,22 +99,17 @@ public class LabelView extends FlexboxLayout {
         addView(textView);
         LayoutParams params = (LayoutParams) textView.getLayoutParams();
         params.setMargins(labelMarginHorizontal / 2, labelMarginVertical / 2, labelMarginHorizontal / 2, labelMarginVertical / 2);
+        params.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         textView.setLayoutParams(params);
         return textView;
-    }
-
-    private void select(int position) {
-        if (position == selectedPosition) {
-            return;
-        }
-        select(position);
     }
 
     public int getSelectedPosition() {
         return selectedPosition;
     }
 
-    private String getSelectedLabel() {
+    public String getSelectedLabel() {
         return labels[selectedPosition];
     }
 

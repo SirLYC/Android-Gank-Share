@@ -27,9 +27,9 @@
             <EditText
                 android:id="@+id/et_post_who"
                 style="@style/PostEditTextStyle"
-                android:drawableStart="@drawable/ic_link"
+                android:drawableStart="@drawable/ic_account"
                 android:hint="@string/hint_who"
-                android:drawableLeft="@drawable/ic_link" />
+                android:drawableLeft="@drawable/ic_account" />
 
             <include layout="@layout/divider_horizontal" />
 
@@ -38,9 +38,9 @@
                 style="@style/PostEditTextStyle"
                 android:minLines="3"
                 android:gravity="top"
-                android:drawableStart="@drawable/ic_link"
+                android:drawableStart="@drawable/ic_content"
                 android:hint="@string/hint_desc"
-                android:drawableLeft="@drawable/ic_link" />
+                android:drawableLeft="@drawable/ic_content" />
 
             <include layout="@layout/divider_horizontal" />
 
@@ -49,8 +49,8 @@
                 android:text="@string/hint_category"
                 style="@style/PostEditTextStyle"
                 android:textColor="@color/textPrimary"
-                android:drawableStart="@drawable/ic_link"
-                android:drawableLeft="@drawable/ic_link" />
+                android:drawableStart="@drawable/ic_label"
+                android:drawableLeft="@drawable/ic_label" />
 
             <com.lyc.gank.widget.LabelView
                 android:id="@+id/lv_post"

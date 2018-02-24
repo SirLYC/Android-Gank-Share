@@ -23,12 +23,12 @@ class CategoryFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         vp_category.adapter = CategoryPagerAdapter(childFragmentManager)
-        vp_category.offscreenPageLimit = 7
+        vp_category.offscreenPageLimit = 8
         tab_category.setupWithViewPager(vp_category)
     }
 
     private class CategoryPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-        private val fragments = arrayOfNulls<SingleContentFragment>(7)
+        private val fragments = arrayOfNulls<SingleContentFragment>(8)
 
         override fun getItem(position: Int): Fragment {
             return fragments[position] ?: SingleContentFragment.instance(types[position])

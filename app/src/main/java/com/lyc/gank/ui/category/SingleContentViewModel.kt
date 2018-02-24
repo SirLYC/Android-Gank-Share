@@ -93,7 +93,9 @@ class SingleContentViewModel : ViewModel() {
                     doLoadMore()
                 } else {
                     loadState.value = LoadState.Error("没有网络连接")
-                    singleContentList.add(ErrorItem)
+                    if (!singleContentList.contains(ErrorItem)) {
+                        singleContentList.add(ErrorItem)
+                    }
                 }
             }
         }

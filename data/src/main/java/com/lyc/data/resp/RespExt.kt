@@ -13,7 +13,7 @@ inline fun<T> Observable<T>.async(): Observable<T>
         = this.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-fun<T> Observable<Resp<T>>.unwrap(): Observable<T>
+inline fun <T> Observable<Resp<T>>.unwrap(): Observable<T>
         = this.flatMap {
     return@flatMap if(it.error){
         Observable.error(NetworkErrorException("error response"))

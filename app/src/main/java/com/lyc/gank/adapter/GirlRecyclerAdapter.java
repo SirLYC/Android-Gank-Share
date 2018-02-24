@@ -33,7 +33,7 @@
 //    @Override
 //    public GirlHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //        View view = LayoutInflater.from(mContext)
-//                .inflate(R.layout.item_girls, parent, false);
+//                .inflate(R.layout.item_girl, parent, false);
 //        return new GirlHolder(view);
 //    }
 //

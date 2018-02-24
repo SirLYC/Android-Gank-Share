@@ -4,10 +4,12 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.gigavalue.mobile.widget.LinearItemDivider
 import com.lyc.data.resp.GankItem
 import com.lyc.gank.App
 import com.lyc.gank.R
@@ -16,7 +18,6 @@ import com.lyc.gank.ui.AbstractGankItemViewBinder
 import com.lyc.gank.ui.GankWithImgViewBinder
 import com.lyc.gank.ui.GankWithoutImgViewBinder
 import com.lyc.gank.utils.*
-import com.lyc.gank.view.ItemDecoration
 import com.lyc.gank.widget.LoadMoreDetector
 import kotlinx.android.synthetic.main.fragment_single_content.*
 
@@ -55,12 +56,14 @@ class SingleContentFragment : BaseFragment(), AbstractGankItemViewBinder.OnGankI
             observe(this@SingleContentFragment)
             register(GankItem::class.java)
                     .to(GankWithImgViewBinder(this@SingleContentFragment),
-                            GankWithoutImgViewBinder(this@SingleContentFragment))
+                            GankWithoutImgViewBinder(this@SingleContentFragment),
+                            GirlItemViewBinder(this@SingleContentFragment))
                     .withClassLinker { _, t ->
-                        return@withClassLinker if (t.imgUrl != null)
-                            GankWithImgViewBinder::class.java
-                        else
-                            GankWithoutImgViewBinder::class.java
+                        return@withClassLinker when {
+                            t.type == "福利" -> GirlItemViewBinder::class.java
+                            t.imgUrl != null -> GankWithImgViewBinder::class.java
+                            else -> GankWithoutImgViewBinder::class.java
+                        }
                     }
             register(ErrorItem::class.java, ErrorItemViewBinder(singleContentViewModel::loadMore))
             register(LoadMoreItem::class.java, LoadMoreItemViewBinder)
@@ -68,9 +71,14 @@ class SingleContentFragment : BaseFragment(), AbstractGankItemViewBinder.OnGankI
         }
 
         rv_single_content.let {
-            it.addItemDecoration(ItemDecoration(activity(), ItemDecoration.Orientation.HORIZONTAL))
+
             it.adapter = reactiveAdapter
-            it.layoutManager = LinearLayoutManager(activity())
+            if (type == "福利") {
+                it.layoutManager = GridLayoutManager(activity(), 2)
+            } else {
+                it.addItemDecoration(LinearItemDivider(activity()!!))
+                it.layoutManager = LinearLayoutManager(activity())
+            }
             LoadMoreDetector.detect(rv_single_content, this)
         }
         refresher_single_content.setOnRefreshListener(this)

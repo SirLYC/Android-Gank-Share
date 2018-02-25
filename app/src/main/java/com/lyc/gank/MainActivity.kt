@@ -1,15 +1,14 @@
-package com.lyc.gank.ui
+package com.lyc.gank
 
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
-import com.lyc.gank.R
 import com.lyc.gank.base.BaseActivity
-import com.lyc.gank.ui.category.CategoryFragment
-import com.lyc.gank.ui.discover.DiscoverFragment
-import com.lyc.gank.ui.home.HomeFragment
-import com.lyc.gank.ui.user.UserFragment
+import com.lyc.gank.category.CategoryFragment
+import com.lyc.gank.discover.DiscoverFragment
+import com.lyc.gank.home.HomeFragment
+import com.lyc.gank.user.UserFragment
 import com.lyc.gank.utils.toast
 import kotlinx.android.synthetic.main.activity_main.*
 

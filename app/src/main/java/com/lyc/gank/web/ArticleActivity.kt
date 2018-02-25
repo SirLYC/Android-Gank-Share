@@ -1,4 +1,4 @@
-package com.lyc.gank.ui.web
+package com.lyc.gank.web
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint

@@ -1,4 +1,4 @@
-package com.lyc.gank.ui.category
+package com.lyc.gank.category
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

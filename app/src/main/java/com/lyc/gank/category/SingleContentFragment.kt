@@ -1,4 +1,4 @@
-package com.lyc.gank.ui.category
+package com.lyc.gank.category
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -15,10 +15,10 @@ import com.lyc.data.resp.GankItem
 import com.lyc.gank.App
 import com.lyc.gank.R
 import com.lyc.gank.base.BaseFragment
-import com.lyc.gank.ui.GankWithImgViewBinder
-import com.lyc.gank.ui.GankWithoutImgViewBinder
-import com.lyc.gank.ui.OnGankItemClickListener
-import com.lyc.gank.ui.web.ArticleActivity
+import com.lyc.gank.GankWithImgViewBinder
+import com.lyc.gank.GankWithoutImgViewBinder
+import com.lyc.gank.OnGankItemClickListener
+import com.lyc.gank.web.ArticleActivity
 import com.lyc.gank.utils.*
 import com.lyc.gank.widget.LoadMoreDetector
 import kotlinx.android.synthetic.main.fragment_single_content.*

@@ -1,4 +1,4 @@
-package com.lyc.gank.ui.discover
+package com.lyc.gank.user
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import com.lyc.gank.base.BaseFragment
 /**
  * Created by Liu Yuchuan on 2018/2/24.
  */
-class DiscoverFragment : BaseFragment() {
+class UserFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_discover, container, false)
     }

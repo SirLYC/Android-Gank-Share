@@ -1,4 +1,4 @@
-package com.lyc.gank.ui.category
+package com.lyc.gank.category
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.lyc.data.resp.GankItem
 import com.lyc.gank.R
-import com.lyc.gank.ui.OnGankItemClickListener
+import com.lyc.gank.OnGankItemClickListener
 import com.lyc.gank.utils.gankOption
 import kotlinx.android.synthetic.main.item_girl.view.*
 import me.drakeet.multitype.ItemViewBinder

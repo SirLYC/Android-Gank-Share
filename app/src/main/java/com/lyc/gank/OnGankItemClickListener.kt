@@ -1,4 +1,4 @@
-package com.lyc.gank.ui
+package com.lyc.gank
 
 import android.widget.ImageView
 import com.lyc.data.resp.GankItem

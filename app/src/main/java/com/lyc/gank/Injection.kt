@@ -3,9 +3,9 @@ package com.lyc.gank
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
-import com.lyc.gank.ui.category.SingleContentViewModel
-import com.lyc.gank.ui.home.HomeViewModel
-import com.lyc.gank.ui.post.PostViewModel
+import com.lyc.gank.category.SingleContentViewModel
+import com.lyc.gank.home.HomeViewModel
+import com.lyc.gank.post.PostViewModel
 
 /**
  * Created by hgj on 22/12/2017.

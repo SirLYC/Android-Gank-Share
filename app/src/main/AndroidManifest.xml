@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,10 +26,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.post.PostActivity"
+            android:name=".post.PostActivity"
             android:label="@string/title_post" />
         <activity
-            android:name=".ui.web.ArticleActivity"
+            android:name=".web.ArticleActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/title_read_article" />
     </application>

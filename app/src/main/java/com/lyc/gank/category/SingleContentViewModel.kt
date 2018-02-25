@@ -1,4 +1,4 @@
-package com.lyc.gank.ui.category
+package com.lyc.gank.category
 
 import android.arch.lifecycle.ViewModel
 import com.lyc.data.category.CategoryRepository

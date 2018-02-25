@@ -1,40 +1,45 @@
-package com.lyc.gank.ui
+package com.lyc.gank
 
-import android.annotation.SuppressLint
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.lyc.data.resp.GankItem
-import com.lyc.gank.R
 import com.lyc.gank.utils.TimeUtil
-import kotlinx.android.synthetic.main.item_article_without_img.view.*
+import com.lyc.gank.utils.gankOption
+import kotlinx.android.synthetic.main.item_article_with_img.view.*
 import me.drakeet.multitype.ItemViewBinder
 
 /**
  * Created by Liu Yuchuan on 2018/2/17.
  */
-class GankWithoutImgViewBinder(
+class GankWithImgViewBinder(
         private val onGankItemClickListener: OnGankItemClickListener
-) : ItemViewBinder<GankItem, GankWithoutImgViewBinder.ViewHolder>() {
+) : ItemViewBinder<GankItem, GankWithImgViewBinder.ViewHolder>() {
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup) =
-            ViewHolder(inflater.inflate(R.layout.item_article_without_img, parent, false))
+            ViewHolder(inflater.inflate(R.layout.item_article_with_img, parent, false))
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, item: GankItem) {
         holder.itemView.setOnClickListener {
             when (item.type) {
+                "福利" -> onGankItemClickListener.onGirlItemClick(holder.img, item)
                 "休息视频" -> onGankItemClickListener.onVideoItemClick(item)
                 else -> onGankItemClickListener.onArticleItemClick(item)
             }
         }
         holder.title.text = item.title
-        holder.info.text = "${item.type} ${TimeUtil.publishTime(item.publishTime)} ${item.author}"
+        holder.info.text = ("${item.type} ${TimeUtil.publishTime(item.publishTime)} ${item.author}")
+        Glide.with(holder.img)
+                .load(item.imgUrl)
+                .gankOption()
+                .into(holder.img)
     }
 
     class  ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val title = itemView.tv_article_item_title!!
         val info = itemView.tv_article_item_info!!
+        val img = itemView.iv_article_item_img!!
     }
 }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.lyc.gank.ui.web.ArticleActivity">
+    tools:context="com.lyc.gank.web.ArticleActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/abl_article"

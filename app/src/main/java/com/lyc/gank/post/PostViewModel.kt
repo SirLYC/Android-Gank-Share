@@ -1,4 +1,4 @@
-package com.lyc.gank.ui.post
+package com.lyc.gank.post
 
 import android.arch.lifecycle.ViewModel
 import com.lyc.data.post.PostRepository

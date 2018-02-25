@@ -1,4 +1,4 @@
-package com.lyc.gank.ui.home
+package com.lyc.gank.home
 
 import android.arch.lifecycle.ViewModel
 import com.lyc.data.recommend.RecommendRepository

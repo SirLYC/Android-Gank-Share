@@ -9,6 +9,7 @@ import com.lyc.data.resp.GankItem
 import com.lyc.gank.R
 import com.lyc.gank.OnGankItemClickListener
 import com.lyc.gank.utils.gankOption
+import com.lyc.gank.utils.logi
 import kotlinx.android.synthetic.main.item_girl.view.*
 import me.drakeet.multitype.ItemViewBinder
 
@@ -19,7 +20,9 @@ class GirlItemViewBinder(
         private val onGankItemClickListener: OnGankItemClickListener
 ) : ItemViewBinder<GankItem, GirlItemViewBinder.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, item: GankItem) {
-        holder.itemView.setOnClickListener { onGankItemClickListener.onGirlItemClick(holder.img, item) }
+        holder.itemView.setOnClickListener {
+            onGankItemClickListener.onGirlItemClick(holder.img, item)
+        }
         Glide.with(holder.img)
                 .load(item.imgUrl)
                 .gankOption()

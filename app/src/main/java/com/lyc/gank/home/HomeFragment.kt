@@ -18,6 +18,7 @@ import com.lyc.gank.base.BaseFragment
 import com.lyc.gank.GankWithImgViewBinder
 import com.lyc.gank.GankWithoutImgViewBinder
 import com.lyc.gank.OnGankItemClickListener
+import com.lyc.gank.photo.PhotoActivity
 import com.lyc.gank.post.PostActivity
 import com.lyc.gank.web.ArticleActivity
 import com.lyc.gank.utils.*
@@ -122,11 +123,11 @@ class HomeFragment: BaseFragment(), LoadMoreDetector.LoadMoreCallback,
     }
 
     override fun onGirlItemClick(iv: ImageView, item: GankItem) {
-        //todo: PhotoActivity
+        PhotoActivity.start(activity()!!, item)
     }
 
     override fun onVideoItemClick(item: GankItem) {
-        //todo: Video player or user system's web browser
+        openWebPage(item.url)
     }
 
     override fun onArticleItemClick(item: GankItem) {

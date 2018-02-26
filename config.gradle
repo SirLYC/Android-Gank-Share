@@ -71,14 +71,11 @@ ext {
             // https://github.com/drakeet/MultiType
             'multitype'           : 'me.drakeet.multitype:multitype:3.4.0',
 
-            // todo : remove
-            'litepal' : 'org.litepal.android:core:1.6.0',
-
             // https://github.com/square/picasso
             'picasso'             : 'com.squareup.picasso:picasso:2.5.2',
 
             // https://github.com/chrisbanes/PhotoView
-            'photoview'           : 'com.github.chrisbanes.photoview:library:1.2.4',
+            'photoview'           : 'com.github.chrisbanes:PhotoView:2.1.3',
 
             // https://github.com/google/flexbox-layout
             'flexboxlayout'       : 'com.google.android:flexbox:0.3.2'

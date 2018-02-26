@@ -17,4 +17,7 @@
     <string name="title_category">分类</string>
     <string name="tip_exit">再按一次返回键退出应用</string>
     <string name="title_read_article">查看文章</string>
+    <string name="tip_no_matched_app">没有可用App</string>
+    <string name="title_photo">查看照片</string>
+    <string name="action_exit">退出</string>
 </resources>

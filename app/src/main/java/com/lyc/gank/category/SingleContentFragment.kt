@@ -19,7 +19,7 @@ import com.lyc.gank.GankWithImgViewBinder
 import com.lyc.gank.GankWithoutImgViewBinder
 import com.lyc.gank.OnGankItemClickListener
 import com.lyc.gank.photo.PhotoActivity
-import com.lyc.gank.web.ArticleActivity
+import com.lyc.gank.article.ArticleActivity
 import com.lyc.gank.utils.*
 import com.lyc.gank.widget.LoadMoreDetector
 import kotlinx.android.synthetic.main.fragment_single_content.*

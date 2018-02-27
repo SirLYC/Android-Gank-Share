@@ -35,6 +35,12 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         setSupportActionBar(tb_main)
         bnv_main.setOnNavigationItemSelectedListener(this)
 
+        supportFragmentManager.fragments.forEach {
+            supportFragmentManager.beginTransaction()
+                    .hide(it)
+                    .commitAllowingStateLoss()
+        }
+
         val homeFragment = supportFragmentManager.findFragmentByTag(HomeFragment::class.java.name) ?: HomeFragment()
         if(homeFragment.isAdded){
             supportFragmentManager.beginTransaction()

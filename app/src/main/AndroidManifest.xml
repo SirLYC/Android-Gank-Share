@@ -29,13 +29,13 @@
             android:name=".post.PostActivity"
             android:label="@string/title_post" />
         <activity
-            android:name=".web.ArticleActivity"
+            android:name=".article.ArticleActivity"
             android:label="@string/title_read_article"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".photo.PhotoActivity"
             android:label="@string/title_photo"
-            android:theme="@style/AppTheme.NoActionBar.Zoom" />
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

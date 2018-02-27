@@ -3,6 +3,7 @@ package com.lyc.gank.photo
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -35,6 +36,7 @@ class PhotoActivity : AppCompatActivity(), LoadRetryView.OnInflateListener, Anim
                         putExtra(KEY_URL, gankItem.url)
                     }
             context.startActivity(intent)
+            (context as Activity).overridePendingTransition(R.anim.photo_zoom_in, 0)
         }
     }
 
@@ -130,4 +132,9 @@ class PhotoActivity : AppCompatActivity(), LoadRetryView.OnInflateListener, Anim
     }
 
     override fun onAnimationStart(animation: Animator) {}
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, R.anim.photo_zoom_out)
+    }
 }

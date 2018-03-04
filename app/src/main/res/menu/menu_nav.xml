@@ -16,7 +16,7 @@
 
 
         <item
-            android:icon="@drawable/ic_search"
+            android:icon="@drawable/ic_search_24dp"
             android:checkable="true"
             android:id="@+id/menu_discover"
             android:title="@string/title_discover" />

@@ -36,6 +36,10 @@
             android:name=".photo.PhotoActivity"
             android:label="@string/title_photo"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".search.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="" />
     </application>
 
 </manifest>

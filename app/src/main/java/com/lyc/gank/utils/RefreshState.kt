@@ -11,12 +11,12 @@ import android.support.annotation.CheckResult
  *                        |      Empty (init)      |
  *                        +------------------------+
  *                             |
- *                             | refresh
+ *                             | search
  *                             v
  *                        +------------------------+  result(true)   +--------------+
  *                        |                        | --------------> |              |
  *    +------------------ |  RefreshingFromEmpty   |                 | RefreshEmpty |
- *    |                   |                        |  refresh        |              |
+ *    |                   |                        |  search        |              |
  *    |                   |                        | <-------------- |              |
  *    |                   +------------------------+                 +--------------+
  *    |                        |
@@ -26,12 +26,12 @@ import android.support.annotation.CheckResult
  *    |                   |        NotEmpty        |
  *    |                   +------------------------+
  *    |                        |              ^
- *    | error                  | refresh      | result(*)
+ *    | error                  | search      | result(*)
  *    v                        v              |
  *  +--------+  error     +------------------------+
  *  |        | <--------- |                        |
  *  | Error  |            | RefreshingFromNotEmpty |
- *  |        |  refresh   |                        |
+ *  |        |  search   |                        |
  *  |        | ---------> |                        |
  *  +--------+            +------------------------+
  *

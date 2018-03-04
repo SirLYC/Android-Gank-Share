@@ -51,14 +51,10 @@ class PostViewModel : ViewModel() {
         postRepository.postArticle(type, link, desc, who)
                 .async()
                 .subscribe({
-                    if (it.error) {
-                        postState.value.error(it.msg)?.let(postState::setValue)
-                    } else {
-                        postState.value.result()?.let(postState::setValue)
-                    }
+                    postState.value.result()?.let(postState::setValue)
                 }, {
                     loge(TAG, "$type\n$link\n$desc\n$who", it)
-                    postState.value.error("未知错误")?.let(postState::setValue)
+                    postState.value.error(it.message ?: "未知错误")?.let(postState::setValue)
                 })
                 .also {
                     compositeDisposable.add(it)

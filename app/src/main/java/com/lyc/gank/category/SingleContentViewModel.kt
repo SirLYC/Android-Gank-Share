@@ -24,7 +24,7 @@ class SingleContentViewModel : ViewModel() {
     //for lazy load
     private var dataLoad = false
 
-    private var loadIndex = -1
+    private var loadIndex = 0
 
     private var loadMoreDisposable: Disposable? = null
 
@@ -57,7 +57,7 @@ class SingleContentViewModel : ViewModel() {
         if (singleContentList.contains(LoadMoreItem)) {
             singleContentList.remove(LoadMoreItem)
         }
-        categoryRepository.getItems(0)
+        categoryRepository.getItems(1)
                 .async()
                 .subscribe({
                     if (it.size > 0 && singleContentList.size > 0
@@ -70,11 +70,15 @@ class SingleContentViewModel : ViewModel() {
 
                     singleContentList.clear()
                     singleContentList.addAll(it)
+                    loadIndex = 1
                     refreshState.value.result(singleContentList.isEmpty())?.let(refreshState::setValue)
                     loadState.value = LoadState.HasMore
                 }, {
                     refreshState.value.error("获取{$type}干货失败")?.let(refreshState::setValue)
                 })
+                .also {
+                    compositeDisposable.add(it)
+                }
     }
 
     fun loadMore() {

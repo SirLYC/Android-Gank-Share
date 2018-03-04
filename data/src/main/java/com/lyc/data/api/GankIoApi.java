@@ -1,9 +1,10 @@
 package com.lyc.data.api;
 
 import com.lyc.data.resp.DayData;
+import com.lyc.data.resp.GankItem;
 import com.lyc.data.resp.PostResp;
 import com.lyc.data.resp.Resp;
-import com.lyc.data.resp.GankItem;
+import com.lyc.data.resp.SearchResp;
 
 import java.util.List;
 
@@ -20,17 +21,29 @@ import retrofit2.http.Path;
 
 public interface GankIoApi {
     @GET("data/{type}/{count}/{page}")
-    Observable<Resp<List<GankItem>>> getDataResults(@Path("type") String type, @Path("page") int page, @Path("count") int count);
+    Observable<Resp<List<GankItem>>> getDataResults(@Path("type") String type,
+                                                    @Path("page") int page,
+                                                    @Path("count") int count);
 
     @GET("day/{year}/{month}/{day}")
-    Observable<Resp<DayData>> getRecommendResults(@Path("year") String year, @Path("month") String month, @Path("day") String day);
+    Observable<Resp<DayData>> getRecommendResults(@Path("year") String year,
+                                                  @Path("month") String month,
+                                                  @Path("day") String day);
 
     @GET("day/history")
     Observable<Resp<List<String>>> getHistoryDates();
 
     @POST("add2gank")
     @FormUrlEncoded
-    Observable<PostResp> add2gank(@Field("url") String url, @Field("desc") String description,
-                                  @Field("type") String Type, @Field("debug") String debugBoolean,
+    Observable<PostResp> add2gank(@Field("url") String url,
+                                  @Field("desc") String description,
+                                  @Field("type") String Type,
+                                  @Field("debug") String debugBoolean,
                                   @Field("who") String who);
+
+    @GET("search/query/{parameter}/category/{category}/count/{count}/page/{page}")
+    Observable<SearchResp> search(@Path("parameter") String parameter,
+                                  @Path("category") String category,
+                                  @Path("count") int count,
+                                  @Path("page") int page);
 }

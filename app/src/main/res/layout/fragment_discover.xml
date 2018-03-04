@@ -3,8 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="TODO"
+    <FrameLayout
+        android:padding="8dp"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_search"
+            android:padding="8dp"
+            android:background="@drawable/bg_search_click"
+            android:drawableStart="@drawable/ic_search_18dp"
+            android:drawableLeft="@drawable/ic_search_18dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/action_search"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

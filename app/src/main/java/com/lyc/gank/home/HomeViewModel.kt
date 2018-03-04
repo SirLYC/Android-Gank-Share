@@ -19,7 +19,7 @@ class HomeViewModel : ViewModel() {
     private val recommendRepository = RecommendRepository()
     private val dateList = mutableListOf<String>()
 
-    private var loadIndex = -1
+    private var loadIndex = 0
 
     private var loadMoreDisposable: Disposable? = null
 
@@ -47,7 +47,7 @@ class HomeViewModel : ViewModel() {
                 .async()
                 .subscribe({
 
-                    //check if it needs to refresh
+                    //check if it needs to search
                     if(dateList.isNotEmpty() && it.isNotEmpty()
                             && it[0] == dateList[0] && homeList.isNotEmpty()){
                         refreshState.value = RefreshState.Error("已经是最新内容")
@@ -77,7 +77,7 @@ class HomeViewModel : ViewModel() {
                 .subscribe({
                     homeList.clear()
                     it.addAllTo(homeList)
-                    loadIndex = 0
+                    loadIndex = 1
                     refreshState.value.result(homeList.isEmpty()).let(refreshState::setValue)
                     loadState.value = if(dateList.size > 1) LoadState.HasMore else LoadState.NoMore
                 }, {

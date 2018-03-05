@@ -122,7 +122,7 @@ class SearchActivity : AppCompatActivity(), TextWatcher,
         }
     }
 
-    override fun canLoadMore() = true
+    override fun canLoadMore() = searchViewModel.loadState.value is LoadState.HasMore
 
     override fun loadMore() {
         searchViewModel.loadMore()

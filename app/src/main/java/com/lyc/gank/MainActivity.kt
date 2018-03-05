@@ -2,6 +2,7 @@ package com.lyc.gank
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.PersistableBundle
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
 import com.lyc.gank.base.BaseActivity
@@ -9,6 +10,7 @@ import com.lyc.gank.category.CategoryFragment
 import com.lyc.gank.discover.DiscoverFragment
 import com.lyc.gank.home.HomeFragment
 import com.lyc.gank.user.UserFragment
+import com.lyc.gank.utils.logi
 import com.lyc.gank.utils.toast
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -23,6 +25,10 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         private const val FRAGMENT_CATEGORY = 1
         private const val FRAGMENT_DISCOVER = 2
         private const val FRAGMENT_USER = 3
+
+        private const val KEY_FRAGMENT_NOW = "KEY_FRAGMENT_NOW"
+
+        private const val TAG = "MainActivity"
     }
 
     private var tmpToExit = false
@@ -41,18 +47,24 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
                     .commitAllowingStateLoss()
         }
 
-        val homeFragment = supportFragmentManager.findFragmentByTag(HomeFragment::class.java.name) ?: HomeFragment()
-        if(homeFragment.isAdded){
+        if (savedInstanceState != null) {
+            logi(TAG, savedInstanceState.toString())
+        }
+        fragmentNow = savedInstanceState?.getInt(KEY_FRAGMENT_NOW, FRAGMENT_HOME) ?: FRAGMENT_HOME
+
+        val fragmentClass = fragmentClass(fragmentNow)
+        val fragment = supportFragmentManager.findFragmentByTag(fragmentClass.name) ?: fragmentClass.newInstance()
+        if (fragment.isAdded) {
             supportFragmentManager.beginTransaction()
-                    .show(homeFragment)
+                    .show(fragment)
                     .commitAllowingStateLoss()
         }else{
             supportFragmentManager.beginTransaction()
-                    .add(R.id.container_main, homeFragment, HomeFragment::class.java.name)
-                    .commitAllowingStateLoss()
+                    .add(R.id.container_main, fragment, fragmentClass.name)
+                    .commitNowAllowingStateLoss()
         }
-        fragmentNow = FRAGMENT_HOME
-        changeActionBar(FRAGMENT_HOME)
+        changeActionBar(fragmentNow)
+        bnv_main.selectedItemId = menuItem(fragmentNow)
     }
 
     private fun switchFragment(id: Int){
@@ -108,6 +120,14 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         else -> throw IllegalArgumentException("Unknown fragment")
     }
 
+    private fun menuItem(id: Int) = when (id) {
+        FRAGMENT_HOME -> R.id.menu_home
+        FRAGMENT_CATEGORY -> R.id.menu_category
+        FRAGMENT_DISCOVER -> R.id.menu_discover
+        FRAGMENT_USER -> R.id.menu_me
+        else -> throw IllegalArgumentException("Unknown fragment")
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_home -> {
@@ -128,6 +148,11 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
             }
             else -> false
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState.putInt(KEY_FRAGMENT_NOW, fragmentNow)
     }
 
     override fun onBackPressed() {

@@ -35,6 +35,9 @@ class SearchViewModel : ViewModel() {
 
     fun search(parameter: String) {
         searchList.clear()
+        searchDisposable?.dispose()
+        loadMoreDisposable?.dispose()
+        loadState.value = LoadState.Empty
         refreshState.value.refresh()?.let { nextState ->
             if (NetworkStateReceiver.isNetWorkConnected()) {
                 refreshState.value = nextState
@@ -57,12 +60,11 @@ class SearchViewModel : ViewModel() {
                     parameterSubject.onNext(parameter)
                     if (it.count == 0) {
                         refreshState.value.error("没有找到相关内容")?.let(refreshState::setValue)
-                        loadState.value = LoadState.NoMore
                     } else {
                         searchList.addAll(it.results)
-                        loadState.value = LoadState.HasMore
                         loadIndex = 1
                     }
+                    loadState.value.result(it.count == 20)?.let(loadState::setValue)
                     refreshState.value.result(it.count == 0)?.let(refreshState::setValue)
                 }, {
                     refreshState.value.error("搜索失败")?.let(refreshState::setValue)

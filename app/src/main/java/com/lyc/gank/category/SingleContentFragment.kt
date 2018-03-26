@@ -87,28 +87,29 @@ class SingleContentFragment : BaseFragment(), OnGankItemClickListener,
         refresher_single_content.setOnRefreshListener(this)
 
 
-        singleContentViewModel.refreshState.let {
-            when (it.value) {
-                is RefreshState.Empty -> if (userVisibleHint) singleContentViewModel.refresh()
-                is RefreshState.Refreshing -> refresher_single_content.isRefreshing = true
-            }
-
-            singleContentViewModel.refreshState.observe(this, Observer {
-                when (it) {
-                    is RefreshState.Refreshing -> refresher_single_content.isRefreshing = true
-                    is RefreshState.RefreshEmpty -> refresher_single_content.isRefreshing = false
-                    is RefreshState.NotEmpty -> refresher_single_content.isRefreshing = false
-                    is RefreshState.Error -> {
-                        refresher_single_content.isRefreshing = false
-                        toast(it.msg)
+        singleContentViewModel.refreshState.observe(this, Observer { state ->
+            when (state) {
+                is RefreshState.Empty -> {
+                    refresher_single_content.isRefreshing = false
+                    if (userVisibleHint) {
+                        singleContentViewModel.refresh()
                     }
                 }
-            })
-        }
+                is RefreshState.Refreshing -> refresher_single_content.isRefreshing = true
+                else -> refresher_single_content.isRefreshing = false
+            }
+        })
 
-        singleContentViewModel.loadState.observe(this, Observer {
-            if (it is LoadState.Error) {
-                toast(it.msg)
+        singleContentViewModel.refreshEvent.observe(this, Observer { event ->
+            if (event is RefreshState.Error) {
+                toast(event.msg)
+            }
+        })
+
+
+        singleContentViewModel.loadEvent.observe(this, Observer { event ->
+            if (event is LoadState.Error) {
+                toast(event.msg)
             }
         })
     }

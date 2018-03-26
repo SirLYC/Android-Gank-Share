@@ -15,8 +15,10 @@ class SingleContentViewModel : ViewModel() {
     private lateinit var type: String
 
     val singleContentList = ObservableList<Any>(mutableListOf())
-    val refreshState = NonNullSingleLiveEvent<RefreshState>(RefreshState.Empty)
-    val loadState = NonNullSingleLiveEvent<LoadState>(LoadState.Empty)
+    val refreshEvent = NonNullSingleLiveEvent<RefreshState>(RefreshState.Empty)
+    val loadEvent = NonNullSingleLiveEvent<LoadState>(LoadState.Empty)
+    val refreshState = NonNullLiveData<RefreshState>(RefreshState.Empty)
+    val loadState = NonNullLiveData<LoadState>(LoadState.Empty)
 
     private val compositeDisposable = CompositeDisposable()
     private lateinit var categoryRepository: CategoryRepository
@@ -32,6 +34,11 @@ class SingleContentViewModel : ViewModel() {
         private const val TAG = "SingleCategory"
     }
 
+    init {
+        refreshState.observeForever { refreshEvent.value = it!! }
+        loadState.observeForever { loadEvent.value = it!! }
+    }
+
     fun dataLoad() = dataLoad
 
     fun setType(type: String) {
@@ -42,6 +49,7 @@ class SingleContentViewModel : ViewModel() {
 
     fun refresh() {
         dataLoad = true
+        loadMoreDisposable?.dispose()
         refreshState.value.refresh()?.let { nextState ->
             if (NetworkStateReceiver.isNetWorkConnected()) {
                 refreshState.value = nextState
@@ -63,6 +71,9 @@ class SingleContentViewModel : ViewModel() {
                     if (it.size > 0 && singleContentList.size > 0
                             && singleContentList[0] is GankItem
                             && it[0].idOnServer == (singleContentList[0] as GankItem).idOnServer) {
+
+                        assertState(refreshState is RefreshState.Refreshing, "${refreshState.value}")
+                        // do nothing
                         refreshState.value = RefreshState.Error("已经是最新内容")
                         refreshState.value = RefreshState.NotEmpty
                         return@subscribe
@@ -71,8 +82,12 @@ class SingleContentViewModel : ViewModel() {
                     singleContentList.clear()
                     singleContentList.addAll(it)
                     loadIndex = 1
-                    refreshState.value.result(singleContentList.isEmpty())?.let(refreshState::setValue)
-                    loadState.value = LoadState.HasMore
+
+                    refreshState.value.result(singleContentList.isEmpty())?.let {
+                        refreshState.value = it
+                        resetLoadState()
+                    }
+
                 }, {
                     refreshState.value.error("获取{$type}干货失败")?.let(refreshState::setValue)
                 })
@@ -82,34 +97,26 @@ class SingleContentViewModel : ViewModel() {
     }
 
     fun loadMore() {
-        if (refreshState.value is RefreshState.Refreshing) {
-            return
-        }
-
-        if (loadState.value is LoadState.NoMore && !singleContentList.contains(NoMoreItem)) {
-            singleContentList.add(NoMoreItem)
-        }
-
         loadState.value.loadMore()?.let { nextState ->
-            if (nextState is LoadState.Loading) {
-                if (NetworkStateReceiver.isNetWorkConnected()) {
-                    loadState.value = nextState
-                    doLoadMore()
-                } else {
-                    loadState.value = LoadState.Error("没有网络连接")
-                    if (!singleContentList.contains(ErrorItem)) {
-                        singleContentList.add(ErrorItem)
-                    }
+            if (loadState.value is LoadState.Error) {
+                singleContentList.remove(ErrorItem)
+            }
+
+            if (NetworkStateReceiver.isNetWorkConnected()) {
+                loadState.value = nextState
+                doLoadMore()
+            } else {
+                loadState.value = LoadState.Error("没有网络连接")
+                if (!singleContentList.contains(ErrorItem)) {
+                    singleContentList.add(ErrorItem)
                 }
             }
         }
     }
 
     private fun doLoadMore() {
-        if (singleContentList.contains(ErrorItem)) {
-            singleContentList.remove(ErrorItem)
-        }
         singleContentList.add(LoadMoreItem)
+
         categoryRepository.getItems(loadIndex + 1)
                 .async()
                 .subscribe({
@@ -122,10 +129,10 @@ class SingleContentViewModel : ViewModel() {
                     singleContentList.remove(LoadMoreItem)
                     singleContentList.addAll(it)
                     loadIndex++
-                    loadState.value.result(true)?.let(loadState::setValue)
+                    loadState.value.result(it.size == 20)?.let(loadState::setValue)
                 }, {
                     singleContentList.remove(LoadMoreItem)
-                    loadState.value.error("加载更多失败").let(loadState::setValue)
+                    loadState.value.error("加载更多失败")?.let(loadState::setValue)
                     loge(TAG, "page ${loadIndex + 1}", it)
                 })
                 .also {
@@ -134,7 +141,21 @@ class SingleContentViewModel : ViewModel() {
                 }
     }
 
+    private fun resetLoadState() {
+        when (loadState.value) {
+            is LoadState.Loading -> {
+                singleContentList.remove(LoadMoreItem)
+                loadMoreDisposable?.dispose()
+            }
+            is LoadState.Error -> singleContentList.remove(ErrorItem)
+            is LoadState.NoMore -> singleContentList.remove(NoMoreItem)
+        }
+
+        loadState.value = LoadState.HasMore
+    }
+
     override fun onCleared() {
+        loadMoreDisposable?.dispose()
         compositeDisposable.dispose()
         super.onCleared()
     }

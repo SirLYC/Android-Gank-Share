@@ -12,8 +12,10 @@ import io.reactivex.disposables.Disposable
  */
 class HomeViewModel : ViewModel() {
     val homeList = ObservableList<Any>(mutableListOf())
-    val refreshState = NonNullSingleLiveEvent<RefreshState>(RefreshState.Empty)
-    val loadState = NonNullSingleLiveEvent<LoadState>(LoadState.Empty)
+    val refreshEvent = NonNullSingleLiveEvent<RefreshState>(RefreshState.Empty)
+    val loadMoreEvent = NonNullSingleLiveEvent<LoadState>(LoadState.Empty)
+    val refreshState = NonNullLiveData<RefreshState>(RefreshState.Empty)
+    val loadMoreState = NonNullLiveData<LoadState>(LoadState.Empty)
 
     private val compositeDisposable = CompositeDisposable()
     private val recommendRepository = RecommendRepository()
@@ -25,6 +27,11 @@ class HomeViewModel : ViewModel() {
 
     companion object {
         private const val TAG = "Home"
+    }
+
+    init {
+        refreshState.observeForever { refreshEvent.value = it!! }
+        loadMoreState.observeForever { loadMoreEvent.value = it!! }
     }
 
     fun refresh(){
@@ -40,9 +47,6 @@ class HomeViewModel : ViewModel() {
 
     private fun doRefresh(){
         loadMoreDisposable?.dispose()
-        if (homeList.contains(LoadMoreItem)) {
-            homeList.remove(LoadMoreItem)
-        }
         recommendRepository.getDates()
                 .async()
                 .subscribe({
@@ -50,9 +54,12 @@ class HomeViewModel : ViewModel() {
                     //check if it needs to search
                     if(dateList.isNotEmpty() && it.isNotEmpty()
                             && it[0] == dateList[0] && homeList.isNotEmpty()){
+
+                        assertState(refreshState.value is RefreshState.Refreshing, "${refreshState.value}")
+
                         refreshState.value = RefreshState.Error("已经是最新内容")
                         refreshState.value = RefreshState.NotEmpty
-                        loadState.value = if(dateList.size > 1) LoadState.HasMore else LoadState.NoMore
+                        loadMoreState.value = if (dateList.size > 1) LoadState.HasMore else LoadState.NoMore
                         return@subscribe
                     }
 
@@ -61,10 +68,10 @@ class HomeViewModel : ViewModel() {
                     if (dateList.isNotEmpty()){
                         refreshDayRecommend()
                     }else{
-                        refreshState.value.error("没有查找到可获取干货").let(refreshState::setValue)
+                        refreshState.value.error("没有查找到可获取干货")?.let(refreshState::setValue)
                     }
                 }, {
-                    refreshState.value.error("获取干货日期失败").let(refreshState::setValue)
+                    refreshState.value.error("获取干货日期失败")?.let(refreshState::setValue)
                     loge(TAG, "", it)
                 })
                 .also { compositeDisposable.add(it) }
@@ -77,11 +84,18 @@ class HomeViewModel : ViewModel() {
                 .subscribe({
                     homeList.clear()
                     it.addAllTo(homeList)
-                    loadIndex = 1
-                    refreshState.value.result(homeList.isEmpty()).let(refreshState::setValue)
-                    loadState.value = if(dateList.size > 1) LoadState.HasMore else LoadState.NoMore
+
+                    // load index starts from 0
+                    loadIndex = 0
+
+                    assertState(refreshState.value is RefreshState.Refreshing, "${refreshState.value}")
+
+                    refreshState.value.result(homeList.isEmpty())?.let {
+                        refreshState.value = it
+                        resetLoadMoreState()
+                    }
                 }, {
-                    refreshState.value.error("获取${dateList[0]}干货失败").let(refreshState::setValue)
+                    refreshState.value.error("获取${dateList[0]}干货失败")?.let(refreshState::setValue)
                     loge(TAG, dateList[0], it)
                 })
                 .also { compositeDisposable.add(it) }
@@ -92,39 +106,26 @@ class HomeViewModel : ViewModel() {
             return
         }
 
-        if (loadState.value is LoadState.NoMore && !homeList.contains(NoMoreItem)) {
-            homeList.add(NoMoreItem)
-        }
+        loadMoreState.value.loadMore()?.let { nextState ->
+            if (loadMoreState.value is LoadState.Error) {
+                homeList.remove(ErrorItem)
+            }
 
-        loadState.value.loadMore()?.let { nextState ->
-            if(nextState is LoadState.Loading){
-                if(NetworkStateReceiver.isNetWorkConnected()){
-                    loadState.value = nextState
-                    doLoadMore()
-                }else{
-                    loadState.value = LoadState.Error("没有网络连接")
-                    if (!homeList.contains(ErrorItem))
-                        homeList.add(ErrorItem)
-                }
+            if (NetworkStateReceiver.isNetWorkConnected()) {
+                loadMoreState.value = nextState
+                doLoadMore()
+            } else {
+                loadMoreState.value = LoadState.Error("没有网络连接")
+                if (!homeList.contains(ErrorItem))
+                    homeList.add(ErrorItem)
             }
         }
     }
 
     private fun doLoadMore(){
-        if(loadIndex >= dateList.size - 1 && loadState.value !is LoadState.NoMore) {
-            loadState.value = LoadState.NoMore
-            if(!homeList.contains(NoMoreItem)) {
-                homeList.add(NoMoreItem)
-            }else{
-                homeList.add(NoMoreItem)
-            }
-            return
-        }
-
-        if (homeList.contains(ErrorItem)) {
-            homeList.remove(ErrorItem)
-        }
         homeList.add(LoadMoreItem)
+
+        // next index
         val dates = dateList[loadIndex + 1].split("-")
         recommendRepository.getItems(dates[0], dates[1], dates[2])
                 .async()
@@ -132,14 +133,14 @@ class HomeViewModel : ViewModel() {
                     homeList.remove(LoadMoreItem)
                     it.addAllTo(homeList)
                     loadIndex++
-                    if(loadIndex >= dateList.size - 1){
-                        loadState.value = LoadState.NoMore
-                    }else{
-                        loadState.value = LoadState.HasMore
-                    }
+
+                    assertState(loadMoreState.value === LoadState.Loading, "${loadMoreState.value}")
+
+                    loadMoreState.value
+                            .result(loadIndex < dateList.size - 1)?.let(loadMoreState::setValue)
                 }, {
                     homeList.remove(LoadMoreItem)
-                    loadState.value.error("加载更多失败").let(loadState::setValue)
+                    loadMoreState.value.error("加载更多失败")?.let(loadMoreState::setValue)
                     loge(TAG, dateList[loadIndex + 1], it)
                 })
                 .also {
@@ -148,8 +149,29 @@ class HomeViewModel : ViewModel() {
                 }
     }
 
+    private fun resetLoadMoreState() {
+        when (loadMoreState.value) {
+            LoadState.Loading -> {
+                homeList.remove(LoadMoreItem)
+                loadMoreDisposable?.dispose()
+            }
+            LoadState.NoMore -> {
+                homeList.remove(NoMoreItem)
+            }
+            is LoadState.Error -> {
+                homeList.remove(ErrorItem)
+            }
+        }
+
+        loadMoreState.value = if (loadIndex < dateList.size - 1) {
+            LoadState.HasMore
+        } else {
+            LoadState.NoMore
+        }
+    }
+
     override fun onCleared() {
-        compositeDisposable.dispose()
+        compositeDisposable.clear()
         super.onCleared()
     }
 }

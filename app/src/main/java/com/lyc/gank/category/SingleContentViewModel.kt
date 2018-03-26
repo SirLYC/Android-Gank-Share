@@ -49,7 +49,6 @@ class SingleContentViewModel : ViewModel() {
 
     fun refresh() {
         dataLoad = true
-        loadMoreDisposable?.dispose()
         refreshState.value.refresh()?.let { nextState ->
             if (NetworkStateReceiver.isNetWorkConnected()) {
                 refreshState.value = nextState
@@ -61,10 +60,6 @@ class SingleContentViewModel : ViewModel() {
     }
 
     private fun doRefresh() {
-        loadMoreDisposable?.dispose()
-        if (singleContentList.contains(LoadMoreItem)) {
-            singleContentList.remove(LoadMoreItem)
-        }
         categoryRepository.getItems(1)
                 .async()
                 .subscribe({
@@ -72,7 +67,7 @@ class SingleContentViewModel : ViewModel() {
                             && singleContentList[0] is GankItem
                             && it[0].idOnServer == (singleContentList[0] as GankItem).idOnServer) {
 
-                        assertState(refreshState is RefreshState.Refreshing, "${refreshState.value}")
+                        assertState(refreshState.value is RefreshState.Refreshing, "${refreshState.value}")
                         // do nothing
                         refreshState.value = RefreshState.Error("已经是最新内容")
                         refreshState.value = RefreshState.NotEmpty
@@ -83,13 +78,16 @@ class SingleContentViewModel : ViewModel() {
                     singleContentList.addAll(it)
                     loadIndex = 1
 
+                    assertState(refreshState.value is RefreshState.Refreshing, "${refreshState.value}")
+
                     refreshState.value.result(singleContentList.isEmpty())?.let {
                         refreshState.value = it
                         resetLoadState()
                     }
 
                 }, {
-                    refreshState.value.error("获取{$type}干货失败")?.let(refreshState::setValue)
+                    loge("SingleContentViewModel", "", it)
+                    refreshState.value.error("获取${type}干货失败")?.let(refreshState::setValue)
                 })
                 .also {
                     compositeDisposable.add(it)

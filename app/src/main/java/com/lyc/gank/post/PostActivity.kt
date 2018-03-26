@@ -1,14 +1,14 @@
 package com.lyc.gank.post
 
 import android.arch.lifecycle.Observer
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Patterns
 import android.view.MenuItem
 import android.view.View
 import com.lyc.data.types
 import com.lyc.gank.R
-import com.lyc.gank.utils.PostState
+import com.lyc.gank.utils.RefreshState
 import com.lyc.gank.utils.provideViewModel
 import com.lyc.gank.utils.textPaste
 import com.lyc.gank.utils.toast
@@ -30,25 +30,19 @@ class PostActivity : AppCompatActivity(), View.OnClickListener {
 
         postViewModel.postState.let {
             when (it.value) {
-                is PostState.Posting -> fab_post.isEnabled = false
-                is PostState.Success -> onPostSuccess()
+                is RefreshState.Refreshing -> fab_post.isEnabled = false
                 else -> fab_post.isEnabled = true
             }
-
-            postViewModel.postState.observe(this, Observer {
-                when (it) {
-                    is PostState.Posting -> fab_post.isEnabled = false
-                    is PostState.Success -> onPostSuccess()
-                    else -> fab_post.isEnabled = true
-                }
-            })
         }
+
+        postViewModel.postEvent.observe(this, Observer {
+            when (it) {
+                is RefreshState.NotEmpty -> toast(R.string.tip_post_success)
+                is RefreshState.Error -> toast(it.msg)
+            }
+        })
     }
 
-    private fun onPostSuccess() {
-        finish()
-        toast(R.string.tip_post_success)
-    }
 
     //setText when resume
     override fun onResume() {

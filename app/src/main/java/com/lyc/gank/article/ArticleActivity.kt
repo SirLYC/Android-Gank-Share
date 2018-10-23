@@ -102,6 +102,8 @@ class ArticleActivity : AppCompatActivity(), ScrollWebView.OnScrollListener
                 swv_article.visibility = INVISIBLE
                 lrv_article.showRetryView()
             }
+
+
         }
 
         swv_article.loadUrl(url)

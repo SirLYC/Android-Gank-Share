@@ -50,40 +50,26 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         if (savedInstanceState != null) {
             logi(TAG, savedInstanceState.toString())
         }
-        fragmentNow = savedInstanceState?.getInt(KEY_FRAGMENT_NOW, FRAGMENT_HOME) ?: FRAGMENT_HOME
 
-        val fragmentClass = fragmentClass(fragmentNow)
-        val fragment = supportFragmentManager.findFragmentByTag(fragmentClass.name) ?: fragmentClass.newInstance()
-        if (fragment.isAdded) {
-            supportFragmentManager.beginTransaction()
-                    .show(fragment)
-                    .commitAllowingStateLoss()
-        }else{
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.container_main, fragment, fragmentClass.name)
-                    .commitNowAllowingStateLoss()
-        }
-        changeActionBar(fragmentNow)
-        bnv_main.selectedItemId = menuItem(fragmentNow)
+        switchFragment(savedInstanceState?.getInt(KEY_FRAGMENT_NOW, FRAGMENT_HOME) ?: FRAGMENT_HOME)
     }
 
-    private fun switchFragment(id: Int){
-        val fromClazz = fragmentClass(fragmentNow)
+    private fun switchFragment(id: Int) {
         val toClazz = fragmentClass(id)
-        val ff = supportFragmentManager.findFragmentByTag(fromClazz.name) ?: fromClazz.newInstance()
         val tf = supportFragmentManager.findFragmentByTag(toClazz.name) ?: toClazz.newInstance()
-        if(tf.isAdded){
-            supportFragmentManager.beginTransaction()
-                    .hide(ff)
-                    .show(tf)
-                    .commitAllowingStateLoss()
-        }else{
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.container_main, tf, toClazz.name)
-                    .hide(ff)
-                    .show(tf)
-                    .commitAllowingStateLoss()
-        }
+        supportFragmentManager.beginTransaction()
+                .apply {
+                    if (!tf.isAdded) {
+                        add(R.id.container_main, tf, toClazz.name)
+                    }
+                    supportFragmentManager.fragments.forEach {
+                        if (it != tf && !it.isHidden) {
+                            hide(it)
+                        }
+                    }
+                }
+                .show(tf)
+                .commitAllowingStateLoss()
         changeActionBar(id)
         fragmentNow = id
     }
@@ -112,7 +98,7 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         }
     }
 
-    private fun fragmentClass(id: Int) = when(id){
+    private fun fragmentClass(id: Int) = when (id) {
         FRAGMENT_HOME -> HomeFragment::class.java
         FRAGMENT_CATEGORY -> CategoryFragment::class.java
         FRAGMENT_DISCOVER -> DiscoverFragment::class.java

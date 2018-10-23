@@ -34,26 +34,26 @@ class HomeViewModel : ViewModel() {
         loadMoreState.observeForever { loadMoreEvent.value = it!! }
     }
 
-    fun refresh(){
+    fun refresh() {
         refreshState.value.refresh()?.let { nextState ->
-            if(NetworkStateReceiver.isNetWorkConnected()){
+            if (NetworkStateReceiver.isNetWorkConnected()) {
                 refreshState.value = nextState
                 doRefresh()
-            }else{
+            } else {
                 refreshState.value = RefreshState.Error("没有网络连接")
             }
         }
     }
 
-    private fun doRefresh(){
+    private fun doRefresh() {
         loadMoreDisposable?.dispose()
         recommendRepository.getDates()
                 .async()
                 .subscribe({
 
                     //check if it needs to search
-                    if(dateList.isNotEmpty() && it.isNotEmpty()
-                            && it[0] == dateList[0] && homeList.isNotEmpty()){
+                    if (dateList.isNotEmpty() && it.isNotEmpty()
+                            && it[0] == dateList[0] && homeList.isNotEmpty()) {
 
                         assertState(refreshState.value is RefreshState.Refreshing, "${refreshState.value}")
 
@@ -65,9 +65,9 @@ class HomeViewModel : ViewModel() {
 
                     dateList.clear()
                     dateList.addAll(it)
-                    if (dateList.isNotEmpty()){
+                    if (dateList.isNotEmpty()) {
                         refreshDayRecommend()
-                    }else{
+                    } else {
                         refreshState.value.error("没有查找到可获取干货")?.let(refreshState::setValue)
                     }
                 }, {
@@ -77,7 +77,7 @@ class HomeViewModel : ViewModel() {
                 .also { compositeDisposable.add(it) }
     }
 
-    private fun refreshDayRecommend(){
+    private fun refreshDayRecommend() {
         val dates = dateList[0].split("-")
         recommendRepository.getItems(dates[0], dates[1], dates[2])
                 .async()
@@ -101,8 +101,8 @@ class HomeViewModel : ViewModel() {
                 .also { compositeDisposable.add(it) }
     }
 
-    fun loadMore(){
-        if(refreshState.value is RefreshState.Refreshing){
+    fun loadMore() {
+        if (refreshState.value is RefreshState.Refreshing) {
             return
         }
 
@@ -122,7 +122,10 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun doLoadMore(){
+    private fun doLoadMore() {
+        homeList.removeAll {
+            it === LoadMoreItem
+        }
         homeList.add(LoadMoreItem)
 
         // next index
@@ -150,18 +153,11 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun resetLoadMoreState() {
-        when (loadMoreState.value) {
-            LoadState.Loading -> {
-                homeList.remove(LoadMoreItem)
-                loadMoreDisposable?.dispose()
-            }
-            LoadState.NoMore -> {
-                homeList.remove(NoMoreItem)
-            }
-            is LoadState.Error -> {
-                homeList.remove(ErrorItem)
-            }
+        homeList.removeAll {
+            it === NoMoreItem || it === ErrorItem || it === LoadMoreItem
         }
+        loadMoreDisposable?.dispose()
+
 
         loadMoreState.value = if (loadIndex < dateList.size - 1) {
             LoadState.HasMore

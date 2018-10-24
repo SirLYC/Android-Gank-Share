@@ -14,17 +14,25 @@ import com.lyc.gank.R
  * This is a subclass of FrameLayout Contains two ViewStubs which shows loading and action retry.
  * This view is only for load and retry, so you should never add any child view
  */
-class LoadRetryView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+class LoadRetryView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), View.OnClickListener{
 
     private var loadView: View? = null
     private lateinit var loadViewStub: ViewStub
     private var loadViewLoaded = false
     private var retryView: View? = null
+        set(value) {
+            field = value
+            field?.run {
+                setOnClickListener(this@LoadRetryView)
+            }
+        }
     private lateinit var retryViewStub: ViewStub
     private var retryViewLoaded = false
     private var hideLoadDelay = true
     var state = STATE_NOTHING
         private set
+
+    var onRetryClickListener: OnRetryClickListener? = null
 
     private companion object {
         private const val MIN_DURATION = 600L // ms
@@ -84,6 +92,8 @@ class LoadRetryView(context: Context, attrs: AttributeSet?) : FrameLayout(contex
         lastShowTime = SystemClock.elapsedRealtime()
         state = STATE_LOAD
 
+        hideOrShowChildren(false)
+
         return loadView!!
     }
 
@@ -106,14 +116,36 @@ class LoadRetryView(context: Context, attrs: AttributeSet?) : FrameLayout(contex
             }
         }
 
+        hideOrShowChildren(false)
+
+
         return retryView!!
     }
 
     fun hideAll() {
         retryViewStub.visibility = View.GONE
         loadViewStub.visibility = View.GONE
-        visibility = View.GONE
+        loadView?.visibility = View.GONE
+        retryView?.visibility = View.GONE
+//        visibility = View.GONE
         state = STATE_NOTHING
+        hideOrShowChildren(true)
+    }
+
+    private fun hideOrShowChildren(show: Boolean) {
+        if (show) {
+            VISIBLE
+        } else {
+            GONE
+        }.let {
+            for (i in 0 until childCount) {
+                getChildAt(i).run {
+                    if (this != loadViewStub && this != retryViewStub
+                            && this != loadView && this != retryView)
+                        visibility = it
+                }
+            }
+        }
     }
 
     fun setOnInflateListener(onInflateListener: OnInflateListener) {
@@ -124,5 +156,17 @@ class LoadRetryView(context: Context, attrs: AttributeSet?) : FrameLayout(contex
     interface OnInflateListener {
         fun onLoadViewInflate(stub: ViewStub, inflated: View)
         fun onRetryViewInflate(stub: ViewStub, inflated: View)
+    }
+
+    interface OnRetryClickListener {
+        fun onRetryClicked(v: View)
+    }
+
+    override fun onClick(v: View) {
+        when(v) {
+            retryView -> {
+                onRetryClickListener?.onRetryClicked(v)
+            }
+        }
     }
 }

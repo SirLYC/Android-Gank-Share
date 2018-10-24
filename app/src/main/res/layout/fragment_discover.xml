@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
-        android:padding="8dp"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/tv_search"
-            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_search_click"
-            android:drawableStart="@drawable/ic_search_18dp"
             android:drawableLeft="@drawable/ic_search_18dp"
             android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_search_18dp"
             android:gravity="center_vertical"
+            android:padding="8dp"
             android:text="@string/action_search"
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textColor="@color/white"/>
     </FrameLayout>
-</android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_refresh"
+        android:text="@string/title_random_recommend"
+        android:drawablePadding="8dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:drawableStart="@drawable/ic_date_range_blue_24dp"
+        android:drawableLeft="@drawable/ic_date_range_blue_24dp"
+        android:padding="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.lyc.gank.widget.LoadRetryView
+        android:id="@+id/lrv_discover"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_discover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.lyc.gank.widget.LoadRetryView>
+</LinearLayout>

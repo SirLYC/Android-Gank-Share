@@ -106,14 +106,6 @@ class MainActivity : BaseActivity(), BottomNavigationView.OnNavigationItemSelect
         else -> throw IllegalArgumentException("Unknown fragment")
     }
 
-    private fun menuItem(id: Int) = when (id) {
-        FRAGMENT_HOME -> R.id.menu_home
-        FRAGMENT_CATEGORY -> R.id.menu_category
-        FRAGMENT_DISCOVER -> R.id.menu_discover
-        FRAGMENT_USER -> R.id.menu_me
-        else -> throw IllegalArgumentException("Unknown fragment")
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_home -> {

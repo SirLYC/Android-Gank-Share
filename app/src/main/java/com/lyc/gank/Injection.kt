@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import com.lyc.gank.category.SingleContentViewModel
+import com.lyc.gank.discover.DiscoverViewModel
 import com.lyc.gank.home.HomeViewModel
 import com.lyc.gank.post.PostViewModel
 import com.lyc.gank.search.SearchViewModel
@@ -21,6 +22,7 @@ class Injection(context: Context): ViewModelProvider.Factory{
            isAssignableFrom(SingleContentViewModel::class.java) -> SingleContentViewModel()
            isAssignableFrom(PostViewModel::class.java) -> PostViewModel()
            isAssignableFrom(SearchViewModel::class.java) -> SearchViewModel()
+           isAssignableFrom(DiscoverViewModel::class.java) -> DiscoverViewModel()
            else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
        }
     } as T

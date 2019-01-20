@@ -7,7 +7,7 @@ def deps = rootProject.ext.deps
 
 android {
     compileSdkVersion config.compileSdkVersion
-    buildToolsVersion config.buildToolsVersion
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.lyc.gank"
